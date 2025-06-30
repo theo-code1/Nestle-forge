@@ -1,9 +1,12 @@
 import React, { useState, useRef } from 'react';
 
 const UpscalerSection = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImage, setSelectedImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [upscaledImage, setUpscaledImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef(null);
+  const [showComparison, setShowComparison] = useState(false);
 
   // Handle file selection
   const handleImageChange = (e) => {
@@ -38,27 +41,54 @@ const UpscalerSection = () => {
   const handleUpscale = async () => {
     if (!selectedImage) return;
 
-    // Here you would typically send the image to your backend
-    // For now, we'll just log it
-    console.log('Upscaling image:', selectedImage.name);
-    
-    // Example of how you might send it to your FastAPI backend:
-    /*
     const formData = new FormData();
     formData.append('image', selectedImage);
     
     try {
+      setIsLoading(true);
+      console.log('Sending image for upscaling...', selectedImage);
+      
+      // Show loading state
       const response = await fetch('http://localhost:8000/upscale', {
         method: 'POST',
         body: formData,
       });
-      const result = await response.json();
-      console.log('Upscale result:', result);
-      // Handle the upscaled image
+
+      const data = await response.json().catch(() => ({
+        error: 'Invalid response from server',
+        details: 'The server returned an invalid response format'
+      }));
+      
+      console.log('API Response:', data);
+      
+      // Handle different error cases
+      if (data.error) {
+        console.error('Error from server:', data.error, data.details || '');
+        throw new Error(data.error);
+      }
+      
+      if (!data || !data.upscaled) {
+        console.error('Invalid response format:', data);
+        throw new Error('Invalid response from the server. Please try again.');
+      }
+
+      // If we get here, we have a valid response with an upscaled image
+      setUpscaledImage(`data:image/png;base64,${data.upscaled}`);
+      setShowComparison(true);
+      console.log('Image upscaled and displayed successfully');
     } catch (error) {
-      console.error('Error upscaling image:', error);
+      console.error('Error upscaling image:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+      });
+      
+      // Show user-friendly error message
+      const errorMessage = error.message || 'Failed to upscale image';
+      alert(`Error: ${errorMessage}. Please try again with a different image.`);
+    } finally {
+      setIsLoading(false);
     }
-    */
   };
 
   return (
@@ -69,7 +99,7 @@ const UpscalerSection = () => {
       </p>
       
       <div 
-        className="mt-16 border-2 border-dashed border-gray-300 rounded-2xl p-24 text-center cursor-pointer hover:border-indigo-400 transition-colors"
+        className="mt-16 border-2 border-dashed border-gray-300 rounded-2xl p-12 text-center cursor-pointer hover:border-indigo-400 transition-colors"
         onClick={() => fileInputRef.current.click()}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -106,7 +136,7 @@ const UpscalerSection = () => {
             <p className="text-sm text-gray-500 mt-1">JPG, PNG up to 10MB</p>
           </div>
         )}
-        
+
         <input
           type="file"
           ref={fileInputRef}
@@ -116,15 +146,64 @@ const UpscalerSection = () => {
         />
       </div>
 
-      {selectedImage && (
-        <div className="mt-8 text-center">
+      {selectedImage && !showComparison && (
+        <div className="mt-4 text-center">
           <button
             onClick={handleUpscale}
-            className="px-8 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+            disabled={isLoading}
+            className={`px-8 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            Upscale Image
+            {isLoading ? 'Upscaling...' : 'Upscale Image'}
           </button>
           <p className="text-sm text-gray-500 mt-2">Click to enhance your image quality</p>
+        </div>
+      )}
+
+      {showComparison && upscaledImage && (
+        <div className="mt-8">
+          <h3 className="text-lg font-medium text-center mb-4">Comparison</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="text-center">
+              <p className="text-sm text-gray-500 mb-2">Original</p>
+              <img 
+                src={preview} 
+                alt="Original" 
+                className="max-w-full h-auto rounded-lg border border-gray-200"
+              />
+            </div>
+            <div className="text-center">
+              <p className="text-sm text-gray-500 mb-2">Upscaled</p>
+              <img 
+                src={upscaledImage} 
+                alt="Upscaled" 
+                className="max-w-full h-auto rounded-lg border border-gray-200"
+              />
+              <button
+                onClick={() => {
+                  const link = document.createElement('a');
+                  link.href = upscaledImage;
+                  link.download = `upscaled_${selectedImage.name}`;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+                className="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Download Upscaled Image
+              </button>
+            </div>
+          </div>
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => {
+                setShowComparison(false);
+                setUpscaledImage(null);
+              }}
+              className="text-indigo-600 hover:text-indigo-800"
+            >
+              ← Back to upload
+            </button>
+          </div>
         </div>
       )}
     </section>

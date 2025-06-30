@@ -10,15 +10,15 @@ const Navbar = () => {
   return (
     <nav className='relative w-6/7 flex gap-16 bg-indigo-50/50 border-b border-b-black/20 justify-end items-center py-4 px-8 '>
         <ul className='flex gap-12 '>
-            <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Link01</a></li>
-            <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Link02</a></li>
-            <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Link03</a></li>
+            <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Services</a></li>
+            <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">About</a></li>
+            <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Contact</a></li>
             <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Link04</a></li>
         </ul>
         <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className='group flex items-center gap-1 text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'>{selectedLanguage} <DropArrow className='group-hover:text-indigo-600'/></button>
         {isDropdownOpen && <ul className='absolute top-14 right-60 text-center flex-col gap-2 transition-all duration-100 px-2 pt-3 pb-1 bg-indigo-50/50 rounded-lg border border-black/20'>
             {languageOptions.map((option, index) => (
-                <li 
+                <li     
                 key={index} 
                 onClick={() => {
                     setSelectedLanguage(option);
