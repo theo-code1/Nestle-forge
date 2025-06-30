@@ -2,10 +2,12 @@ from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os
+import base64
 import mimetypes
-import requests
-from pathlib import Path
 import logging
+import uuid
+from pathlib import Path
+import requests
 from datetime import datetime
 
 # Configure logging
@@ -47,43 +49,54 @@ UPLOADS_DIR.mkdir(exist_ok=True)
 async def upscale_image(request: Request, image: UploadFile = File(...)):
     logger.info(f"Received file: {image.filename}")
     logger.info(f"Content type: {image.content_type}")
-    logger.info(f"Headers: {request.headers}")
     
-    # Read the uploaded image data
-    image_data = await image.read()
-    
-    # Get file extension
-    ext = os.path.splitext(image.filename)[1].lower()
-    if ext not in SUPPORTED_FORMATS:
-        return {"error": f"Unsupported format: {ext}"}
+    if not image.filename:
+        logger.error("No filename provided")
+        return {"error": "No file provided or invalid file"}
     
     # Get mime type
     mime_type = mimetypes.guess_type(image.filename)[0] or "application/octet-stream"
     
-    # Prepare the request
+    # Prepare the request to Stability AI
     headers = {
         "Authorization": f"Bearer {API_KEY}",
         "Accept": "image/*"
     }
     
-    # Read the file content
-    file_content = await image.read()
+    # Create uploads directory if it doesn't exist
+    UPLOADS_DIR.mkdir(exist_ok=True)
     
-    # Create a temporary file
-    temp_file = UPLOADS_DIR / f"temp_{image.filename}"
+    # Create a temporary file with a unique name
+    file_ext = os.path.splitext(image.filename)[1] or '.png'
+    temp_file = UPLOADS_DIR / f"temp_{uuid.uuid4()}{file_ext}"
+    
+    logger.info(f"Using temporary file: {temp_file}")
     try:
-        # Save the uploaded file temporarily
+        # Read and save the uploaded file
+        file_content = await image.read()
+        if not file_content:
+            raise ValueError("Received empty file")
+        
         with open(temp_file, "wb") as f:
             f.write(file_content)
+            
+        logger.info(f"Saved {len(file_content)} bytes to {temp_file}")
         
         # Make API request
         with open(temp_file, "rb") as f:
-            files = {"image": (image.filename, f, image.content_type)}
-            data = {"width": 2048}  # Set a target width
+            # Create proper file tuple: (filename, file-like, content_type)
+            files = {
+                'image': (image.filename, f, image.content_type)
+            }
+            data = {
+                'width': 2048,
+                'height': 2048,
+                'scale': 2
+            }
             
             logger.info(f"Sending request to {API_URL}")
             logger.info(f"Headers: {headers}")
-            logger.info(f"Files: {files.keys()}")
+            logger.info(f"Files: {list(files.keys())}")
             logger.info(f"Data: {data}")
             
             try:

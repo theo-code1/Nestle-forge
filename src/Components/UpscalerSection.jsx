@@ -39,26 +39,45 @@ const UpscalerSection = () => {
 
   // Handle the upscale button click
   const handleUpscale = async () => {
-    if (!selectedImage) return;
+    if (!selectedImage) {
+      alert('Please select an image first');
+      return;
+    }
 
     const formData = new FormData();
+    // Make sure to use the file object directly, not the preview URL
     formData.append('image', selectedImage);
     
     try {
       setIsLoading(true);
       console.log('Sending image for upscaling...', selectedImage);
       
-      // Show loading state
+      // Log the FormData contents for debugging
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+      
       const response = await fetch('http://localhost:8000/upscale', {
         method: 'POST',
         body: formData,
+        // Don't set Content-Type header, let the browser set it with the boundary
       });
 
-      const data = await response.json().catch(() => ({
-        error: 'Invalid response from server',
-        details: 'The server returned an invalid response format'
-      }));
-      
+      // First check if the response is OK
+      if (!response.ok) {
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch (error) {
+          console.error('Error parsing error response:', error);
+          const text = await response.text();
+          errorMessage = text || errorMessage;
+        }
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
       console.log('API Response:', data);
       
       // Handle different error cases
