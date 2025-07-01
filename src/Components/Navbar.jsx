@@ -16,22 +16,23 @@ const Navbar = () => {
             <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Link04</a></li>
         </ul>
         <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className='group flex items-center gap-1 text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'>{selectedLanguage} <DropArrow className='group-hover:text-indigo-600'/></button>
-        {isDropdownOpen && <ul className='absolute top-14 right-60 text-center flex-col gap-2 transition-all duration-100 px-2 pt-3 pb-1 bg-indigo-50/50 rounded-lg border border-black/20'>
+        {isDropdownOpen && <div data-disabled="true" className='absolute top-14 right-60 text-center flex-col gap-2 transition-all duration-100 px-2 pt-3 pb-1 bg-indigo-50/50 rounded-lg border border-black/20'>
             {languageOptions.map((option, index) => (
-                <li     
-                key={index} 
-                onClick={() => {
-                    setSelectedLanguage(option);
-                    setIsDropdownOpen(false);
-                  }}
-                className='mb-1'>
+                <span     
+                    className='mb-1 block'
+                    key={index} 
+                    onClick={() => {
+                        setSelectedLanguage(option);
+                        setIsDropdownOpen(false);
+                    }}
+                >
                     <a href='#'
                         className='text-lg text-center font-medium transition-all duration-150 px-4 py-1 rounded-md hover:text-white hover:bg-indigo-600'>
                         {option}
                     </a>
-                </li>
+                </span>
             ))}
-        </ul>}
+        </div>}
         {/* {languageOptions.map((option, index) => (
             <option 
             key={index} 
