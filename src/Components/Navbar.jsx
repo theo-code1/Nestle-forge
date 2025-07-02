@@ -16,7 +16,7 @@ const Navbar = () => {
             <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Link04</a></li>
         </ul>
         <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className='group flex items-center gap-1 text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'>{selectedLanguage} <DropArrow className='group-hover:text-indigo-600'/></button>
-        {isDropdownOpen && <div data-disabled="true" className='absolute top-14 right-60 text-center flex-col gap-2 transition-all duration-100 px-2 pt-3 pb-1 bg-indigo-50/50 rounded-lg border border-black/20'>
+        {isDropdownOpen && <div data-disabled="true" className='absolute top-14 right-60 z-50 text-center flex-col gap-2 transition-all duration-100 px-2 pt-3 pb-1 bg-indigo-50/50 rounded-lg border border-black/20'>
             {languageOptions.map((option, index) => (
                 <span     
                     className='mb-1 block'
