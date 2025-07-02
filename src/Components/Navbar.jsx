@@ -12,7 +12,7 @@ const Navbar = () => {
         <ul className='flex gap-12 '>
             <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Services</a></li>
             <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">About</a></li>
-            <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Contact</a></li>
+            <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Lonk03</a></li>
             <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Link04</a></li>
         </ul>
         <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className='group flex items-center gap-1 text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'>{selectedLanguage} <DropArrow className='group-hover:text-indigo-600'/></button>

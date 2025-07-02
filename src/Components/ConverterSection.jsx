@@ -1,78 +1,77 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 
-const formatCategories = {
-  Image: ['PNG', 'JPEG', 'WEBP', 'BMP', 'GIF', 'ICO'],
-  Document: ['PDF', 'DOC', 'DOCX'],
-  Vector: ['SVG', 'EPS', 'AI'],
-  Video: ['MP4', 'AVI'],
-  Archive: ['ZIP', 'RAR'],
-};
+// const formatCategories = {
+//   Image: ['PNG', 'JPEG', 'WEBP', 'BMP', 'GIF', 'ICO'],
+//   Document: ['PDF', 'DOC', 'DOCX'],
+//   Vector: ['SVG', 'EPS', 'AI'],
+//   Archive: ['ZIP', 'RAR'],
+// };
 
-export default function FormatDropdown({ onSelect }) {
-  const [activeCategory, setActiveCategory] = useState('Image');
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState('');
+// export default function FormatDropdown({ onSelect }) {
+//   const [activeCategory, setActiveCategory] = useState('Image');
+//   const [open, setOpen] = useState(false);
+//   const [search, setSearch] = useState('');
 
-  const filteredFormats = formatCategories[activeCategory].filter((f) =>
-    f.toLowerCase().includes(search.toLowerCase())
-  );
+//   const filteredFormats = formatCategories[activeCategory].filter((f) =>
+//     f.toLowerCase().includes(search.toLowerCase())
+//   );
 
-  return (
-    <div className="relative">
-      <button
-        onClick={() => setOpen(!open)}
-        className="bg-black text-white px-4 py-2 rounded shadow"
-      >
-        Choose Format
-      </button>
+//   return (
+//     <div className="relative">
+//       <button
+//         onClick={() => setOpen(!open)}
+//         className="bg-black text-white px-4 py-2 rounded shadow"
+//       >
+//         Choose Format
+//       </button>
 
-      {open && (
-        <div className="absolute z-50 mt-2 bg-gray-900 text-white rounded shadow-lg w-[300px] p-4">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full p-2 mb-3 rounded bg-gray-800 text-white"
-          />
+//       {open && (
+//         <div className="absolute z-50 mt-2 bg-gray-900 text-white rounded shadow-lg w-[300px] p-4">
+//           <input
+//             type="text"
+//             placeholder="Search..."
+//             value={search}
+//             onChange={(e) => setSearch(e.target.value)}
+//             className="w-full p-2 mb-3 rounded bg-gray-800 text-white"
+//           />
 
-          <div className="flex gap-4 mb-4">
-            <div className="w-1/3 space-y-2">
-              {Object.keys(formatCategories).map((category) => (
-                <button
-                  key={category}
-                  className={`block w-full text-left px-2 py-1 rounded ${
-                    activeCategory === category
-                      ? 'bg-gray-700 text-white'
-                      : 'text-gray-400 hover:bg-gray-800'
-                  }`}
-                  onClick={() => setActiveCategory(category)}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
+//           <div className="flex gap-4 mb-4">
+//             <div className="w-1/3 space-y-2">
+//               {Object.keys(formatCategories).map((category) => (
+//                 <button
+//                   key={category}
+//                   className={`block w-full text-left px-2 py-1 rounded ${
+//                     activeCategory === category
+//                       ? 'bg-gray-700 text-white'
+//                       : 'text-gray-400 hover:bg-gray-800'
+//                   }`}
+//                   onClick={() => setActiveCategory(category)}
+//                 >
+//                   {category}
+//                 </button>
+//               ))}
+//             </div>
 
-            <div className="w-2/3 grid grid-cols-3 gap-2">
-              {filteredFormats.map((format) => (
-                <button
-                  key={format}
-                  onClick={() => {
-                    onSelect(format);
-                    setOpen(false);
-                  }}
-                  className="bg-gray-700 hover:bg-blue-600 text-white py-1 rounded text-sm"
-                >
-                  {format}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+//             <div className="w-2/3 grid grid-cols-3 gap-2">
+//               {filteredFormats.map((format) => (
+//                 <button
+//                   key={format}
+//                   onClick={() => {
+//                     onSelect(format);
+//                     setOpen(false);
+//                   }}
+//                   className="bg-gray-700 hover:bg-blue-600 text-white py-1 rounded text-sm"
+//                 >
+//                   {format}
+//                 </button>
+//               ))}
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
 
 
 

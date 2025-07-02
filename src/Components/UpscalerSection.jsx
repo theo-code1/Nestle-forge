@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Upload from "./Icons/upload.jsx";
 
 const UpscalerSection = () => {
@@ -6,29 +6,44 @@ const UpscalerSection = () => {
   const [selectedImg, setSelectedImg] = useState(null);
   const [fileName, setFileName] = useState("No file selected");
   const [showErr, setShowErr] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const handleUpscaling = () => {
-    // Handle the upscaling logic here
-    if (!selectedImg) {
+    if (selectedImg === null) {
       setShowErr("Please select an image to upscale.");
       return;
-    }else { setShowErr(''); }
+    }else { 
+      setShowErr(''); 
+      setIsLoading(true);
+      fetchUpscaleImage();
+    }
     
     // Example: Log the selected image URL
     console.log("Upscaling image:", selectedImg);
   }
+  const fetchUpscaleImage = async () => {
+    try {
+      const response = await fetch("https://api.example.com/upscale", {
+        method: "POST",
+        body: JSON.stringify({ image: selectedImg }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-  // useEffect(() => {
+      if (!response.ok) {
+        throw new Error("Failed to upscale image");
+      }
 
-  //   // Check if an image is selected
-  //   if(!selectedImg){
-  //     setShowErr( "Please select an image to upscale.")
-  //     // console.error(showErr);
-  //     return;
-  //   } else{
-  //     setShowErr('')
-  //   }
-  // }, [selectedImg]);
+      const data = await response.json();
+      console.log("Upscaled image data:", data);
+      // Handle the upscaled image data
+    } catch (error) {
+      console.error("Error upscaling image:", error);
+    }
+  };
+
 
   return (
     <section className="flex flex-col items-center gap-4 pt-16">
@@ -43,17 +58,17 @@ const UpscalerSection = () => {
       </header>
 
       <div 
-        className="drag-drop-container flex flex-col items-center justify-center gap-4 w-1/2 pt-16 pb-12 px-16 mt-12 rounded-xl border-2 border-dashed hover:border-indigo-600 mx-auto cursor-pointer"
-        onClick={() => document.getElementById('file').click()}
+        className={`drag-drop-container flex flex-col items-center justify-center gap-4 w-1/2 pt-16 pb-12 px-16 mt-12 rounded-xl border-2 border-dashed hover:border-indigo-600 mx-auto  ${isLoading ? 'cursor-not-allowed opacity-70' : 'cursor-pointer opacity-100'}`}
+        onClick={!isLoading ? () => document.getElementById('file').click() : null}
       >
         {!selectedImg && (
           <Upload />)}
 
         {selectedImg && (
-          <img src={selectedImg} alt="Selected" className="w-40 h-40 object-cover rounded-lg" />
+          <img src={selectedImg} alt="Selected" className="w-50 h-50 object-cover rounded-md" />
         )}
 
-        <div className="select-file flex gap-4 items-center mt-4">
+        <div className={`select-file flex gap-4 items-center mt-4 ${isLoading ? 'cursor-not-allowed opacity-70' : 'cursor-pointer opacity-100'}`}>
           <input 
             type="file" 
             id="file" 
@@ -78,14 +93,14 @@ const UpscalerSection = () => {
           <p className="text-sm text-gray-500 mt-2">Supported formats: JPG, PNG, WEBP, BMP, TIFF, GIF </p>
       </div>
 
-      <span className="text-red-500 text-sm font-[400] mt-2"> {showErr} </span> 
+      {selectedImg === null ?  <span className="text-red-500 text-sm font-[400] mt-2"> {showErr} </span> : '' }
 
       <button
         type="submit"
         onClick={handleUpscaling}
-        className="submit px-6 py-2.5 rounded-lg text-lg bg-indigo-600 text-white hover:brightness-90 active:brightness-80 transition-all duration-150"
+        className={`submit px-6 py-2.5 rounded-lg text-lg hover:brightness-90 active:brightness-80 transition-all duration-150 ${isLoading ?  'bg-indigo-600 text-white brightness-90 active:brightness-80' : 'bg-indigo-600 text-white '}`}
       >
-        upscale image
+        {isLoading ? 'Upscaling...' : 'Upscale Image'}
       </button>
     </section>
   );
