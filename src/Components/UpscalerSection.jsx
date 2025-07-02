@@ -5,20 +5,24 @@ const UpscalerSection = () => {
 
   const [selectedImg, setSelectedImg] = useState(null);
 
+  let Err = "";
+  const handleFileChange = () => {
+  };
+
   return (
     <section className="flex flex-col items-center gap-8 pt-16">
-      <header className="headers flex flex-col gap-2">
+      <header className="headers flex flex-col gap-4">
         <h1 className="text-4xl font-roboto font-medium text-center">
           {" "}
           Start upscaling your image
         </h1>
-        <p className="text-[16px] font-roboto font-medium text-center">
-          Upload your image and start upscaling
+        <p className="text-[16px] font-roboto font-[400]  text-center">
+          upscale, enhance, optimize, and transform. Totally free to use, no subscriptions or hidden fees.
         </p>
       </header>
 
       <div 
-        className="drag-drop-container flex flex-col items-center justify-center w-2/5 py-8 px-16 mt-16 rounded-xl border-2 border-dashed hover:border-indigo-600 mx-auto cursor-pointer"
+        className="drag-drop-container flex flex-col items-center justify-center gap-4 w-1/2 py-16 px-16 mt-12 rounded-xl border-2 border-dashed hover:border-indigo-600 mx-auto cursor-pointer"
         onClick={() => document.getElementById('file').click()}
       >
         <Upload />
@@ -36,13 +40,15 @@ const UpscalerSection = () => {
           <span className="bg-indigo-600 text-white px-4 py-2 rounded-full hover:brightness-90 active:brightness-80 transition-all duration-150">
             Choose File
           </span>
-          <span id="file-name" className="text-[16px] font-roboto text-gray-600">
+          <span id="file-name" className="text-[16px] font-roboto text-gray-800">
             No file selected
           </span>
         </div>
       </div>
+      <span className="err">{Err}</span>
       <button
         type="submit"
+        onClick={handleFileChange}
         className="submit px-6 py-3 rounded-lg text-lg bg-indigo-600 text-white hover:brightness-90 active:brightness-80 transition-all duration-150"
       >
         upscale image
