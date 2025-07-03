@@ -1,19 +1,20 @@
 import { useState } from "react";
-import Upload from "./Icons/upload.jsx";
+import Upload from "./Icons/Upload.jsx";
 
 const UpscalerSection = () => {
 
   const [selectedImg, setSelectedImg] = useState(null);
-  const [fileName, setFileName] = useState("No file selected");
+  const [fileName, setFileName] = useState("No image selected");
   const [showErr, setShowErr] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
 
   const handleUpscaling = () => {
-    if (selectedImg === null) {
-      setShowErr("Please select an image to upscale.");
+    if (selectedImg === null ) {
+      setShowErr("Please select an image to convert.");
       return;
-    }else { 
+    }
+    else { 
       setShowErr(''); 
       setIsLoading(true);
       fetchUpscaleImage();
@@ -46,7 +47,7 @@ const UpscalerSection = () => {
 
 
   return (
-    <section className="flex flex-col items-center gap-4 pt-16">
+    <section className="flex flex-col items-center gap-4 py-16 overflow-x-hidden overflow-y-auto max-h-[90dvh]">
       <header className="headers flex flex-col gap-4">
         <h1 className="text-4xl  font-medium text-center">
           {" "}
@@ -83,7 +84,7 @@ const UpscalerSection = () => {
               }}
           />
           <span className="bg-indigo-600 text-white px-4 py-2 rounded-full hover:brightness-90 active:brightness-80 transition-all duration-150">
-            Choose File
+            Uplaod Image
           </span>
           <span id="file-name" className="text-[16px]  text-gray-800">
             {fileName}
@@ -98,7 +99,7 @@ const UpscalerSection = () => {
       <button
         type="submit"
         onClick={handleUpscaling}
-        className={`submit px-6 py-2.5 rounded-lg text-lg hover:brightness-90 active:brightness-80 transition-all duration-150 ${isLoading ?  'bg-indigo-600 text-white brightness-90 active:brightness-80' : 'bg-indigo-600 text-white '}`}
+        className={`submit px-6 py-2.5 rounded-lg text-lg bg-indigo-600 text-white hover:brightness-90 active:brightness-80 transition-all duration-150 ${isLoading ?  'brightness-80 hover:brightness-80 active:brightness-80 cursor-not-allowed' : '' }`}
       >
         {isLoading ? 'Upscaling...' : 'Upscale Image'}
       </button>

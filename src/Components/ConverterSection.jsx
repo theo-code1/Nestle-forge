@@ -1,34 +1,132 @@
 import { useState } from 'react';
-import Upload from "./Icons/upload.jsx";
+import Upload from "./Icons/Upload.jsx";
 import ToArrow from "./Icons/toArrow.jsx";
+import Dropdwn from "./Icons/dropdown.jsx";
+import { convertImage } from "../utils/api";
+// import ConvertedImg from './ConvertedImg.jsx';
 
-// const formatCategories = {
-//   Image: ['PNG', 'JPEG', 'WEBP', 'BMP', 'GIF', 'ICO'],
-//   Document: ['PDF', 'DOC', 'DOCX'],
-//   Vector: ['SVG', 'EPS', 'AI'],
-//   Archive: ['ZIP', 'RAR'],
-// };
+const formatCategories = {
+  Image: ['PNG', 'JPEG', 'WEBP', 'BMP', 'GIF', 'ICO'],
+  Document: ['PDF', 'DOC', 'DOCX'],
+  Vector: ['SVG', 'EPS', 'AI'],
+};
 
-export default function FormatDropdown() {
+export default function ConverterSection() {
 
   const [selectedImg, setSelectedImg] = useState(null);
-  const [fileName, setFileName] = useState("No file selected");
+  const [selectedImgDetails, setSelectedImgDetails] = useState({
+    name: "No file selected",
+    format: "No format selected",
+    size: ''
+  })
+  const [convertToFormat, setConvertToFormat] = useState("Webp");
+  const [openMenuFormats, setOpenMenuFormats] = useState(false);
+  const [showErr, setShowErr] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [hoveredCategory, setHoveredCategory] = useState(Object.keys(formatCategories)[0]);
 
-  const handleConverting = () => {
-    console.log("Converting image:", selectedImg);
-  }
+  // const [selectedFormat, setSelectedFormat] = useState("");
+  // const [fileName, setFileName] = useState("No image selected");
+  const truncateFileName = (name, length = 20) => {
+    if (name.length <= length) return name;
+    const extension = name.split('.').pop();
+    return name.slice(0, length - extension.length - 3) + '...' + extension;
+  };
+  
 
+
+  const handleConverting = async () => {
+    // Reset any previous errors
+    setShowErr('');
+    
+    // Validate inputs
+    if (!selectedImg) {
+      setShowErr("Please select an image to convert.");
+      return;
+    }
+    
+    if (!convertToFormat) {
+      setShowErr("Please select a target format.");
+      return;
+    }
+    
+    // Set loading state
+    setIsLoading(true);
+    
+    try {
+      // Get the file from input
+      const fileInput = document.getElementById('file');
+      const file = fileInput.files[0];
+      
+      if (!file) {
+        throw new Error('No file selected');
+      }
+      
+      console.log('Starting conversion for file:', file.name, 'to format:', convertToFormat);
+      
+      // Use the API utility for conversion
+      const blob = await convertImage(file, convertToFormat);
+      
+      console.log('Received blob:', {
+        size: blob.size,
+        type: blob.type
+      });
+      
+      if (!blob || blob.size === 0) {
+        throw new Error('Received empty file from server');
+      }
+      
+      // Create a filename for the download
+      const filename = `converted.${convertToFormat.toLowerCase()}`;
+      
+      console.log('Initiating download for:', filename);
+      
+      // Create and trigger download
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      
+      // Clean up
+      setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        console.log('Download completed and cleaned up');
+      }, 100);
+      
+    } catch (error) {
+      console.error('Conversion error:', error);
+      
+      // Format error message for better user feedback
+      let errorMessage = 'Conversion failed';
+      if (error.message.includes('NetworkError')) {
+        errorMessage = 'Failed to connect to the server. Make sure the backend is running.';
+      } else if (error.message.includes('404')) {
+        errorMessage = 'Server endpoint not found. The backend might not be running correctly.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      setShowErr(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
 
 return (
-  <section className="flex flex-col items-center gap-8">
-    <div className="heading flex flex-col items-center gap-4 mt-16">
+  <section className="flex flex-col items-center gap-8 py-16 overflow-y-auto overflow-x-hidden max-h-[90dvh]">
+    <div className="heading flex flex-col items-center gap-4">
       <h1 className="text-4xl font-medium text-center">Conver your images to any Format you want</h1>
       <p className="text-[16px]  font-[400]  text-center">Easily change your images into any popular format.Fast, simple, and lossless <br /> conversion for all your needs.</p>
     </div>
 
     <div 
-        className={`drag-drop-container cursor-pointer flex flex-col items-center justify-center gap-4 w-1/2 pt-16 pb-12 px-16 mt-12 rounded-xl border-2 border-dashed hover:border-indigo-600 mx-auto `}
-        onClick={() => document.getElementById('file').click() }
+        className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-1/2 pt-16 pb-12 px-16 mt-12 rounded-xl border-2 border-dashed hover:border-indigo-600 mx-auto ${isLoading ? 'cursor-not-allowed opacity-70' : 'cursor-pointer opacity-100'}`}
+        onClick={!isLoading ? () => document.getElementById('file').click() : null }
       >
         {!selectedImg && (
           <Upload />)}
@@ -45,30 +143,102 @@ return (
             accept="image/*"
             onChange={(e) => {
               const selectedFile = e.target.files[0];
-              setFileName(selectedFile.name);
+              console.log(selectedFile);
+              const fileFormat = selectedFile.type.split('/')[1].toUpperCase();
+              setSelectedImgDetails({
+                name: selectedFile.name,
+                format: fileFormat,
+                size: (selectedFile.size / 1024).toFixed(2) + ' KB'
+              });
               setSelectedImg(URL.createObjectURL(selectedFile));
-              console.log(selectedImg);
             }}
           />
           <span className="bg-indigo-600 text-white px-4 py-2 rounded-full hover:brightness-90 active:brightness-80 transition-all duration-150">
-            Choose File
+            Uplaod Image
           </span>
           <span id="file-name" className="text-[16px]  text-gray-800">
-            {fileName}
+            {truncateFileName(selectedImgDetails.name)}
           </span>
 
 
         </div>
-        {selectedImg && (
-          <div className="select-formates flex items-center gap-4 mt-4">
-            <button type="button" className="text-lg font-medium border-indigo-700 border px-4 py-2">{`selected img Format`}</button>
+        {selectedImg && (<>
+          <div className="select-formates flex items-center gap-4 mt-4 z-30">
+            <button type="button" className="text-lg font-medium border-indigo-700 border px-4 py-2 rounded-lg">{selectedImgDetails.format}</button>
             <ToArrow />
-            <button type="button" className="text-lg font-medium border-indigo-700 border px-4 py-2">to...</button>
-          </div> )}
+            <div className="relative">
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenMenuFormats(!openMenuFormats);
+                }} 
+                type="button" 
+                className="text-lg font-medium border-indigo-700 border pl-4 pr-2 py-2 rounded-lg flex items-center hover:bg-black/5 cursor-pointer transition-all duration-100"
+              >
+                {convertToFormat || 'to...'}
+                <Dropdwn className={`transition-transform duration-200 ${openMenuFormats ? 'rotate-180' : ''}`} />
+              </button>
+            </div>
+          </div> 
+
+          {openMenuFormats && (
+            <div className="absolute mt-2 w-96 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden">
+              <div className="flex">
+                {/* Categories List */}
+                <div className="w-1/3 border-r border-gray-200 bg-gray-50">
+                  {Object.keys(formatCategories).map((category) => (
+                    <div 
+                      key={category}
+                      className={`px-4 py-3 text-sm font-medium cursor-pointer transition-colors ${
+                        hoveredCategory === category 
+                          ? 'bg-white text-indigo-700 font-semibold' 
+                          : 'text-gray-800 hover:bg-gray-100'
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setHoveredCategory(category);
+                      }}
+                    >
+                      {category}
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Formats List */}
+                <div className="w-2/3 p-2">
+                  {hoveredCategory && formatCategories[hoveredCategory]?.map((format) => (
+                    <button
+                      key={format}
+                      className={`w-full px-4 py-2.5 text-sm text-left rounded-md transition-colors ${
+                        convertToFormat === format 
+                          ? 'bg-indigo-600 text-white font-medium' 
+                          : 'text-gray-800 hover:bg-indigo-50'
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setConvertToFormat(format);
+                        setOpenMenuFormats(false);
+                      }}
+                    >
+                      {format}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+          </>
+        )}
 
       </div>
-      <button type="submit" onClick={handleConverting} className={`submit px-6 py-2.5 rounded-lg text-lg bg-indigo-600 text-white hover:brightness-90 active:brightness-80 transition-all duration-150 `}>Convert Image</button>
+      {selectedImg === null ? (<span className='text-red-500 text-sm font-[400] mt-2'>{showErr}</span>) : ''}
+      <button type="button" onClick={handleConverting} className={`submit px-6 py-2.5 rounded-lg text-lg bg-indigo-600 text-white hover:brightness-90 active:brightness-80 transition-all duration-150 ${isLoading ? 'brightness-80 hover:brightness-80 active:brightness-80 cursor-not-allowed' : ''} `}> {isLoading ? 'Coverting...' : 'Convert Image'}</button>  
+      {/* {downloadUrl && (
+        <a href={downloadUrl} download={`converted.${format}`}>Click here to download</a>
+      )} */}
+
       
+      {/* {isLoading && ( <ConvertedImg convertedImage={selectedImg} ImageName={selectedImgDetails.name.split('.')[0]+`.`+convertToFormat} ImageSize={selectedImgDetails.size}/> )} */}
   </section>
 )
 }
@@ -100,50 +270,50 @@ return (
 //       </button>
 
 //       {open && (
-//         <div className="absolute z-50 mt-2 bg-gray-900 text-white rounded shadow-lg w-[300px] p-4">
-//           <input
-//             type="text"
-//             placeholder="Search..."
-//             value={search}
-//             onChange={(e) => setSearch(e.target.value)}
-//             className="w-full p-2 mb-3 rounded bg-gray-800 text-white"
-//           />
+    //     <div className="absolute z-50 mt-2 bg-gray-900 text-white rounded shadow-lg w-[300px] p-4">
+    //       <input
+    //         type="text"
+    //         placeholder="Search..."
+    //         value={search}
+    //         onChange={(e) => setSearch(e.target.value)}
+    //         className="w-full p-2 mb-3 rounded bg-gray-800 text-white"
+    //       />
 
-//           <div className="flex gap-4 mb-4">
-//             <div className="w-1/3 space-y-2">
-//               {Object.keys(formatCategories).map((category) => (
-//                 <button
-//                   key={category}
-//                   className={`block w-full text-left px-2 py-1 rounded ${
-//                     activeCategory === category
-//                       ? 'bg-gray-700 text-white'
-//                       : 'text-gray-400 hover:bg-gray-800'
-//                   }`}
-//                   onClick={() => setActiveCategory(category)}
-//                 >
-//                   {category}
-//                 </button>
-//               ))}
-//             </div>
+    //       <div className="flex gap-4 mb-4">
+    //         <div className="w-1/3 space-y-2">
+    //           {Object.keys(formatCategories).map((category) => (
+    //             <button
+    //               key={category}
+    //               className={`block w-full text-left px-2 py-1 rounded ${
+    //                 activeCategory === category
+    //                   ? 'bg-gray-700 text-white'
+    //                   : 'text-gray-400 hover:bg-gray-800'
+    //               }`}
+    //               onClick={() => setActiveCategory(category)}
+    //             >
+    //               {category}
+    //             </button>
+    //           ))}
+    //         </div>
 
-//             <div className="w-2/3 grid grid-cols-3 gap-2">
-//               {filteredFormats.map((format) => (
-//                 <button
-//                   key={format}
-//                   onClick={() => {
-//                     onSelect(format);
-//                     setOpen(false);
-//                   }}
-//                   className="bg-gray-700 hover:bg-blue-600 text-white py-1 rounded text-sm"
-//                 >
-//                   {format}
-//                 </button>
-//               ))}
-//             </div>
-//           </div>
-//         </div>
-//       )}
-//     </div>
+    //         <div className="w-2/3 grid grid-cols-3 gap-2">
+    //           {filteredFormats.map((format) => (
+    //             <button
+    //               key={format}
+    //               onClick={() => {
+    //                 onSelect(format);
+    //                 setOpen(false);
+    //               }}
+    //               className="bg-gray-700 hover:bg-blue-600 text-white py-1 rounded text-sm"
+    //             >
+    //               {format}
+    //             </button>
+    //           ))}
+    //         </div>
+    //       </div>
+    //     </div>
+    //   )}
+    // </div>
 //   );
 // }
 

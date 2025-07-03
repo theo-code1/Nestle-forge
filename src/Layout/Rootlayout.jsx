@@ -4,12 +4,12 @@ import { Outlet } from 'react-router-dom'
 
 const Rootlayout = () => {
   return (
-    <div>
+    <section>
         <SideBar />
         <Navbar />
         
         <Outlet />
-    </div>
+    </section>
   )
 }
 
