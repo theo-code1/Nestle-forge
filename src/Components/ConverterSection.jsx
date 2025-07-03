@@ -3,7 +3,7 @@ import Upload from "./Icons/Upload.jsx";
 import ToArrow from "./Icons/toArrow.jsx";
 import Dropdwn from "./Icons/dropdown.jsx";
 import { convertImage, downloadBlob } from "../utils/api";
-// import ConvertedImg from './ConvertedImg.jsx';
+import ConvertedImg from './ConvertedImg.jsx';
 
 const formatCategories = {
   Image: ['PNG', 'JPEG', 'WEBP', 'BMP', 'GIF', 'ICO'],
@@ -24,6 +24,8 @@ export default function ConverterSection() {
   const [showErr, setShowErr] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState(Object.keys(formatCategories)[0]);
+  const [downloadUrl, setDownloadUrl] = useState(null);
+  const [isConverted, setIsConverted] = useState(false);
 
   // const [selectedFormat, setSelectedFormat] = useState("");
   // const [fileName, setFileName] = useState("No image selected");
@@ -96,7 +98,8 @@ export default function ConverterSection() {
       
       // Use the downloadBlob utility function
       downloadBlob(blob, filename);
-      
+      setDownloadUrl(URL.createObjectURL(blob));
+      setIsConverted(false);
       console.log('Download initiated');
       
     } catch (error) {
@@ -118,6 +121,7 @@ export default function ConverterSection() {
       resetState();
     } finally {
       setIsLoading(false);
+      setIsConverted(true);
     }
   };
   
@@ -148,8 +152,9 @@ return (
             accept="image/*"
             onChange={(e) => {
               const selectedFile = e.target.files[0];
-              console.log(selectedFile);
               const fileFormat = selectedFile.type.split('/')[1].toUpperCase();
+              console.log('format : ' + fileFormat);
+              console.log('size : ' + (selectedFile.size / 1024).toFixed(2) + ' KB');
               setSelectedImgDetails({
                 name: selectedFile.name,
                 format: fileFormat,
@@ -237,13 +242,16 @@ return (
 
       </div>
       {selectedImg === null ? (<span className='text-red-500 text-sm font-[400] mt-2'>{showErr}</span>) : ''}
-      <button type="button" onClick={handleConverting} className={`submit px-6 py-2.5 rounded-lg text-lg bg-indigo-600 text-white hover:brightness-90 active:brightness-80 transition-all duration-150 ${isLoading ? 'brightness-80 hover:brightness-80 active:brightness-80 cursor-not-allowed' : ''} `}> {isLoading ? 'Coverting...' : 'Convert Image'}</button>  
-      {/* {downloadUrl && (
-        <a href={downloadUrl} download={`converted.${format}`}>Click here to download</a>
-      )} */}
+      
+      {!isConverted && (
+ <button type="button" onClick={handleConverting} className={`submit px-6 py-2.5 rounded-lg text-lg bg-indigo-600 text-white hover:brightness-90 active:brightness-80 transition-all duration-150 ${isLoading ? 'brightness-80 hover:brightness-80 active:brightness-80 cursor-not-allowed' : ''} `}> {isLoading ? 'Converting...' : 'Convert Image'}</button>  
+      )}
+      {isConverted && downloadUrl && (
+        <a href={downloadUrl} download={`converted.${convertToFormat}`} className='bg-indigo-600 text-lg font-medium text-white px-6 py-2.5 rounded-lg hover:brightness-90 active:brightness-80 transition-all duration-150'>Download</a>
+      )}
 
       
-      {/* {isLoading && ( <ConvertedImg convertedImage={selectedImg} ImageName={selectedImgDetails.name.split('.')[0]+`.`+convertToFormat} ImageSize={selectedImgDetails.size}/> )} */}
+      {isConverted && ( <ConvertedImg convertedImage={selectedImg} ImageName={selectedImgDetails.name.split('.')[0]+`.`+convertToFormat} ImageSize={selectedImgDetails.size}/> )}
   </section>
 )
 }

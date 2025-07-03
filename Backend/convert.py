@@ -75,6 +75,12 @@ def convert_image():
         output_filename = f"{name}_converted.{target_format}"
         output_path = os.path.join(UPLOAD_FOLDER, output_filename)
 
+        # Only allow vector conversions for SVG, EPS, PDF
+        vector_formats = ['svg', 'eps', 'pdf']
+        if target_format not in vector_formats:
+            logger.error(f"Target format {target_format} is not supported for vector conversion.")
+            return jsonify({'error': f'Only SVG, EPS, and PDF conversions are supported by this endpoint.'}), 400
+
         # Check if Inkscape is available
         version_check = subprocess.run(
             ['inkscape', '--version'],
@@ -86,19 +92,16 @@ def convert_image():
         # Build conversion command
         command = [
             'inkscape',
-            '--export-filename=' + output_path,
-            '--export-dpi=300'
+            '--export-filename=' + output_path
         ]
 
-        # Special handling for PDFs (to skip image import prompt)
-        if input_path.lower().endswith('.pdf'):
-            command.append('--pdf-poppler')  # Optional, for better import engine
-
-        # Handle different formats
+        # Handle different vector formats
         if target_format == 'svg':
             command.extend(['--export-plain-svg', '--export-type=svg'])
-        elif target_format in ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'pdf', 'eps', 'ps']:
-            command.extend(['--export-type=' + target_format])
+        elif target_format == 'eps':
+            command.extend(['--export-type=eps'])
+        elif target_format == 'pdf':
+            command.extend(['--export-type=pdf'])
         else:
             raise ValueError(f'Unsupported target format: {target_format}')
 
