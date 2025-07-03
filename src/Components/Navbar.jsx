@@ -10,7 +10,7 @@ const Navbar = () => {
   return (
     <nav className='relative w-6/7 flex gap-16 bg-indigo-50/50 border-b border-b-black/20 justify-end items-center py-4 px-8 '>
         <ul className='flex gap-12 '>
-            <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Services</a></li>
+            <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Services</a></li>       {/* Add Nav Links here */}
             <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">About</a></li>
             <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Lonk03</a></li>
             <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Link04</a></li>

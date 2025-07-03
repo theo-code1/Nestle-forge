@@ -53,7 +53,7 @@ const UpscalerSection = () => {
           Start upscaling your image
         </h1>
         <p className="text-[16px]  font-[400]  text-center">
-          upscale, enhance, optimize, and transform. Totally free to use, no subscriptions or hidden fees.
+          Enhance image resolution with AI-powered upscaling. Get sharper, clearer images without losing quality.
         </p>
       </header>
 

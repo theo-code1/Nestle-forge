@@ -1,4 +1,6 @@
-// import { useState } from 'react';
+import { useState } from 'react';
+import Upload from "./Icons/upload.jsx";
+import ToArrow from "./Icons/toArrow.jsx";
 
 // const formatCategories = {
 //   Image: ['PNG', 'JPEG', 'WEBP', 'BMP', 'GIF', 'ICO'],
@@ -7,10 +9,82 @@
 //   Archive: ['ZIP', 'RAR'],
 // };
 
-// export default function FormatDropdown({ onSelect }) {
-//   const [activeCategory, setActiveCategory] = useState('Image');
-//   const [open, setOpen] = useState(false);
-//   const [search, setSearch] = useState('');
+export default function FormatDropdown() {
+
+  const [selectedImg, setSelectedImg] = useState(null);
+  const [fileName, setFileName] = useState("No file selected");
+
+  const handleConverting = () => {
+    console.log("Converting image:", selectedImg);
+  }
+
+
+return (
+  <section className="flex flex-col items-center gap-8">
+    <div className="heading flex flex-col items-center gap-4 mt-16">
+      <h1 className="text-4xl font-medium text-center">Conver your images to any Format you want</h1>
+      <p className="text-[16px]  font-[400]  text-center">Easily change your images into any popular format.Fast, simple, and lossless <br /> conversion for all your needs.</p>
+    </div>
+
+    <div 
+        className={`drag-drop-container cursor-pointer flex flex-col items-center justify-center gap-4 w-1/2 pt-16 pb-12 px-16 mt-12 rounded-xl border-2 border-dashed hover:border-indigo-600 mx-auto `}
+        onClick={() => document.getElementById('file').click() }
+      >
+        {!selectedImg && (
+          <Upload />)}
+
+        {selectedImg && (
+          <img src={selectedImg} alt="Selected" className="w-50 h-50 object-cover rounded-md" />
+        )}
+
+        <div className={`select-file flex gap-4 items-center mt-4 `}>
+          <input 
+            type="file" 
+            id="file" 
+            className="hidden" 
+            accept="image/*"
+            onChange={(e) => {
+              const selectedFile = e.target.files[0];
+              setFileName(selectedFile.name);
+              setSelectedImg(URL.createObjectURL(selectedFile));
+              console.log(selectedImg);
+            }}
+          />
+          <span className="bg-indigo-600 text-white px-4 py-2 rounded-full hover:brightness-90 active:brightness-80 transition-all duration-150">
+            Choose File
+          </span>
+          <span id="file-name" className="text-[16px]  text-gray-800">
+            {fileName}
+          </span>
+
+
+        </div>
+        {selectedImg && (
+          <div className="select-formates flex items-center gap-4 mt-4">
+            <button type="button" className="text-lg font-medium border-indigo-700 border px-4 py-2">{`selected img Format`}</button>
+            <ToArrow />
+            <button type="button" className="text-lg font-medium border-indigo-700 border px-4 py-2">to...</button>
+          </div> )}
+
+      </div>
+      <button type="submit" onClick={handleConverting} className={`submit px-6 py-2.5 rounded-lg text-lg bg-indigo-600 text-white hover:brightness-90 active:brightness-80 transition-all duration-150 `}>Convert Image</button>
+      
+  </section>
+)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //   const filteredFormats = formatCategories[activeCategory].filter((f) =>
 //     f.toLowerCase().includes(search.toLowerCase())
