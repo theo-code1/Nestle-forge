@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Upload from "./Icons/Upload.jsx";
 import ToArrow from "./Icons/toArrow.jsx";
 import Dropdwn from "./Icons/dropdown.jsx";
-import { convertImage } from "../utils/api";
+import { convertImage, downloadBlob } from "../utils/api";
 // import ConvertedImg from './ConvertedImg.jsx';
 
 const formatCategories = {
@@ -35,32 +35,44 @@ export default function ConverterSection() {
   
 
 
+  const resetFileInput = () => {
+    const fileInput = document.getElementById('file');
+    if (fileInput) {
+      fileInput.value = '';  // This resets the file input
+    }
+  };
+
+  const resetState = () => {
+    setSelectedImg(null);
+    setSelectedImgDetails({
+      name: "No file selected",
+      format: "No format selected",
+      size: ''
+    });
+  };
+
   const handleConverting = async () => {
-    // Reset any previous errors
+    // Reset any previous errors and states
     setShowErr('');
-    
-    // Validate inputs
-    if (!selectedImg) {
-      setShowErr("Please select an image to convert.");
-      return;
-    }
-    
-    if (!convertToFormat) {
-      setShowErr("Please select a target format.");
-      return;
-    }
-    
-    // Set loading state
     setIsLoading(true);
     
     try {
-      // Get the file from input
-      const fileInput = document.getElementById('file');
-      const file = fileInput.files[0];
+      // Validate inputs
+      if (!selectedImg) {
+        throw new Error("Please select an image to convert.");
+      }
       
-      if (!file) {
+      if (!convertToFormat) {
+        throw new Error("Please select a target format.");
+      }
+      
+      // Get a fresh reference to the file
+      const fileInput = document.getElementById('file');
+      if (!fileInput?.files?.length) {
         throw new Error('No file selected');
       }
+      
+      const file = fileInput.files[0];
       
       console.log('Starting conversion for file:', file.name, 'to format:', convertToFormat);
       
@@ -77,40 +89,33 @@ export default function ConverterSection() {
       }
       
       // Create a filename for the download
-      const filename = `converted.${convertToFormat.toLowerCase()}`;
+      const originalName = file.name.split('.').slice(0, -1).join('.');
+      const filename = `${originalName}_converted.${convertToFormat.toLowerCase()}`;
       
       console.log('Initiating download for:', filename);
       
-      // Create and trigger download
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
+      // Use the downloadBlob utility function
+      downloadBlob(blob, filename);
       
-      // Clean up
-      setTimeout(() => {
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-        console.log('Download completed and cleaned up');
-      }, 100);
+      console.log('Download initiated');
       
     } catch (error) {
       console.error('Conversion error:', error);
+      let errorMessage = 'An error occurred during conversion';
       
-      // Format error message for better user feedback
-      let errorMessage = 'Conversion failed';
-      if (error.message.includes('NetworkError')) {
-        errorMessage = 'Failed to connect to the server. Make sure the backend is running.';
-      } else if (error.message.includes('404')) {
-        errorMessage = 'Server endpoint not found. The backend might not be running correctly.';
-      } else if (error.message) {
-        errorMessage = error.message;
+      if (error.message) {
+        if (error.message.includes('NetworkError')) {
+          errorMessage = 'Failed to connect to the server. Please try again.';
+        } else if (error.message.includes('404')) {
+          errorMessage = 'Server endpoint not found. Please try again later.';
+        } else {
+          errorMessage = error.message;
+        }
       }
       
       setShowErr(errorMessage);
+      resetFileInput();
+      resetState();
     } finally {
       setIsLoading(false);
     }

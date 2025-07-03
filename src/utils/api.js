@@ -2,7 +2,7 @@
  * Handles API calls to the backend server
  */
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'http://localhost:5000';  // Match the port you set above
 
 /**
  * Convert an image to a different format
@@ -20,14 +20,40 @@ export const convertImage = async (file, targetFormat) => {
 
   const formData = new FormData();
   formData.append('file', file);
-  formData.append('format', targetFormat);
+  formData.append('format', targetFormat.toLowerCase()); // Ensure format is lowercase
 
   try {
     console.log('Sending request to backend...');
+    
+    // Log FormData contents (for debugging)
+    for (let pair of formData.entries()) {
+      console.log('FormData:', pair[0], pair[1]);
+    }
+    
+    console.log('Request details:', {
+      url: `${API_BASE_URL}/convert`,
+      method: 'POST',
+      file: {
+        name: file.name,
+        type: file.type,
+        size: file.size
+      },
+      targetFormat: targetFormat.toLowerCase(),
+      headers: {
+        'Accept': 'application/octet-stream',
+      }
+    });
+    
     const response = await fetch(`${API_BASE_URL}/convert`, {
       method: 'POST',
       body: formData,
       // Don't set Content-Type header, let the browser set it with the correct boundary
+    });
+    
+    console.log('Response received:', {
+      status: response.status,
+      statusText: response.statusText,
+      headers: Object.fromEntries([...response.headers.entries()])
     });
 
     console.log('Response status:', response.status, response.statusText);
@@ -42,14 +68,19 @@ export const convertImage = async (file, targetFormat) => {
     if (!response.ok) {
       let errorMessage = `Server error: ${response.status} ${response.statusText}`;
       try {
-        const errorData = await response.json();
-        console.error('Error response JSON:', errorData);
-        errorMessage = errorData.error || errorData.details || errorMessage;
-      } catch {
-        // If we can't parse as JSON, try to get the raw text
-        const text = await response.text().catch(() => 'No error details available');
-        console.error('Error response text:', text);
-        errorMessage = text || errorMessage;
+        // Try to get error details from response
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const errorData = await response.json();
+          console.error('Error response JSON:', errorData);
+          errorMessage = errorData.error || errorData.details || errorMessage;
+        } else {
+          const text = await response.text();
+          console.error('Error response text:', text);
+          errorMessage = text || errorMessage;
+        }
+      } catch (e) {
+        console.error('Error parsing error response:', e);
       }
       throw new Error(errorMessage);
     }
