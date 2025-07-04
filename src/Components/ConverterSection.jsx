@@ -26,30 +26,13 @@ export default function ConverterSection() {
   const [hoveredCategory, setHoveredCategory] = useState(
     Object.keys(formatCategories)[0]
   );
-  const [isConverted, setIsConverted] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [droppedFiles, setDroppedfiles] = useState();
+  const [droppedFiles] = useState();
 
   const truncateFileName = (name, length = 20) => {
     if (name.length <= length) return name;
     const extension = name.split(".").pop();
     return name.slice(0, length - extension.length - 3) + "..." + extension;
-  };
-
-  const resetFileInput = () => {
-    const fileInput = document.getElementById("file");
-    if (fileInput) {
-      fileInput.value = ""; // This resets the file input
-    }
-  };
-
-  const resetState = () => {
-    setSelectedImg(null);
-    setSelectedImgDetails({
-      name: "No file selected",
-      format: "No format selected",
-      size: "",
-    });
   };
 
   const handleDelete = (url) => {
@@ -178,9 +161,6 @@ export default function ConverterSection() {
         },
       ]);
       console.log("Download initiated");
-      setIsConverted(true);
-      // resetFileInput();
-      // resetState();
     } catch (error) {
       console.error("Conversion error:", error);
       let errorMessage = "An error occurred during conversion";
@@ -198,8 +178,6 @@ export default function ConverterSection() {
       setShowErr(errorMessage);
     } finally {
       setIsLoading(false);
-      // resetFileInput();
-      // resetState();
     }
   };
 
@@ -348,7 +326,6 @@ export default function ConverterSection() {
         <span className="text-red-500 text-sm font-[400] mt-2">{showErr}</span>
       )}
 
-      {/* {!isConverted  && ( */}
       <button
         type="button"
         onClick={handleConverting}
@@ -361,7 +338,6 @@ export default function ConverterSection() {
         {" "}
         {isLoading ? "Converting..." : "Convert Image"}
       </button>
-      {/* )} */}
 
       {uploadedFiles.length > 0 && (
         <div className="w-full flex flex-col max-w-4xl gap-6 mt-10">
@@ -385,9 +361,3 @@ export default function ConverterSection() {
     </section>
   );
 }
-// convertedImage={file.url}
-// ImageName={file.name}
-// ImageSize={file.size}
-// imgHref={file.url}
-// DownloadImg={file.name}
-// OnClick={() => handleDelete(file.url)}
