@@ -44,8 +44,17 @@ def convert_image():
         input_image = Image.open(file.stream)
         
         # If image is in RGBA mode and target format is JPEG, convert to RGB
-        if input_image.mode == 'RGBA' and target_format.lower() == 'jpg':
-            input_image = input_image.convert('RGB')
+        if target_format.lower() in ['jpg', 'jpeg']:
+            if input_image.mode in ('RGBA', 'LA'):
+                # Create a white background
+                background = Image.new('RGB', input_image.size, (255, 255, 255))
+                if input_image.mode == 'RGBA':
+                    background.paste(input_image, mask=input_image.split()[3])  # 3 is alpha
+                else:  # 'LA'
+                    background.paste(input_image, mask=input_image.split()[1])  # 1 is alpha
+                input_image = background
+            elif input_image.mode != 'RGB':
+                input_image = input_image.convert('RGB')
         
         # Create output filename
         output_filename = generate_unique_filename(file.filename, target_format)

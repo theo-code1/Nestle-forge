@@ -5,6 +5,8 @@ from datetime import datetime
 from flask import Flask, request, jsonify, send_file, make_response
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
+import tempfile
+from PIL import Image
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -169,6 +171,45 @@ def convert_image():
             'error': 'An unexpected error occurred',
             'details': str(e)
         }), 500
+
+@app.route('/vectorize', methods=['POST'])
+def vectorize_image():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file provided'}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No file selected'}), 400
+
+    try:
+        # Save uploaded file to a temp location
+        with tempfile.TemporaryDirectory() as tmpdir:
+            input_path = os.path.join(tmpdir, 'input.png')
+            pbm_path = os.path.join(tmpdir, 'input.pbm')
+            svg_path = os.path.join(tmpdir, 'output.svg')
+
+            # Save the uploaded image
+            file.save(input_path)
+
+            # Convert to black-and-white PBM (required by potrace)
+            img = Image.open(input_path).convert('L')  # grayscale
+            img = img.point(lambda x: 0 if x < 128 else 255, '1')  # threshold to B&W
+            img.save(pbm_path)
+
+            # Run potrace to convert PBM to SVG
+            result = subprocess.run(
+                ['potrace', pbm_path, '-s', '-o', svg_path],
+                capture_output=True,
+                text=True
+            )
+            if result.returncode != 0:
+                return jsonify({'error': 'Potrace failed', 'details': result.stderr}), 500
+
+            # Return the SVG file
+            return send_file(svg_path, mimetype='image/svg+xml', as_attachment=True, download_name='vectorized.svg')
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
