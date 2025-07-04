@@ -9,7 +9,10 @@ app = Flask(__name__)
 CORS(app)
 
 UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'tiff'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'tiff', 'ico', 'jfif'}
+# ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp', 'gif', 'svg', 'pdf', 'eps', 'ai'}
+RASTER_OUTPUT_FORMATS = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'tiff'}
+VECTOR_FORMATS = {'svg', 'eps', 'pdf', 'ai'}
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
@@ -38,6 +41,9 @@ def convert_image():
     
     if not allowed_file(file.filename):
         return jsonify({'error': 'File type not allowed'}), 400
+    
+    if target_format.lower() in VECTOR_FORMATS:
+        return jsonify({'error': f'Output format {target_format} is not supported by this endpoint. Please use the /vectorize endpoint for vector formats.'}), 400
     
     try:
         # Read the input image

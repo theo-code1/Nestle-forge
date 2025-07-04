@@ -137,3 +137,36 @@ export const downloadBlob = (blob, filename) => {
     URL.revokeObjectURL(url);
   }, 0);
 };
+
+/**
+ * Vectorize an image (bitmap to SVG paths) using the /vectorize endpoint
+ * @param {File} file - The image file to vectorize
+ * @returns {Promise<Blob>} - The resulting SVG as a Blob
+ */
+export const vectorizeImage = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch('http://localhost:5000/vectorize', {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    let errorMessage = `Server error: ${response.status} ${response.statusText}`;
+    try {
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const errorData = await response.json();
+        errorMessage = errorData.error || errorData.details || errorMessage;
+      } else {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+    } catch {
+
+      throw new Error(errorMessage);
+    }
+  }
+  return await response.blob();
+};

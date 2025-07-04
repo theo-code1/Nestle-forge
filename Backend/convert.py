@@ -16,15 +16,19 @@ app = Flask(__name__)
 # Configure CORS to allow requests from your frontend
 CORS(app, resources={
     r"/convert": {
-        "origins": ["http://localhost:5173"],  # Update with your frontend URL
+        "origins": ["http://localhost:5173"],
+        "methods": ["POST", "OPTIONS"],
+        "allow_headers": ["Content-Type"]
+    },
+    r"/vectorize": {
+        "origins": ["http://localhost:5173"],
         "methods": ["POST", "OPTIONS"],
         "allow_headers": ["Content-Type"]
     }
 })
 
-INKSCAPE_BIN = "C:\Program Files\Inkscape\bin\inkscape.com"
+INKSCAPE_BIN = "C:\\Program Files\\Inkscape\\bin\\inkscape.com"
 
-# command = [INKSCAPE_BIN, input_path, '--export-filename=' + output_path]
 
 
 UPLOAD_FOLDER = './uploads'

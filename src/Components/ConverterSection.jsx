@@ -2,7 +2,7 @@ import { useState } from "react";
 import Upload from "./Icons/Upload.jsx";
 import ToArrow from "./Icons/toArrow.jsx";
 import Dropdown from "./Icons/dropdown.jsx";
-import { convertImage } from "../utils/api";
+import { convertImage, vectorizeImage } from "../utils/api";
 import ConvertedImg from "./ConvertedImg.jsx";
 import FaTrash from "./Icons/Delete.jsx";
 
@@ -144,8 +144,12 @@ export default function ConverterSection() {
         convertToFormat
       );
 
-      // Use the API utility for conversion
-      const blob = await convertImage(file, convertToFormat);
+      let blob;
+      if (convertToFormat.toLowerCase() === "svg") {
+        blob = await vectorizeImage(file);
+      } else {
+        blob = await convertImage(file, convertToFormat);
+      }
 
       console.log("Received blob:", {
         size: blob.size,
@@ -213,11 +217,12 @@ export default function ConverterSection() {
 
       <div className="files-management relative w-full flex items-start">
         <div
-          className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-1/2 pt-16 pb-12 px-16 mt-12 rounded-xl border-2 border-dashed hover:border-indigo-600 mx-auto ${
+          className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-1/2 pt-16 pb-12 px-16 mt-12 rounded-xl border-2 border-dashed mx-auto ${
             isLoading
               ? "cursor-not-allowed opacity-70"
               : "cursor-pointer opacity-100"
-          }`}
+          }
+          ${isLoading ? 'hover:border-black' : 'hover:border-indigo-600'}`}
           onClick={
             !isLoading ? () => document.getElementById("file").click() : null
           }

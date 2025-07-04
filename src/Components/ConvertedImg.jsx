@@ -11,7 +11,7 @@ const ConvertedImg = ({ convertedImage, ImageName, ImageSize, DownloadImg, imgHr
         </div>
       </div>
       <div className='btns flex items-center justify-center gap-2'>
-        <button onclick={OnClick} title='Delete' className='text-xl bg-white text-red-500 hover:bg-red-500 hover:text-white transition-all duration-100 cursor-pointer border-2 border-red-500 rounded-lg px-6 py-4 ' download={DownloadImg}> <FaTrash /> </button>
+        <button onClick={OnClick} title='Delete' className='text-xl bg-white text-red-500 hover:bg-red-500 hover:text-white transition-all duration-100 cursor-pointer border-2 border-red-500 rounded-lg px-6 py-4 ' download={DownloadImg}> <FaTrash /> </button>
           <a href={imgHref} className='text-lg text-indigo-600 bg-white hover:bg-indigo-600 hover:text-white transition-all duration-100 cursor-pointer border-2 border-indigo-600 rounded-lg px-6 py-3' download={DownloadImg}> Download </a>
       </div>
     </nav>
