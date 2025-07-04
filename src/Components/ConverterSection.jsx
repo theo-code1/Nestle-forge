@@ -4,7 +4,7 @@ import ToArrow from "./Icons/toArrow.jsx";
 import Dropdown from "./Icons/dropdown.jsx";
 import { convertImage, vectorizeImage } from "../utils/api";
 import ConvertedImg from "./ConvertedImg.jsx";
-import FaTrash from "./Icons/Delete.jsx";
+// import FaTrash from "./Icons/Delete.jsx";
 
 const formatCategories = {
   Image: ["PNG", "JPEG", "WEBP", "BMP", "GIF", "ICO"],
