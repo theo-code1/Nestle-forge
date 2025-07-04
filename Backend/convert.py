@@ -20,7 +20,7 @@ CORS(app, resources={
     }
 })
 
-INKSCAPE_BIN = "C:\\Program Files\\Inkscape\\bin\\inkscape.com"
+INKSCAPE_BIN = "C:\Program Files\Inkscape\bin\inkscape.com"
 
 # command = [INKSCAPE_BIN, input_path, '--export-filename=' + output_path]
 

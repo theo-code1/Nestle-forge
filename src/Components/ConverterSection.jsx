@@ -20,11 +20,6 @@ export default function ConverterSection() {
     format: "No format selected",
     size: ''
   })
-  const [convertedImgDetails, setConvertedImgDetails] = useState({
-    name: '',
-    format: '',
-    size: '',
-  })
   const [convertToFormat, setConvertToFormat] = useState("");
   const [openMenuFormats, setOpenMenuFormats] = useState(false);
   const [showErr, setShowErr] = useState('');
@@ -173,8 +168,8 @@ export default function ConverterSection() {
       ]);
       console.log('Download initiated');
       setIsConverted(true);
-      resetFileInput();
-      resetState();
+      // resetFileInput();
+      // resetState();
     } catch (error) {
       console.error('Conversion error:', error);
       let errorMessage = 'An error occurred during conversion';
@@ -192,8 +187,8 @@ export default function ConverterSection() {
       setShowErr(errorMessage);
     } finally {
       setIsLoading(false);
-      resetFileInput();
-      resetState();
+      // resetFileInput();
+      // resetState();
     }
   };
   
@@ -314,21 +309,21 @@ return (
       {/* {!isConverted  && ( */}
         <button type="button" onClick={handleConverting} className={`submit px-6 py-2.5 rounded-lg text-lg bg-indigo-600 text-white hover:brightness-90 active:brightness-80 transition-all duration-150 ${isLoading ? 'brightness-80 hover:brightness-80 active:brightness-80 cursor-not-allowed' : ''} `}> {isLoading ? 'Converting...' : 'Convert Image'}</button>  
       {/* )} */}
-      {isConverted && showErr === '' && (
-        <div className="w-full flex flex-col max-w-4xl gap-6 mt-10">
-          {isConverted && (
-            <div key={file.url} className="relative group bg-white rounded-lg shadow-md flex flex-col items-center ">
 
+      {uploadedFiles.length > 0 && (
+        <div className="w-full flex flex-col max-w-4xl gap-6 mt-10">
+          {uploadedFiles.map((file) => (
+            <div key={file.url} className="relative group bg-white rounded-lg shadow-md flex flex-col items-center ">
               <ConvertedImg 
                 convertedImage={selectedImg} 
-                ImageName={selectedImgDetails.name.split('.') + convertToFormat} 
-                ImageSize={} 
+                ImageName={file.name} 
+                ImageSize={file.size} 
                 imgHref={file.url} 
                 DownloadImg={file.name}
                 OnClick={() => handleDelete(file.url)}
-                />
+              />
             </div>
-          )}
+          ))}
         </div>
       )}
   </section>
