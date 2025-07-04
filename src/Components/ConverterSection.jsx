@@ -20,6 +20,11 @@ export default function ConverterSection() {
     format: "No format selected",
     size: ''
   })
+  const [convertedImgDetails, setConvertedImgDetails] = useState({
+    name: '',
+    format: '',
+    size: '',
+  })
   const [convertToFormat, setConvertToFormat] = useState("");
   const [openMenuFormats, setOpenMenuFormats] = useState(false);
   const [showErr, setShowErr] = useState('');
@@ -167,7 +172,9 @@ export default function ConverterSection() {
         }
       ]);
       console.log('Download initiated');
-      
+      setIsConverted(true);
+      resetFileInput();
+      resetState();
     } catch (error) {
       console.error('Conversion error:', error);
       let errorMessage = 'An error occurred during conversion';
@@ -183,11 +190,10 @@ export default function ConverterSection() {
       }
       
       setShowErr(errorMessage);
-      resetFileInput();
-      resetState();
     } finally {
       setIsLoading(false);
-      setIsConverted(true);
+      resetFileInput();
+      resetState();
     }
   };
   
@@ -224,7 +230,7 @@ return (
             }}
           />
           <span className="bg-indigo-600 text-white px-4 py-2 rounded-full hover:brightness-90 active:brightness-80 transition-all duration-150">
-            Uplaod Image
+            Upload Image
           </span>
           <span id="file-name" className="text-[16px]  text-gray-800">
             {truncateFileName(selectedImgDetails.name)}
@@ -301,28 +307,36 @@ return (
         )}
 
       </div>
-      {selectedImg === null || selectedImgDetails.format === convertToFormat ? (<span className='text-red-500 text-sm font-[400] mt-2'>{showErr}</span>) : ''}
+      {showErr && (
+        <span className='text-red-500 text-sm font-[400] mt-2'>{showErr}</span>
+      )}
       
       {/* {!isConverted  && ( */}
         <button type="button" onClick={handleConverting} className={`submit px-6 py-2.5 rounded-lg text-lg bg-indigo-600 text-white hover:brightness-90 active:brightness-80 transition-all duration-150 ${isLoading ? 'brightness-80 hover:brightness-80 active:brightness-80 cursor-not-allowed' : ''} `}> {isLoading ? 'Converting...' : 'Convert Image'}</button>  
       {/* )} */}
       {isConverted && showErr === '' && (
         <div className="w-full flex flex-col max-w-4xl gap-6 mt-10">
-          {uploadedFiles.map((file) => (
+          {isConverted && (
             <div key={file.url} className="relative group bg-white rounded-lg shadow-md flex flex-col items-center ">
 
               <ConvertedImg 
-                convertedImage={file.url} 
-                ImageName={file.name} 
-                ImageSize={file.size} 
+                convertedImage={selectedImg} 
+                ImageName={selectedImgDetails.name.split('.') + convertToFormat} 
+                ImageSize={} 
                 imgHref={file.url} 
                 DownloadImg={file.name}
                 OnClick={() => handleDelete(file.url)}
-              />
+                />
             </div>
-          ))}
+          )}
         </div>
       )}
   </section>
 )
 }
+// convertedImage={file.url} 
+// ImageName={file.name} 
+// ImageSize={file.size} 
+// imgHref={file.url} 
+// DownloadImg={file.name}
+// OnClick={() => handleDelete(file.url)}
