@@ -2,7 +2,25 @@
  * Handles API calls to the backend server
  */
 
-const API_BASE_URL = 'http://localhost:5000';  // Match the port you set above
+// Vector formats use convert.py (port 5000), raster formats use convert2.py (port 5001)
+const VECTOR_API_URL = 'http://localhost:5000';
+const RASTER_API_URL = 'http://localhost:5001';
+
+// Define which formats go to which backend
+const VECTOR_FORMATS = ['svg', 'eps', 'pdf'];
+const RASTER_FORMATS = ['png', 'jpeg', 'jpg', 'webp', 'bmp', 'gif', 'ico'];
+
+const getApiUrl = (targetFormat) => {
+  const format = targetFormat.toLowerCase();
+  if (VECTOR_FORMATS.includes(format)) {
+    return VECTOR_API_URL;
+  } else if (RASTER_FORMATS.includes(format)) {
+    return RASTER_API_URL;
+  } else {
+    // Default to raster API for unknown formats
+    return RASTER_API_URL;
+  }
+};
 
 /**
  * Convert an image to a different format
@@ -30,8 +48,9 @@ export const convertImage = async (file, targetFormat) => {
       console.log('FormData:', pair[0], pair[1]);
     }
     
+    const apiUrl = getApiUrl(targetFormat);
     console.log('Request details:', {
-      url: `${API_BASE_URL}/convert`,
+      url: `${apiUrl}/convert`,
       method: 'POST',
       file: {
         name: file.name,
@@ -44,7 +63,7 @@ export const convertImage = async (file, targetFormat) => {
       }
     });
     
-    const response = await fetch(`${API_BASE_URL}/convert`, {
+    const response = await fetch(`${apiUrl}/convert`, {
       method: 'POST',
       body: formData,
       // Don't set Content-Type header, let the browser set it with the correct boundary
