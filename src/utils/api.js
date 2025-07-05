@@ -12,7 +12,7 @@ const getApiUrl = () => {
  * Convert an image to a different format
  * @param {File} file - The image file to convert
  * @param {string} targetFormat - The target format (e.g., 'png', 'jpg', 'webp')
- * @returns {Promise<Blob>} - The converted file as a Blob
+ * @returns {Promise<Object>} - The converted file info with URL and metadata
  */
 export const convertImage = async (file, targetFormat) => {
   console.log('Starting conversion:', {
@@ -45,7 +45,7 @@ export const convertImage = async (file, targetFormat) => {
       },
       targetFormat: targetFormat.toLowerCase(),
       headers: {
-        'Accept': 'application/octet-stream',
+        'Accept': 'application/json',
       }
     });
     
@@ -90,9 +90,29 @@ export const convertImage = async (file, targetFormat) => {
       throw new Error(errorMessage);
     }
 
-    console.log('Conversion successful, getting blob...');
-    // Return the file as a Blob
-    return await response.blob();
+    console.log('Conversion successful, parsing response...');
+    
+    // Check if response is JSON (Supabase) or blob (fallback)
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      // Supabase response - return JSON with URL
+      const result = await response.json();
+      console.log('Supabase response:', result);
+      return result;
+    } else {
+      // Fallback response - return blob
+      const blob = await response.blob();
+      console.log('Fallback blob response:', {
+        size: blob.size,
+        type: blob.type,
+      });
+      return {
+        success: true,
+        url: URL.createObjectURL(blob),
+        filename: `${file.name.split('.')[0]}_converted.${targetFormat.toLowerCase()}`,
+        size: blob.size
+      };
+    }
   } catch (error) {
     console.error('Error converting image:', error);
     throw error;

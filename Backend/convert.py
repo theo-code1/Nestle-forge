@@ -4,6 +4,7 @@ import os
 from flask_cors import CORS
 from datetime import datetime
 import io
+from supabase_config import get_supabase_storage
 
 app = Flask(__name__)
 CORS(app)
@@ -58,17 +59,41 @@ def convert_image():
         
         # Create output filename
         output_filename = generate_unique_filename(file.filename, target_format)
-        output_path = os.path.join(UPLOAD_FOLDER, output_filename)
         
-        # Save the converted image
+        # Save the converted image to a bytes buffer
         save_format = 'JPEG' if target_format.lower() in ['jpg', 'jpeg'] else target_format.upper()
-        input_image.save(output_path, format=save_format)
+        img_buffer = io.BytesIO()
+        input_image.save(img_buffer, format=save_format)
+        img_buffer.seek(0)
         
-        # Return the converted image
-        return send_file(output_path, 
-                        mimetype=f'image/{target_format.lower()}',
-                        as_attachment=True,
-                        download_name=output_filename)
+        # Upload to Supabase storage
+        try:
+            supabase_storage = get_supabase_storage()
+            content_type = f'image/{target_format.lower()}'
+            public_url = supabase_storage.upload_file(
+                img_buffer.getvalue(),
+                output_filename,
+                content_type
+            )
+            
+            # Return the public URL instead of the file
+            return jsonify({
+                'success': True,
+                'url': public_url,
+                'filename': output_filename,
+                'size': len(img_buffer.getvalue())
+            })
+            
+        except Exception as e:
+            print(f"Supabase upload error: {e}")
+            # Fallback to local storage if Supabase fails
+            output_path = os.path.join(UPLOAD_FOLDER, output_filename)
+            input_image.save(output_path, format=save_format)
+            
+            return send_file(output_path, 
+                            mimetype=f'image/{target_format.lower()}',
+                            as_attachment=True,
+                            download_name=output_filename)
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500

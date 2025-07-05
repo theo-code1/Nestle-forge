@@ -168,33 +168,29 @@ export default function ConverterSection() {
         imageToConvert.convertToFormat
       );
 
-      const blob = await convertImage(imageToConvert.file, imageToConvert.convertToFormat);
+      const result = await convertImage(imageToConvert.file, imageToConvert.convertToFormat);
 
-      console.log("Received blob:", {
-        size: blob.size,
-        type: blob.type,
-      });
+      console.log("Received result:", result);
 
-      if (!blob || blob.size === 0) {
-        throw new Error("Received empty file from server");
+      if (!result || !result.success) {
+        throw new Error("Received invalid response from server");
       }
 
       // Create a filename for the download
       const originalName = imageToConvert.details.name.split(".").slice(0, -1).join(".");
-      const filename = `${originalName}_converted.${imageToConvert.convertToFormat.toLowerCase()}`;
+      const filename = result.filename || `${originalName}_converted.${imageToConvert.convertToFormat.toLowerCase()}`;
 
       console.log("Initiating download for:", filename);
 
       // Store the converted file URL in the image object
-      const convertedUrl = URL.createObjectURL(blob);
       setAllUploadedImages(prev => 
         prev.map(img => 
           img.id === imageId 
             ? { 
                 ...img, 
-                convertedUrl: convertedUrl,
+                convertedUrl: result.url,
                 convertedName: filename,
-                convertedSize: (blob.size / 1024).toFixed(2) + " KB",
+                convertedSize: (result.size / 1024).toFixed(2) + " KB",
                 isConverted: true
               }
             : img
