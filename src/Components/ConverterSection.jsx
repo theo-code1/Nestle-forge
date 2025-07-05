@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Upload from "./Icons/Upload.jsx";
 import ToArrow from "./Icons/toArrow.jsx";
 import Dropdown from "./Icons/dropdown.jsx";
@@ -8,8 +8,8 @@ import ConvertedImg from "./ConvertedImg.jsx";
 
 const formatCategories = {
   Image: ["PNG", "JPEG", "WEBP", "BMP", "GIF", "ICO"],
-  Document: ["PDF", "DOC", "DOCX"],
-  Vector: ["SVG", "EPS", "AI"],
+  Document: ["PDF"],
+  Vector: ["SVG", "EPS"],
 };
 
 export default function ConverterSection() {
@@ -27,7 +27,16 @@ export default function ConverterSection() {
     Object.keys(formatCategories)[0]
   );
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [droppedFiles] = useState();
+  const [droppedFiles, setDroppedFiles] = useState([]);
+
+  // Cleanup object URLs when component unmounts
+  useEffect(() => {
+    return () => {
+      droppedFiles.forEach(file => {
+        URL.revokeObjectURL(file.url);
+      });
+    };
+  }, [droppedFiles]);
 
   const truncateFileName = (name, length = 20) => {
     if (name.length <= length) return name;
@@ -40,6 +49,21 @@ export default function ConverterSection() {
       const filtered = prev.filter((file) => file.url !== url);
       // Clean up object URL
       const removed = prev.find((file) => file.url === url);
+      if (removed) URL.revokeObjectURL(removed.url);
+      return filtered;
+    });
+  };
+
+  const handleSelectDroppedFile = (droppedFile) => {
+    handleFileSelect(droppedFile.file);
+    // Don't clear droppedFiles - let user manage them manually
+  };
+
+  const handleRemoveDroppedFile = (id) => {
+    setDroppedFiles((prev) => {
+      const filtered = prev.filter((file) => file.id !== id);
+      // Clean up object URL
+      const removed = prev.find((file) => file.id === id);
       if (removed) URL.revokeObjectURL(removed.url);
       return filtered;
     });
@@ -78,13 +102,29 @@ export default function ConverterSection() {
     if (isLoading) return;
 
     const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
-      const file = files[0];
-      if (file.type.startsWith("image/")) {
-        handleFileSelect(file);
-      } else {
-        setShowErr("Please select a valid image file.");
-      }
+    const imageFiles = files.filter(file => file.type.startsWith("image/"));
+    
+    if (imageFiles.length === 0) {
+      setShowErr("Please select valid image files.");
+      return;
+    }
+
+    if (imageFiles.length === 1) {
+      // Single file - use existing behavior
+      handleFileSelect(imageFiles[0]);
+      // Don't clear droppedFiles here - let the user manage them manually
+    } else {
+      // Multiple files - store them and show in dropped-files section
+      const fileObjects = imageFiles.map(file => ({
+        file,
+        id: Math.random().toString(36).substr(2, 9),
+        url: URL.createObjectURL(file),
+        name: file.name,
+        size: (file.size / 1024).toFixed(2) + " KB",
+        format: file.type.split("/")[1].toUpperCase()
+      }));
+      setDroppedFiles(fileObjects);
+      setShowErr("");
     }
   };
 
@@ -158,6 +198,7 @@ export default function ConverterSection() {
           name: filename,
           size: (blob.size / 1024).toFixed(2) + " KB",
           format: convertToFormat.toUpperCase(),
+          originalImage: selectedImg, // Store the original image URL
         },
       ]);
       console.log("Download initiated");
@@ -223,9 +264,26 @@ export default function ConverterSection() {
               id="file"
               className="hidden"
               accept="image/*"
+              multiple
               onChange={(e) => {
-                const selectedFile = e.target.files[0];
-                handleFileSelect(selectedFile);
+                const files = Array.from(e.target.files);
+                if (files.length === 1) {
+                  handleFileSelect(files[0]);
+                } else if (files.length > 1) {
+                  const imageFiles = files.filter(file => file.type.startsWith("image/"));
+                  if (imageFiles.length > 0) {
+                    const fileObjects = imageFiles.map(file => ({
+                      file,
+                      id: Math.random().toString(36).substr(2, 9),
+                      url: URL.createObjectURL(file),
+                      name: file.name,
+                      size: (file.size / 1024).toFixed(2) + " KB",
+                      format: file.type.split("/")[1].toUpperCase()
+                    }));
+                    setDroppedFiles(fileObjects);
+                    setShowErr("");
+                  }
+                }
               }}
             />
             <span className="bg-indigo-600 text-white px-4 py-2 rounded-full hover:brightness-90 active:brightness-80 transition-all duration-150">
@@ -315,9 +373,43 @@ export default function ConverterSection() {
           )}
         </div>
 
-        {droppedFiles > 1 && (
-          <div className="dropped-files absolute right-1 top-24 border max-w-2/9 w-fit h-fit px-4 py-2 flex gap-2 flex-wrap">
-            {droppedFiles}
+        {droppedFiles.length > 0 && (
+          <div className="dropped-files absolute right-1 top-24 border max-w-2/9 w-fit h-fit px-4 py-2 flex gap-2 flex-wrap bg-white rounded-lg shadow-lg">
+            <div className="w-full mb-2 flex justify-between items-center">
+              <div>
+                <h3 className="text-sm font-medium text-gray-700 mb-2">Dropped Images ({droppedFiles.length})</h3>
+                <p className="text-xs text-gray-500">Click on an image to select it for conversion</p>
+              </div>
+              <button
+                onClick={() => {
+                  droppedFiles.forEach(file => URL.revokeObjectURL(file.url));
+                  setDroppedFiles([]);
+                }}
+                className="text-xs text-red-500 hover:text-red-700 font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors"
+              >
+                Clear All
+              </button>
+            </div>
+            {droppedFiles.map((droppedFile) => (
+              <div
+                key={droppedFile.id}
+                className="relative group cursor-pointer hover:scale-105 transition-transform duration-200"
+                onClick={() => handleSelectDroppedFile(droppedFile)}
+              >
+                <img
+                  src={droppedFile.url}
+                  alt={droppedFile.name}
+                  className="w-16 h-16 object-cover rounded-md border border-gray-200"
+                />
+                <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors"
+                     onClick={(e) => {
+                       e.stopPropagation();
+                       handleRemoveDroppedFile(droppedFile.id);
+                     }}>
+                  ×
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
@@ -347,7 +439,7 @@ export default function ConverterSection() {
               className="relative group bg-white rounded-lg shadow-md flex flex-col items-center "
             >
               <ConvertedImg
-                convertedImage={selectedImg}
+                convertedImage={file.originalImage || selectedImg}
                 ImageName={file.name}
                 ImageSize={file.size}
                 imgHref={file.url}

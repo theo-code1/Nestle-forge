@@ -163,11 +163,10 @@ export const vectorizeImage = async (file) => {
         const text = await response.text();
         errorMessage = text || errorMessage;
       }
-    } catch (e) {
-      console.error('Error parsing error response:', e);
+    } catch {
+
+      throw new Error(errorMessage);
     }
-    throw new Error(errorMessage);
   }
-  
   return await response.blob();
 };
