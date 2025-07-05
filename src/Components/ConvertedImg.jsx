@@ -109,8 +109,8 @@ const ConvertedImg = ({ convertedImage, ImageName, ImageSize, DownloadImg, imgHr
 
         <div className='btns flex items-center justify-center gap-2'>
           <button onClick={handleDelete} title='Delete' className='text-xl bg-white text-red-500 hover:bg-red-500 hover:text-white transition-all duration-100 cursor-pointer border-2 border-red-500 rounded-lg px-6 py-4 '> <FaTrash /> </button>
-            {isConverted && imgHref  && (
-              <a href={imgHref} className='text-lg bg-indigo-600 text-white hover:text-indigo-600 hover:bg-white transition-all duration-100 cursor-pointer border-2 border-indigo-600 rounded-lg px-6 py-3' download={DownloadImg}> Download </a>
+            {isConverted && imgHref && (
+              <a href={`http://localhost:5001/download/${encodeURIComponent(DownloadImg)}`} className='text-lg bg-indigo-600 text-white hover:text-indigo-600 hover:bg-white transition-all duration-100 cursor-pointer border-2 border-indigo-600 rounded-lg px-6 py-3' download={DownloadImg}> Download </a>
             )}
             {convertToFormat && !isConverted && (
               <button onClick={handleConverting} className='text-lg text-indigo-600 bg-white hover:bg-indigo-600 hover:text-white transition-all duration-100 cursor-pointer border-2 border-indigo-600 rounded-lg px-6 py-3'> {isLoading ? 'converting...' : 'Convert'} </button>

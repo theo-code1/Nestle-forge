@@ -4,6 +4,7 @@ import os
 from flask_cors import CORS
 from datetime import datetime
 import io
+import requests
 from supabase_config import get_supabase_storage
 
 app = Flask(__name__)
@@ -97,6 +98,31 @@ def convert_image():
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/download/<path:filename>')
+def download_file(filename):
+    """Download file from Supabase with proper headers"""
+    try:
+        supabase_storage = get_supabase_storage()
+        bucket_name = supabase_storage.bucket_name
+        
+        # Get the public URL from Supabase
+        public_url = supabase_storage.supabase.storage.from_(bucket_name).get_public_url(filename)
+        
+        # Download the file from Supabase
+        response = requests.get(public_url, stream=True)
+        response.raise_for_status()
+        
+        # Return the file with proper download headers
+        return send_file(
+            io.BytesIO(response.content),
+            as_attachment=True,
+            download_name=filename,
+            mimetype=response.headers.get('content-type', 'application/octet-stream')
+        )
+        
+    except Exception as e:
+        return jsonify({'error': f'Download failed: {str(e)}'}), 500
 
 @app.route('/formats', methods=['GET'])
 def get_supported_formats():
