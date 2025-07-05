@@ -1,4 +1,0 @@
-# Supabase Configuration
-
-# Optional: Storage bucket name (default: 'converted-images')
-SUPABASE_BUCKET_NAME=converted-images 
