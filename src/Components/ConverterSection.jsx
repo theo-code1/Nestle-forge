@@ -1,16 +1,10 @@
 import { useState, useEffect } from "react";
 import Upload from "./Icons/Upload.jsx";
-import ToArrow from "./Icons/toArrow.jsx";
-import Dropdown from "./Icons/dropdown.jsx";
-import { convertImage, vectorizeImage } from "../utils/api";
+import { convertImage } from "../utils/api";
 import ConvertedImg from "./ConvertedImg.jsx";
 // import FaTrash from "./Icons/Delete.jsx";
 
-const formatCategories = {
-  Image: ["PNG", "JPEG", "WEBP", "BMP", "GIF", "ICO"],
-  Document: ["PDF"],
-  Vector: ["SVG", "EPS"],
-};
+
 
 export default function ConverterSection() {
   const [selectedImg, setSelectedImg] = useState(null);
@@ -19,15 +13,13 @@ export default function ConverterSection() {
     format: "No format selected",
     size: "",
   });
-  const [convertToFormat, setConvertToFormat] = useState("");
-  const [openMenuFormats, setOpenMenuFormats] = useState(false);
+  const [isConverted, setIsConverted] = useState(false)
   const [showErr, setShowErr] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [hoveredCategory, setHoveredCategory] = useState(
-    Object.keys(formatCategories)[0]
-  );
+  
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [droppedFiles, setDroppedFiles] = useState([]);
+  const [allUploadedImages, setAllUploadedImages] = useState([]);
 
   // Cleanup object URLs when component unmounts
   useEffect(() => {
@@ -38,11 +30,7 @@ export default function ConverterSection() {
     };
   }, [droppedFiles]);
 
-  const truncateFileName = (name, length = 20) => {
-    if (name.length <= length) return name;
-    const extension = name.split(".").pop();
-    return name.slice(0, length - extension.length - 3) + "..." + extension;
-  };
+
 
   const handleDelete = (url) => {
     setUploadedFiles((prev) => {
@@ -54,31 +42,54 @@ export default function ConverterSection() {
     });
   };
 
-  const handleSelectDroppedFile = (droppedFile) => {
-    handleFileSelect(droppedFile.file);
-    // Don't clear droppedFiles - let user manage them manually
-  };
+  // const handleSelectDroppedFile = (droppedFile) => {
+  //   handleFileSelect(droppedFile.file);
+  //   // Don't clear droppedFiles - let user manage them manually
+  // };
 
-  const handleRemoveDroppedFile = (id) => {
-    setDroppedFiles((prev) => {
-      const filtered = prev.filter((file) => file.id !== id);
-      // Clean up object URL
-      const removed = prev.find((file) => file.id === id);
-      if (removed) URL.revokeObjectURL(removed.url);
-      return filtered;
-    });
+  // const handleRemoveDroppedFile = (id) => {
+  //   setDroppedFiles((prev) => {
+  //     const filtered = prev.filter((file) => file.id !== id);
+  //     // Clean up object URL
+  //     const removed = prev.find((file) => file.id === id);
+  //     if (removed) URL.revokeObjectURL(removed.url);
+  //     return filtered;
+  //   });
+  // };
+
+  const updateImageFormat = (imageId, format) => {
+    setAllUploadedImages(prev => 
+      prev.map(img => 
+        img.id === imageId 
+          ? { ...img, convertToFormat: format }
+          : img
+      )
+    );
   };
 
   const handleFileSelect = (file) => {
     if (!file) return;
 
     const fileFormat = file.type.split("/")[1].toUpperCase();
-    setSelectedImgDetails({
+    const imageUrl = URL.createObjectURL(file);
+    const imageDetails = {
       name: file.name,
       format: fileFormat,
       size: (file.size / 1024).toFixed(2) + " KB",
-    });
-    setSelectedImg(URL.createObjectURL(file));
+    };
+    
+    setSelectedImgDetails(imageDetails);
+    setSelectedImg(imageUrl);
+    setIsConverted(false); // Reset conversion status for new image
+
+    // Add to all uploaded images
+    setAllUploadedImages(prev => [...prev, {
+      id: Math.random().toString(36).substr(2, 9),
+      url: imageUrl,
+      details: imageDetails,
+      file: file,
+      convertToFormat: ""
+    }]);
 
     // Set the file input value for consistency
     const fileInput = document.getElementById("file");
@@ -109,33 +120,44 @@ export default function ConverterSection() {
       return;
     }
 
-    if (imageFiles.length === 1) {
-      // Single file - use existing behavior
-      handleFileSelect(imageFiles[0]);
-      // Don't clear droppedFiles here - let the user manage them manually
-    } else {
-      // Multiple files - store them and show in dropped-files section
-      const fileObjects = imageFiles.map(file => ({
-        file,
-        id: Math.random().toString(36).substr(2, 9),
-        url: URL.createObjectURL(file),
+    // Handle all files (single or multiple) by adding them directly to allUploadedImages
+    imageFiles.forEach(file => {
+      const fileFormat = file.type.split("/")[1].toUpperCase();
+      const imageUrl = URL.createObjectURL(file);
+      const imageDetails = {
         name: file.name,
+        format: fileFormat,
         size: (file.size / 1024).toFixed(2) + " KB",
-        format: file.type.split("/")[1].toUpperCase()
-      }));
-      setDroppedFiles(fileObjects);
-      setShowErr("");
-    }
+      };
+      
+      setAllUploadedImages(prev => [...prev, {
+        id: Math.random().toString(36).substr(2, 9),
+        url: imageUrl,
+        details: imageDetails,
+        file: file,
+        convertToFormat: ""
+      }]);
+    });
+
+    setShowErr("");
   };
 
-  const handleConverting = async () => {
+  const handleConverting = async (imageId) => {
     // Reset any previous errors and states
     setShowErr("");
     setIsLoading(true);
 
+    // Find the image to convert
+    const imageToConvert = allUploadedImages.find(img => img.id === imageId);
+    if (!imageToConvert) {
+      setShowErr("Image not found.");
+      setIsLoading(false);
+      return;
+    }
+
     // Check if same format
     if (
-      selectedImgDetails.format.toLowerCase() === convertToFormat.toLowerCase()
+      imageToConvert.details.format.toLowerCase() === imageToConvert.convertToFormat.toLowerCase()
     ) {
       setShowErr("Please select a different format to convert.");
       setIsLoading(false);
@@ -144,35 +166,18 @@ export default function ConverterSection() {
 
     try {
       // Validate inputs
-      if (!selectedImg) {
-        throw new Error("Please select an image to convert.");
-      }
-
-      if (!convertToFormat) {
+      if (!imageToConvert.convertToFormat) {
         throw new Error("Please select a target format.");
       }
 
-      // Get a fresh reference to the file
-      const fileInput = document.getElementById("file");
-      if (!fileInput?.files?.length) {
-        throw new Error("No file selected");
-      }
-
-      const file = fileInput.files[0];
-
       console.log(
         "Starting conversion for file:",
-        file.name,
+        imageToConvert.details.name,
         "to format:",
-        convertToFormat
+        imageToConvert.convertToFormat
       );
 
-      let blob;
-      if (convertToFormat.toLowerCase() === "svg") {
-        blob = await vectorizeImage(file);
-      } else {
-        blob = await convertImage(file, convertToFormat);
-      }
+      const blob = await convertImage(imageToConvert.file, imageToConvert.convertToFormat);
 
       console.log("Received blob:", {
         size: blob.size,
@@ -184,24 +189,27 @@ export default function ConverterSection() {
       }
 
       // Create a filename for the download
-      const originalName = file.name.split(".").slice(0, -1).join(".");
-      const filename = `${originalName}_converted.${convertToFormat.toLowerCase()}`;
+      const originalName = imageToConvert.details.name.split(".").slice(0, -1).join(".");
+      const filename = `${originalName}_converted.${imageToConvert.convertToFormat.toLowerCase()}`;
 
       console.log("Initiating download for:", filename);
 
-      // Use the downloadBlob utility function
-      const url = URL.createObjectURL(blob);
-      setUploadedFiles((prev) => [
-        ...prev,
-        {
-          url,
-          name: filename,
-          size: (blob.size / 1024).toFixed(2) + " KB",
-          format: convertToFormat.toUpperCase(),
-          originalImage: selectedImg, // Store the original image URL
-        },
-      ]);
-      console.log("Download initiated");
+      // Store the converted file URL in the image object
+      const convertedUrl = URL.createObjectURL(blob);
+      setAllUploadedImages(prev => 
+        prev.map(img => 
+          img.id === imageId 
+            ? { 
+                ...img, 
+                convertedUrl: convertedUrl,
+                convertedName: filename,
+                convertedSize: (blob.size / 1024).toFixed(2) + " KB",
+                isConverted: true
+              }
+            : img
+        )
+      );
+      console.log("Conversion completed");
     } catch (error) {
       console.error("Conversion error:", error);
       let errorMessage = "An error occurred during conversion";
@@ -219,6 +227,7 @@ export default function ConverterSection() {
       setShowErr(errorMessage);
     } finally {
       setIsLoading(false);
+      setIsConverted(true)
     }
   };
 
@@ -248,15 +257,7 @@ export default function ConverterSection() {
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
-          {!selectedImg && <Upload />}
-
-          {selectedImg && (
-            <img
-              src={selectedImg}
-              alt="Selected"
-              className="w-50 h-50 object-cover rounded-md"
-            />
-          )}
+          <Upload />
 
           <div className={`select-file flex gap-4 items-center mt-4 `}>
             <input
@@ -267,189 +268,88 @@ export default function ConverterSection() {
               multiple
               onChange={(e) => {
                 const files = Array.from(e.target.files);
-                if (files.length === 1) {
-                  handleFileSelect(files[0]);
-                } else if (files.length > 1) {
-                  const imageFiles = files.filter(file => file.type.startsWith("image/"));
-                  if (imageFiles.length > 0) {
-                    const fileObjects = imageFiles.map(file => ({
-                      file,
-                      id: Math.random().toString(36).substr(2, 9),
-                      url: URL.createObjectURL(file),
-                      name: file.name,
-                      size: (file.size / 1024).toFixed(2) + " KB",
-                      format: file.type.split("/")[1].toUpperCase()
-                    }));
-                    setDroppedFiles(fileObjects);
-                    setShowErr("");
-                  }
+                const imageFiles = files.filter(file => file.type.startsWith("image/"));
+                
+                if (imageFiles.length === 0) {
+                  setShowErr("Please select valid image files.");
+                  return;
                 }
+
+                // Handle all files (single or multiple) by adding them directly to allUploadedImages
+                imageFiles.forEach(file => {
+                  const fileFormat = file.type.split("/")[1].toUpperCase();
+                  const imageUrl = URL.createObjectURL(file);
+                  const imageDetails = {
+                    name: file.name,
+                    format: fileFormat,
+                    size: (file.size / 1024).toFixed(2) + " KB",
+                  };
+                  
+                  setAllUploadedImages(prev => [...prev, {
+                    id: Math.random().toString(36).substr(2, 9),
+                    url: imageUrl,
+                    details: imageDetails,
+                    file: file,
+                    convertToFormat: ""
+                  }]);
+                });
+
+                setShowErr("");
               }}
             />
             <span className="bg-indigo-600 text-white px-4 py-2 rounded-full hover:brightness-90 active:brightness-80 transition-all duration-150">
               Upload Image
             </span>
-            <span id="file-name" className="text-[16px]  text-gray-800">
+            {/* <span id="file-name" className="text-[16px]  text-gray-800">
               {truncateFileName(selectedImgDetails.name)}
-            </span>
+            </span> */}
           </div>
-          {selectedImg && (
-            <>
-              <div className="select-formats flex items-center gap-4 mt-4 z-30">
-                <button
-                  type="button"
-                  className="text-lg font-medium border-indigo-700 border px-4 py-2 rounded-lg"
-                >
-                  {selectedImgDetails.format}
-                </button>
-                <ToArrow />
-                <div className="relative">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setOpenMenuFormats(!openMenuFormats);
-                    }}
-                    type="button"
-                    className="text-lg font-medium border-indigo-700 border pl-4 pr-2 py-2 rounded-lg flex items-center hover:bg-black/5 cursor-pointer transition-all duration-100"
-                  >
-                    {convertToFormat || "to..."}
-                    <Dropdown
-                      className={`transition-transform duration-200 ${
-                        openMenuFormats ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-                </div>
-              </div>
-
-              {openMenuFormats && (
-                <div className="absolute mt-2 w-96 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden">
-                  <div className="flex">
-                    {/* Categories List */}
-                    <div className="w-1/3 border-r border-gray-200 bg-gray-50">
-                      {Object.keys(formatCategories).map((category) => (
-                        <div
-                          key={category}
-                          className={`px-4 py-3 text-sm font-medium cursor-pointer transition-colors ${
-                            hoveredCategory === category
-                              ? "bg-white text-indigo-700 font-semibold"
-                              : "text-gray-800 hover:bg-gray-100"
-                          }`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setHoveredCategory(category);
-                          }}
-                        >
-                          {category}
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Formats List */}
-                    <div className="w-2/3 p-2">
-                      {hoveredCategory &&
-                        formatCategories[hoveredCategory]?.map((format) => (
-                          <button
-                            key={format}
-                            className={`w-full px-4 py-2.5 text-sm text-left rounded-md transition-colors ${
-                              convertToFormat === format
-                                ? "bg-indigo-600 text-white font-medium"
-                                : "text-gray-800 hover:bg-indigo-50"
-                            }`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setConvertToFormat(format);
-                              setOpenMenuFormats(false);
-                            }}
-                          >
-                            {format}
-                          </button>
-                        ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
+          
         </div>
 
-        {droppedFiles.length > 0 && (
-          <div className="dropped-files absolute right-1 top-24 border max-w-2/9 w-fit h-fit px-4 py-2 flex gap-2 flex-wrap bg-white rounded-lg shadow-lg">
-            <div className="w-full mb-2 flex justify-between items-center">
-              <div>
-                <h3 className="text-sm font-medium text-gray-700 mb-2">Dropped Images ({droppedFiles.length})</h3>
-                <p className="text-xs text-gray-500">Click on an image to select it for conversion</p>
-              </div>
-              <button
-                onClick={() => {
-                  droppedFiles.forEach(file => URL.revokeObjectURL(file.url));
-                  setDroppedFiles([]);
-                }}
-                className="text-xs text-red-500 hover:text-red-700 font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors"
-              >
-                Clear All
-              </button>
-            </div>
-            {droppedFiles.map((droppedFile) => (
-              <div
-                key={droppedFile.id}
-                className="relative group cursor-pointer hover:scale-105 transition-transform duration-200"
-                onClick={() => handleSelectDroppedFile(droppedFile)}
-              >
-                <img
-                  src={droppedFile.url}
-                  alt={droppedFile.name}
-                  className="w-16 h-16 object-cover rounded-md border border-gray-200"
-                />
-                <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors"
-                     onClick={(e) => {
-                       e.stopPropagation();
-                       handleRemoveDroppedFile(droppedFile.id);
-                     }}>
-                  ×
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+
       </div>
       
       {showErr && (
         <span className="text-red-500 text-sm font-[400] mt-2">{showErr}</span>
       )}
 
-      <button
-        type="button"
-        onClick={handleConverting}
-        className={`submit px-6 py-2.5 rounded-lg text-lg bg-indigo-600 text-white hover:brightness-90 active:brightness-80 transition-all duration-150 ${
-          isLoading
-            ? "brightness-80 hover:brightness-80 active:brightness-80 cursor-not-allowed"
-            : ""
-        } `}
-      >
-        {" "}
-        {isLoading ? "Converting..." : "Convert Image"}
-      </button>
-
-      {uploadedFiles.length > 0 && (
+      {allUploadedImages.length > 0 && (
         <div className="w-full flex flex-col max-w-4xl gap-6 mt-10">
-          {uploadedFiles.map((file) => (
+          {allUploadedImages.map((image) => (
             <div
-              key={file.url}
-              className="relative group bg-white rounded-lg shadow-md flex flex-col items-center "
+              key={image.id}
+              className="relative group bg-white rounded-lg shadow-md flex flex-col items-center"
             >
               <ConvertedImg
-                convertedImage={file.originalImage || selectedImg}
-                ImageName={file.name}
-                ImageSize={file.size}
-                imgHref={file.url}
-                DownloadImg={file.name}
-                OnClick={() => handleDelete(file.url)}
+                isConverted={image.isConverted || false}
+                isLoading={isLoading}
+                selectedImgDetails={image.details}
+                selectedImg={image.url}
+                setConvertToFormat={(format) => updateImageFormat(image.id, format)}
+                convertToFormat={image.convertToFormat}
+                handleConverting={() => handleConverting(image.id)}
+                convertedImage={image.url}
+                ImageName={image.details.name}
+                ImageSize={image.details.size}
+                imgHref={image.convertedUrl || ""}
+                DownloadImg={image.convertedName || ""}
+                handleDelete={() => {
+                  // Remove this image from the list
+                  setAllUploadedImages(prev => prev.filter(img => img.id !== image.id));
+                  // Clean up the object URLs
+                  URL.revokeObjectURL(image.url);
+                  if (image.convertedUrl) {
+                    URL.revokeObjectURL(image.convertedUrl);
+                  }
+                }}
               />
             </div>
           ))}
         </div>
       )}
+
+
     </section>
   );
 }

@@ -2,22 +2,16 @@
  * Handles API calls to the backend server
  */
 
-// Vector formats use convert.py (port 5000), raster formats use convert2.py (port 5001)
-const RASTER_API_URL = 'http://localhost:5000';
+const API_URL = 'http://localhost:5001';
 
-const RASTER_FORMATS = ['png', 'jpeg', 'jpg', 'webp', 'bmp', 'gif', 'ico'];
-
-const getApiUrl = (targetFormat) => {
-  const format = targetFormat.toLowerCase();
-  if (RASTER_FORMATS.includes(format)) {
-    return RASTER_API_URL;
-  }
+const getApiUrl = () => {
+  return API_URL;
 };
 
 /**
  * Convert an image to a different format
  * @param {File} file - The image file to convert
- * @param {string} targetFormat - The target format (e.g., 'png', 'jpg', 'pdf')
+ * @param {string} targetFormat - The target format (e.g., 'png', 'jpg', 'webp')
  * @returns {Promise<Blob>} - The converted file as a Blob
  */
 export const convertImage = async (file, targetFormat) => {
@@ -40,7 +34,7 @@ export const convertImage = async (file, targetFormat) => {
       console.log('FormData:', pair[0], pair[1]);
     }
     
-    const apiUrl = getApiUrl(targetFormat);
+    const apiUrl = getApiUrl();
     console.log('Request details:', {
       url: `${apiUrl}/convert`,
       method: 'POST',
@@ -128,37 +122,4 @@ export const downloadBlob = (blob, filename) => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }, 0);
-};
-
-/**
- * Vectorize an image (bitmap to SVG paths) using the /vectorize endpoint
- * @param {File} file - The image file to vectorize
- * @returns {Promise<Blob>} - The resulting SVG as a Blob
- */
-export const vectorizeImage = async (file) => {
-  const formData = new FormData();
-  formData.append('file', file);
-
-  const response = await fetch('http://localhost:5000/vectorize', {
-    method: 'POST',
-    body: formData,
-  });
-
-  if (!response.ok) {
-    let errorMessage = `Server error: ${response.status} ${response.statusText}`;
-    try {
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        const errorData = await response.json();
-        errorMessage = errorData.error || errorData.details || errorMessage;
-      } else {
-        const text = await response.text();
-        errorMessage = text || errorMessage;
-      }
-    } catch {
-
-      throw new Error(errorMessage);
-    }
-  }
-  return await response.blob();
 };
