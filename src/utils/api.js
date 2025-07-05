@@ -3,21 +3,13 @@
  */
 
 // Vector formats use convert.py (port 5000), raster formats use convert2.py (port 5001)
-const VECTOR_API_URL = 'http://localhost:5000';
-const RASTER_API_URL = 'http://localhost:5001';
+const RASTER_API_URL = 'http://localhost:5000';
 
-// Define which formats go to which backend
-const VECTOR_FORMATS = ['svg', 'eps', 'pdf'];
 const RASTER_FORMATS = ['png', 'jpeg', 'jpg', 'webp', 'bmp', 'gif', 'ico'];
 
 const getApiUrl = (targetFormat) => {
   const format = targetFormat.toLowerCase();
-  if (VECTOR_FORMATS.includes(format)) {
-    return VECTOR_API_URL;
-  } else if (RASTER_FORMATS.includes(format)) {
-    return RASTER_API_URL;
-  } else {
-    // Default to raster API for unknown formats
+  if (RASTER_FORMATS.includes(format)) {
     return RASTER_API_URL;
   }
 };
