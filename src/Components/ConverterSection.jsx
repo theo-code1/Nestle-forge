@@ -252,7 +252,7 @@ export default function ConverterSection() {
           <div className="text-center">
             <h3 className="text-xl font-semibold text-gray-800 mb-2">Drop your images here</h3>
             <p className="text-gray-600 text-sm mb-4">or click to browse files</p>
-            <p className="text-xs text-gray-500">Supports: PNG, JPG, JPEG, GIF, BMP, WEBP, TIFF, ICO, JFIF, AVIF</p>
+            <p className="text-xs text-gray-500">Supports: PNG, JPG, JPEG, GIF, BMP, WEBP, TIFF, ICO, AVIF</p>
           </div>
 
           <div className={`select-file flex gap-4 items-center mt-4 `}>

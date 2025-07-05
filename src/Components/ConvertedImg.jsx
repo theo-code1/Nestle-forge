@@ -6,7 +6,7 @@ import Dropdown from "./Icons/dropdown.jsx";
 const ConvertedImg = ({ convertedImage, ImageName, ImageSize, DownloadImg, imgHref, handleDelete, selectedImgDetails, isConverted, handleConverting, selectedImg, setConvertToFormat, convertToFormat, isLoading, imageId, openDropdownId, setOpenDropdownId }) => {
 
   const formatCategories = {
-    Image: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'tiff', 'ico', 'jfif', 'avif'],
+    Image: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'tiff', 'ico', 'avif'],
   };
   const [hoveredCategory, setHoveredCategory] = useState(
     Object.keys(formatCategories)[0]
