@@ -55,7 +55,7 @@ const ConvertedImg = ({ convertedImage, ImageName, ImageSize, DownloadImg, imgHr
                 </div>
 
                 {isDropdownOpen && (
-                  <div className="absolute left-1/3 -top-40 mt-2 w-96 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden">
+                  <div className="absolute left-1/3 -top-48 mt-2 w-96 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden">
                     <div className="flex">
                       {/* Categories List */}
                       <div className="w-1/3 border-r border-gray-200 bg-gray-50">
@@ -88,7 +88,8 @@ const ConvertedImg = ({ convertedImage, ImageName, ImageSize, DownloadImg, imgHr
                                   convertToFormat === format
                                     ? "bg-indigo-600 text-white font-medium"
                                     : "text-gray-800 hover:bg-indigo-50"
-                                }`}
+                                }
+                                ${selectedImgDetails.format === format ? 'bg-indigo-50 cursor-not-allowed' : '' } `}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setConvertToFormat(format);
