@@ -7,40 +7,34 @@ import ConvertedImg from "./ConvertedImg.jsx";
 
 
 export default function ConverterSection() {
-  const [selectedImg, setSelectedImg] = useState(null);
-  const [selectedImgDetails, setSelectedImgDetails] = useState({
-    name: "No file selected",
-    format: "No format selected",
-    size: "",
-  });
-  const [isConverted, setIsConverted] = useState(false)
-  const [showErr, setShowErr] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  
-  const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [droppedFiles, setDroppedFiles] = useState([]);
+  const [errors, setErrors] = useState({});
+  const [loadingImages, setLoadingImages] = useState({});
   const [allUploadedImages, setAllUploadedImages] = useState([]);
+  const [openDropdownId, setOpenDropdownId] = useState(null);
 
   // Cleanup object URLs when component unmounts
   useEffect(() => {
     return () => {
-      droppedFiles.forEach(file => {
-        URL.revokeObjectURL(file.url);
+      allUploadedImages.forEach(image => {
+        URL.revokeObjectURL(image.url);
+        if (image.convertedUrl) {
+          URL.revokeObjectURL(image.convertedUrl);
+        }
       });
     };
-  }, [droppedFiles]);
+  }, [allUploadedImages]);
 
 
 
-  const handleDelete = (url) => {
-    setUploadedFiles((prev) => {
-      const filtered = prev.filter((file) => file.url !== url);
-      // Clean up object URL
-      const removed = prev.find((file) => file.url === url);
-      if (removed) URL.revokeObjectURL(removed.url);
-      return filtered;
-    });
-  };
+  // const handleDelete = (url) => {
+  //   setUploadedFiles((prev) => {
+  //     const filtered = prev.filter((file) => file.url !== url);
+  //     // Clean up object URL
+  //     const removed = prev.find((file) => file.url === url);
+  //     if (removed) URL.revokeObjectURL(removed.url);
+  //     return filtered;
+  //   });
+  // };
 
   // const handleSelectDroppedFile = (droppedFile) => {
   //   handleFileSelect(droppedFile.file);
@@ -61,45 +55,51 @@ export default function ConverterSection() {
     setAllUploadedImages(prev => 
       prev.map(img => 
         img.id === imageId 
-          ? { ...img, convertToFormat: format }
+          ? { 
+              ...img, 
+              convertToFormat: format,
+              isConverted: false,
+              convertedUrl: undefined,
+              convertedName: undefined
+            }
           : img
       )
     );
   };
 
-  const handleFileSelect = (file) => {
-    if (!file) return;
+  // const handleFileSelect = (file) => {
+  //   if (!file) return;
 
-    const fileFormat = file.type.split("/")[1].toUpperCase();
-    const imageUrl = URL.createObjectURL(file);
-    const imageDetails = {
-      name: file.name,
-      format: fileFormat,
-      size: (file.size / 1024).toFixed(2) + " KB",
-    };
+  //   const fileFormat = file.type.split("/")[1].toUpperCase();
+  //   const imageUrl = URL.createObjectURL(file);
+  //   const imageDetails = {
+  //     name: file.name,
+  //     format: fileFormat,
+  //     size: (file.size / 1024).toFixed(2) + " KB",
+  //   };
     
-    setSelectedImgDetails(imageDetails);
-    setSelectedImg(imageUrl);
-    setIsConverted(false); // Reset conversion status for new image
+  //   setSelectedImgDetails(imageDetails);
+  //   setSelectedImg(imageUrl);
+  //   setIsConverted(false); // Reset conversion status for new image
 
-    // Add to all uploaded images
-    setAllUploadedImages(prev => [...prev, {
-      id: Math.random().toString(36).substr(2, 9),
-      url: imageUrl,
-      details: imageDetails,
-      file: file,
-      convertToFormat: ""
-    }]);
+  //   // Add to all uploaded images
+  //   setAllUploadedImages(prev => [...prev, {
+  //     id: Math.random().toString(36).substr(2, 9),
+  //     url: imageUrl,
+  //     details: imageDetails,
+  //     file: file,
+  //     convertToFormat: ""
+  //   }]);
 
-    // Set the file input value for consistency
-    const fileInput = document.getElementById("file");
-    if (fileInput) {
-      // Create a new FileList-like object
-      const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(file);
-      fileInput.files = dataTransfer.files;
-    }
-  };
+  //   // Set the file input value for consistency
+  //   const fileInput = document.getElementById("file");
+  //   if (fileInput) {
+  //     // Create a new FileList-like object
+  //     const dataTransfer = new DataTransfer();
+  //     dataTransfer.items.add(file);
+  //     fileInput.files = dataTransfer.files;
+  //   }
+  // };
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -109,18 +109,12 @@ export default function ConverterSection() {
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
-
-    if (isLoading) return;
-
+    if (Object.values(loadingImages).some(loading => loading)) return;
     const files = Array.from(e.dataTransfer.files);
     const imageFiles = files.filter(file => file.type.startsWith("image/"));
-    
     if (imageFiles.length === 0) {
-      setShowErr("Please select valid image files.");
       return;
     }
-
-    // Handle all files (single or multiple) by adding them directly to allUploadedImages
     imageFiles.forEach(file => {
       const fileFormat = file.type.split("/")[1].toUpperCase();
       const imageUrl = URL.createObjectURL(file);
@@ -129,7 +123,6 @@ export default function ConverterSection() {
         format: fileFormat,
         size: (file.size / 1024).toFixed(2) + " KB",
       };
-      
       setAllUploadedImages(prev => [...prev, {
         id: Math.random().toString(36).substr(2, 9),
         url: imageUrl,
@@ -138,20 +131,18 @@ export default function ConverterSection() {
         convertToFormat: ""
       }]);
     });
-
-    setShowErr("");
   };
 
   const handleConverting = async (imageId) => {
-    // Reset any previous errors and states
-    setShowErr("");
-    setIsLoading(true);
+    // Reset any previous errors for this specific image
+    setErrors(prev => ({ ...prev, [imageId]: "" }));
+    setLoadingImages(prev => ({ ...prev, [imageId]: true }));
 
     // Find the image to convert
     const imageToConvert = allUploadedImages.find(img => img.id === imageId);
     if (!imageToConvert) {
-      setShowErr("Image not found.");
-      setIsLoading(false);
+      setErrors(prev => ({ ...prev, [imageId]: "Image not found." }));
+      setLoadingImages(prev => ({ ...prev, [imageId]: false }));
       return;
     }
 
@@ -159,8 +150,8 @@ export default function ConverterSection() {
     if (
       imageToConvert.details.format.toLowerCase() === imageToConvert.convertToFormat.toLowerCase()
     ) {
-      setShowErr("Please select a different format to convert.");
-      setIsLoading(false);
+      setErrors(prev => ({ ...prev, [imageId]: "Please select a different format to convert." }));
+      setLoadingImages(prev => ({ ...prev, [imageId]: false }));
       return;
     }
 
@@ -224,10 +215,9 @@ export default function ConverterSection() {
         }
       }
 
-      setShowErr(errorMessage);
+      setErrors(prev => ({ ...prev, [imageId]: errorMessage }));
     } finally {
-      setIsLoading(false);
-      setIsConverted(true)
+      setLoadingImages(prev => ({ ...prev, [imageId]: false }));
     }
   };
 
@@ -246,18 +236,24 @@ export default function ConverterSection() {
       <div className="files-management relative w-full flex items-start">
         <div
           className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-1/2 pt-16 pb-12 px-16 mt-12 rounded-xl border-2 border-dashed mx-auto ${
-            isLoading
+            Object.values(loadingImages).some(loading => loading)
               ? "cursor-not-allowed opacity-70"
               : "cursor-pointer opacity-100"
           }
-          ${isLoading ? 'hover:border-black' : 'hover:border-indigo-600'}`}
+          ${Object.values(loadingImages).some(loading => loading) ? 'hover:border-black' : 'hover:border-indigo-600'}`}
           onClick={
-            !isLoading ? () => document.getElementById("file").click() : null
+            !Object.values(loadingImages).some(loading => loading) ? () => document.getElementById("file").click() : null
           }
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
           <Upload />
+
+          <div className="text-center">
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">Drop your images here</h3>
+            <p className="text-gray-600 text-sm mb-4">or click to browse files</p>
+            <p className="text-xs text-gray-500">Supports: PNG, JPG, JPEG, GIF, BMP, WEBP, TIFF, ICO, JFIF, AVIF</p>
+          </div>
 
           <div className={`select-file flex gap-4 items-center mt-4 `}>
             <input
@@ -269,13 +265,9 @@ export default function ConverterSection() {
               onChange={(e) => {
                 const files = Array.from(e.target.files);
                 const imageFiles = files.filter(file => file.type.startsWith("image/"));
-                
                 if (imageFiles.length === 0) {
-                  setShowErr("Please select valid image files.");
                   return;
                 }
-
-                // Handle all files (single or multiple) by adding them directly to allUploadedImages
                 imageFiles.forEach(file => {
                   const fileFormat = file.type.split("/")[1].toUpperCase();
                   const imageUrl = URL.createObjectURL(file);
@@ -284,7 +276,6 @@ export default function ConverterSection() {
                     format: fileFormat,
                     size: (file.size / 1024).toFixed(2) + " KB",
                   };
-                  
                   setAllUploadedImages(prev => [...prev, {
                     id: Math.random().toString(36).substr(2, 9),
                     url: imageUrl,
@@ -293,37 +284,30 @@ export default function ConverterSection() {
                     convertToFormat: ""
                   }]);
                 });
-
-                setShowErr("");
               }}
             />
             <span className="bg-indigo-600 text-white px-4 py-2 rounded-full hover:brightness-90 active:brightness-80 transition-all duration-150">
               Upload Image
             </span>
-            {/* <span id="file-name" className="text-[16px]  text-gray-800">
-              {truncateFileName(selectedImgDetails.name)}
-            </span> */}
           </div>
-          
         </div>
 
 
       </div>
       
-      {showErr && (
-        <span className="text-red-500 text-sm font-[400] mt-2">{showErr}</span>
-      )}
+      
 
       {allUploadedImages.length > 0 && (
         <div className="w-full flex flex-col max-w-4xl gap-6 mt-10">
           {allUploadedImages.map((image) => (
+            <>
             <div
               key={image.id}
               className="relative group bg-white rounded-lg shadow-md flex flex-col items-center"
             >
               <ConvertedImg
                 isConverted={image.isConverted || false}
-                isLoading={isLoading}
+                isLoading={loadingImages[image.id] || false}
                 selectedImgDetails={image.details}
                 selectedImg={image.url}
                 setConvertToFormat={(format) => updateImageFormat(image.id, format)}
@@ -342,13 +326,61 @@ export default function ConverterSection() {
                   if (image.convertedUrl) {
                     URL.revokeObjectURL(image.convertedUrl);
                   }
+                  // Clear any errors for this image
+                  setErrors(prev => {
+                    const newErrors = { ...prev };
+                    delete newErrors[image.id];
+                    return newErrors;
+                  });
                 }}
+                imageId={image.id}
+                openDropdownId={openDropdownId}
+                setOpenDropdownId={setOpenDropdownId}
+                showErr={errors[image.id] || ""}
               />
             </div>
+
+
+                <span className="text-red-500 text-sm font-[400] mt-2">{errors[image.id] || ""}</span>
+              </>
+              
           ))}
+
         </div>
       )}
 
+      {/* Footer Section */}
+      <div className="w-full mt-16 py-8 border-t border-gray-200">
+        <div className="max-w-4xl mx-auto text-center">
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">Why Choose Our Image Converter?</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span className="text-indigo-600 text-xl">⚡</span>
+              </div>
+              <h4 className="font-semibold text-gray-800 mb-2">Fast & Efficient</h4>
+              <p className="text-gray-600 text-sm">Convert multiple images simultaneously with our optimized processing</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span className="text-indigo-600 text-xl">🔒</span>
+              </div>
+              <h4 className="font-semibold text-gray-800 mb-2">Secure Processing</h4>
+              <p className="text-gray-600 text-sm">Your images are processed locally and never stored on our servers</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span className="text-indigo-600 text-xl">🎨</span>
+              </div>
+              <h4 className="font-semibold text-gray-800 mb-2">High Quality</h4>
+              <p className="text-gray-600 text-sm">Maintain image quality across all supported formats</p>
+            </div>
+          </div>
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <p className="text-gray-500 text-sm">© 2025 Image Converter. Built with React & Flask for seamless image conversion.</p>
+          </div>
+        </div>
+      </div>
 
     </section>
   );

@@ -9,7 +9,7 @@ app = Flask(__name__)
 CORS(app)
 
 UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'tiff', 'ico', 'jfif'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'tiff', 'ico', 'jfif', 'avif'}
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
@@ -61,7 +61,8 @@ def convert_image():
         output_path = os.path.join(UPLOAD_FOLDER, output_filename)
         
         # Save the converted image
-        input_image.save(output_path, format=target_format.upper())
+        save_format = 'JPEG' if target_format.lower() in ['jpg', 'jpeg'] else target_format.upper()
+        input_image.save(output_path, format=save_format)
         
         # Return the converted image
         return send_file(output_path, 
