@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import Upload from "./Icons/Upload.jsx";
 import { convertImage } from "../utils/api";
 import ConvertedImg from "./ConvertedImg.jsx";
-// import FaTrash from "./Icons/Delete.jsx";
 
 
 
@@ -26,31 +25,6 @@ export default function ConverterSection() {
 
 
 
-  // const handleDelete = (url) => {
-  //   setUploadedFiles((prev) => {
-  //     const filtered = prev.filter((file) => file.url !== url);
-  //     // Clean up object URL
-  //     const removed = prev.find((file) => file.url === url);
-  //     if (removed) URL.revokeObjectURL(removed.url);
-  //     return filtered;
-  //   });
-  // };
-
-  // const handleSelectDroppedFile = (droppedFile) => {
-  //   handleFileSelect(droppedFile.file);
-  //   // Don't clear droppedFiles - let user manage them manually
-  // };
-
-  // const handleRemoveDroppedFile = (id) => {
-  //   setDroppedFiles((prev) => {
-  //     const filtered = prev.filter((file) => file.id !== id);
-  //     // Clean up object URL
-  //     const removed = prev.find((file) => file.id === id);
-  //     if (removed) URL.revokeObjectURL(removed.url);
-  //     return filtered;
-  //   });
-  // };
-
   const updateImageFormat = (imageId, format) => {
     setAllUploadedImages(prev => 
       prev.map(img => 
@@ -67,39 +41,6 @@ export default function ConverterSection() {
     );
   };
 
-  // const handleFileSelect = (file) => {
-  //   if (!file) return;
-
-  //   const fileFormat = file.type.split("/")[1].toUpperCase();
-  //   const imageUrl = URL.createObjectURL(file);
-  //   const imageDetails = {
-  //     name: file.name,
-  //     format: fileFormat,
-  //     size: (file.size / 1024).toFixed(2) + " KB",
-  //   };
-    
-  //   setSelectedImgDetails(imageDetails);
-  //   setSelectedImg(imageUrl);
-  //   setIsConverted(false); // Reset conversion status for new image
-
-  //   // Add to all uploaded images
-  //   setAllUploadedImages(prev => [...prev, {
-  //     id: Math.random().toString(36).substr(2, 9),
-  //     url: imageUrl,
-  //     details: imageDetails,
-  //     file: file,
-  //     convertToFormat: ""
-  //   }]);
-
-  //   // Set the file input value for consistency
-  //   const fileInput = document.getElementById("file");
-  //   if (fileInput) {
-  //     // Create a new FileList-like object
-  //     const dataTransfer = new DataTransfer();
-  //     dataTransfer.items.add(file);
-  //     fileInput.files = dataTransfer.files;
-  //   }
-  // };
 
   const handleDragOver = (e) => {
     e.preventDefault();
