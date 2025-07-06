@@ -1,115 +1,96 @@
-from flask import Flask, request, jsonify, send_file
-from flask_cors import CORS
+from flask import Flask, request, jsonify
 from PIL import Image
 import io
 import os
-from supabase_config import get_supabase_storage
+from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
-ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'webp'}
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'webp', 'bmp', 'tiff'}
+
+# Compression config
+MAX_WIDTH = 1600
+MAX_HEIGHT = 1600
+JPEG_QUALITY = 25
+WEBP_QUALITY = 25
 
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/compress', methods=['POST'])
 def compress_image():
-    if 'image' not in request.files:
-        return jsonify({'error': 'No image part in request'}), 400
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file uploaded'}), 400
 
-    file = request.files['image']
-
+    file = request.files['file']
     if file.filename == '':
-        return jsonify({'error': 'No image selected'}), 400
+        return jsonify({'error': 'No selected file'}), 400
 
-    if file and allowed_file(file.filename):
-        try:
-            # Get original file size
-            file_stream = file.stream
-            original_size = len(file_stream.read())
-            file_stream.seek(0)  # Reset stream position
-            
-            # Open and process image
-            img = Image.open(file_stream)
-            img_format = img.format or "JPEG"
+    if not allowed_file(file.filename):
+        return jsonify({'error': 'Unsupported file type'}), 400
 
-            # Convert to RGB if necessary
-            if img.mode in ("RGBA", "P"):
-                img = img.convert("RGB")
-            
-            # Resize if image is too large (max 2000px on the longest side)
-            max_size = (2000, 2000)
-            img.thumbnail(max_size, Image.LANCZOS)
-            
-            # Save with optimization and quality settings
-            buffer = io.BytesIO()
-            quality = 60  # Slightly higher quality than before
-            img.save(buffer, format=img_format, 
-                    optimize=True, 
-                    quality=quality,
-                    progressive=True)  # Progressive loading for JPEGs
-            
-            compressed_size = buffer.getbuffer().nbytes
-            compression_ratio = ((original_size - compressed_size) / original_size) * 100
-            
-            buffer.seek(0)
+    try:
+        original_bytes = file.read()
+        original_size = len(original_bytes)
 
-            # Prepare response data
-            response_data = {
-                "success": True,
-                "filename": file.filename,
-                "original_size": original_size,
-                "compressed_size": compressed_size,
-                "compression_ratio": round(compression_ratio, 2),
-                "width": img.width,
-                "height": img.height
+        # Open image
+        image = Image.open(io.BytesIO(original_bytes))
+        original_format = image.format
+
+        # Remove metadata
+        image.info.pop("exif", None)
+        image.info.pop("icc_profile", None)
+
+        # Resize large images
+        if image.width > MAX_WIDTH or image.height > MAX_HEIGHT:
+            image.thumbnail((MAX_WIDTH, MAX_HEIGHT))
+
+        # Convert to RGB for lossy formats
+        if image.mode in ("RGBA", "P"):
+            image = image.convert("RGB")
+
+        # Choose format and compression
+        format = 'JPEG' if original_format.lower() in ['jpg', 'jpeg', 'bmp', 'tiff'] else 'WEBP'
+        compress_kwargs = {}
+
+        if format == 'JPEG':
+            compress_kwargs = {
+                'format': 'JPEG',
+                'quality': JPEG_QUALITY,
+                'optimize': True,
+                'progressive': True
+            }
+        elif format == 'WEBP':
+            compress_kwargs = {
+                'format': 'WEBP',
+                'quality': WEBP_QUALITY,
+                'method': 6
             }
 
-            # Check if Supabase is configured
-            supabase_url = os.getenv('SUPABASE_URL')
-            supabase_key = os.getenv('SUPABASE_KEY')
-            
-            if supabase_url and supabase_key:
-                try:
-                    # Upload to Supabase
-                    supabase_storage = get_supabase_storage()
-                    supabase_path = f"compressed/{file.filename}"
-                    content_type = file.content_type or "image/jpeg"
-                    public_url = supabase_storage.upload_file(
-                        buffer.getvalue(), 
-                        supabase_path, 
-                        content_type
-                    )
-                    response_data["public_url"] = public_url
-                    return jsonify(response_data)
-                    
-                except Exception as e:
-                    print(f"Supabase upload failed: {e}")
-                    # Continue to return the file directly if Supabase fails
-                    pass
+        # Save to buffer
+        output_buffer = io.BytesIO()
+        image.save(output_buffer, **compress_kwargs)
+        output_buffer.seek(0)
 
-            # Return the compressed image as blob if Supabase not configured or failed
-            response = send_file(
-                buffer,
-                mimetype=file.content_type or "image/jpeg",
-                as_attachment=True,
-                download_name=f"compressed_{file.filename}"
-            )
-            
-            # Add compression info to headers
-            response.headers['X-Original-Size'] = str(original_size)
-            response.headers['X-Compressed-Size'] = str(compressed_size)
-            response.headers['X-Compression-Ratio'] = str(round(compression_ratio, 2))
-            
-            return response
+        compressed_bytes = output_buffer.getvalue()
+        compressed_size = len(compressed_bytes)
+        compression_ratio = 100 * (original_size - compressed_size) / original_size
+        
+        # Create a response with the compressed image
+        response = {
+            "success": True,
+            "original_size_kb": round(original_size / 1024, 2),
+            "compressed_size_kb": round(compressed_size / 1024, 2),
+            "compression_ratio_percent": round(compression_ratio, 2),
+            "format": format.lower(),
+            "image_data": compressed_bytes.hex()  # Convert bytes to hex string for JSON
+        }
+        
+        return jsonify(response)
 
-        except Exception as e:
-            print("Exception during compression:", str(e))
-            return jsonify({'error': f'Compression failed: {str(e)}'}), 500
-    else:
-        return jsonify({'error': 'Unsupported file type'}), 400
+    except Exception as e:
+        return jsonify({'error': f'Compression failed: {str(e)}'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

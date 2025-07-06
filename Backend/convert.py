@@ -58,25 +58,10 @@ def convert_image():
         output_filename = generate_unique_filename(file.filename, target_format)
         
         # Save the converted image to a bytes buffer
+        save_format = 'JPEG' if target_format.lower() in ['jpg', 'jpeg'] else target_format.upper()
         img_buffer = io.BytesIO()
-
-        save_kwargs = {}
-
-        if save_format == 'JPEG':
-            save_kwargs = {
-                'quality': 40,         # Lower means higher compression (range: 1–95)
-                'optimize': True,      # Try to optimize the size
-                'progressive': True    # Progressive loading for web
-            }
-        elif save_format == 'WEBP':
-            save_kwargs = {
-                'quality': 40,
-                'method': 6  # Best compression
-            }
-
-        input_image.save(img_buffer, format=save_format, **save_kwargs)
+        input_image.save(img_buffer, format=save_format)
         img_buffer.seek(0)
-
         
         # Upload to Supabase storage
         supabase_storage = get_supabase_storage()

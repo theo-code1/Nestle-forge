@@ -81,27 +81,29 @@ const CompressorSection = () => {
       
       console.log('Compression result:', result);
       
-      // Store the compressed image
+      // Store the compressed image with the URL from the response
       setCompressedImages(prev => ({
         ...prev,
         [imageId]: {
           url: result.url,
+          blob: result.blob,
           filename: result.filename,
-          size: result.size,
-          originalSize: result.originalSize,
-          compressionRatio: result.compressionRatio
+          size: result.compressed_size_kb * 1024, // Convert KB to bytes
+          originalSize: result.original_size_kb * 1024, // Convert KB to bytes
+          compressionRatio: result.compression_ratio_percent
         }
       }));
 
-      // Update the image details with compressed size
+      // Update the image details with compression information
       setAllUploadedImages(prev => prev.map(img => 
         img.id === imageId 
           ? {
               ...img,
               details: {
                 ...img.details,
-                compressedSize: (result.size / 1024).toFixed(2) + " KB",
-                compressionRatio: result.compressionRatio + "%"
+                originalSize: result.originalSize,
+                compressedSize: result.compressedSize,
+                compressionRatio: result.compressionRatio
               }
             }
           : img

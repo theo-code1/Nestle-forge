@@ -1,6 +1,15 @@
 import React from 'react'
 import Delete from './Icons/Delete'
 
+// Helper function to format file sizes
+const formatFileSize = (bytes) => {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+};
+
 const CompressFile = ({ 
   ImageName, 
   ImageSize, 
@@ -34,14 +43,79 @@ const CompressFile = ({
               <h2 className='text-lg'>{ImageName && ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails?.format : ImageName}</h2>
               <h3 className='text-sm'>{ImageSize}</h3>
               {isCompressed && selectedImgDetails?.compressionRatio && (
-                <h4 className='text-xs text-green-600'>Compressed by {selectedImgDetails.compressionRatio}</h4>
+                <div className='text-xs'>
+                  <p className='text-green-600'>Compressed by {Math.round(selectedImgDetails.compressionRatio)}%</p>
+                  {selectedImgDetails.originalSize && selectedImgDetails.compressedSize && (
+                    <p className='text-gray-500'>
+                      {formatFileSize(selectedImgDetails.originalSize)} → {formatFileSize(selectedImgDetails.compressedSize)}
+                    </p>
+                  )}
+                </div>
               )}
           </div>
         </div>
         <div className='btns flex items-center justify-center gap-2'>
           <button onClick={handleDelete} title='Delete' className='text-xl bg-white text-red-500 hover:bg-red-500 hover:text-white transition-all duration-100 cursor-pointer border-2 border-red-500 rounded-lg px-6 py-4 '> <Delete /> </button>
             {isCompressed && compressedImg && (
-              <a href={compressedImg} className='text-lg bg-indigo-600 text-white hover:text-indigo-600 hover:bg-white transition-all duration-100 cursor-pointer border-2 border-indigo-600 rounded-lg px-6 py-3' download={`compressed_${ImageName}`}> Download </a>
+              <button 
+                className='text-lg bg-indigo-600 text-white hover:text-indigo-600 hover:bg-white transition-all duration-100 cursor-pointer border-2 border-indigo-600 rounded-lg px-6 py-3'
+                onClick={async (e) => {
+                  e.preventDefault();
+                  try {
+                    let url = compressedImg;
+                    let filename = `compressed_${ImageName}`;
+                    
+                    // If it's a blob URL, use it directly
+                    if (!compressedImg.startsWith('blob:')) {
+                      // For regular URLs, fetch the file first
+                      const response = await fetch(compressedImg, {
+                        headers: {
+                          'Cache-Control': 'no-cache',
+                          'Pragma': 'no-cache'
+                        },
+                        credentials: 'include' // Include cookies if needed
+                      });
+                      
+                      if (!response.ok) throw new Error('Failed to fetch file');
+                      
+                      const blob = await response.blob();
+                      url = window.URL.createObjectURL(blob);
+                      
+                      // Try to get the filename from content-disposition header
+                      const contentDisposition = response.headers.get('content-disposition');
+                      if (contentDisposition) {
+                        const fileNameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                        if (fileNameMatch && fileNameMatch[1]) {
+                          filename = fileNameMatch[1].replace(/['"]/g, '');
+                        }
+                      }
+                    }
+                    
+                    // Create a temporary link and trigger download
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = filename;
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    
+                    // Clean up
+                    setTimeout(() => {
+                      document.body.removeChild(link);
+                      if (url.startsWith('blob:')) {
+                        window.URL.revokeObjectURL(url);
+                      }
+                    }, 100);
+                    
+                  } catch (error) {
+                    console.error('Download error:', error);
+                    // Fallback to opening in new tab if download fails
+                    window.open(compressedImg, '_blank', 'noopener,noreferrer');
+                  }
+                }}
+              >
+                Download
+              </button>
             )}
             {!isCompressed && (
               <button onClick={handleCompressing} className='text-lg text-indigo-600 bg-white hover:bg-indigo-600 hover:text-white transition-all duration-100 cursor-pointer border-2 border-indigo-600 rounded-lg px-6 py-3'> {isLoading ? 'compressing...' : 'Compress'} </button>

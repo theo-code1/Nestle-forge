@@ -122,7 +122,6 @@ export const convertImage = async (file, targetFormat) => {
 /**
  * Compress an image to reduce file size
  * @param {File} file - The image file to compress
- * @param {number} quality - Compression quality (1-100, default 40)
  * @returns {Promise<Object>} - The compressed file info with URL and metadata
  */
 export const compressImage = async (file, quality = 60) => {
@@ -134,7 +133,7 @@ export const compressImage = async (file, quality = 60) => {
   });
 
   const formData = new FormData();
-  formData.append('image', file);
+  formData.append('file', file); // Changed from 'image' to 'file' to match backend
 
   try {
     console.log('Sending compression request to backend...');
@@ -183,52 +182,28 @@ export const compressImage = async (file, quality = 60) => {
 
     console.log('Compression successful, parsing response...');
     
-    // Check if response is JSON (Supabase) or blob (fallback)
-    const contentType = response.headers.get('content-type') || '';
+    // Parse the JSON response
+    const result = await response.json();
+    console.log('Compression response:', result);
     
-    if (contentType.includes('application/json')) {
-      // Supabase response - return JSON with compression details
-      const result = await response.json();
-      console.log('Supabase response:', result);
-      
-      return {
-        success: true,
-        url: result.public_url,
-        filename: result.filename,
-        size: result.compressed_size,
-        originalSize: result.original_size,
-        compressionRatio: result.compression_ratio,
-        width: result.width,
-        height: result.height
-      };
-    } else {
-      // Fallback response - return blob with compression details from headers
-      const blob = await response.blob();
-      const originalSize = parseInt(response.headers.get('X-Original-Size') || file.size, 10);
-      const compressedSize = parseInt(response.headers.get('X-Compressed-Size') || blob.size, 10);
-      let compressionRatio = response.headers.get('X-Compression-Ratio');
-      
-      // Calculate ratio if not provided in headers
-      if (!compressionRatio && originalSize && compressedSize) {
-        compressionRatio = ((originalSize - compressedSize) / originalSize * 100).toFixed(2);
-      }
-      
-      console.log('Compressed blob response:', {
-        size: compressedSize,
-        originalSize,
-        compressionRatio,
-        type: blob.type,
-      });
-      
-      return {
-        success: true,
-        url: URL.createObjectURL(blob),
-        filename: `compressed_${file.name}`,
-        size: compressedSize,
-        originalSize,
-        compressionRatio: parseFloat(compressionRatio) || 0
-      };
+    if (!result.success) {
+      throw new Error(result.error || 'Compression failed');
     }
+    
+    // Convert hex string back to bytes
+    const byteCharacters = result.image_data.match(/[\da-f]{2}/g).map(h => parseInt(h, 16));
+    const byteArray = new Uint8Array(byteCharacters);
+    const blob = new Blob([byteArray], { type: `image/${result.format}` });
+    const url = URL.createObjectURL(blob);
+    
+    // Return the response data with the compressed image URL
+    return {
+      ...result,
+      file: file,
+      url: url,
+      blob: blob,
+      filename: `compressed_${file.name.replace(/\.[^/.]+$/, '')}.${result.format}`
+    };
   } catch (error) {
     console.error('Error compressing image:', error);
     throw error;
