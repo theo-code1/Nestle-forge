@@ -183,21 +183,37 @@ export const compressImage = async (file, quality = 40) => {
 
     console.log('Compression successful, parsing response...');
     
-    // Get the compressed image as blob
-    const blob = await response.blob();
-    console.log('Compressed blob response:', {
-      size: blob.size,
-      type: blob.type,
-    });
-    
-    return {
-      success: true,
-      url: URL.createObjectURL(blob),
-      filename: `compressed_${file.name}`,
-      size: blob.size,
-      originalSize: file.size,
-      compressionRatio: ((file.size - blob.size) / file.size * 100).toFixed(2)
-    };
+    // Check if response is JSON (Supabase) or blob (fallback)
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      // Supabase response - return JSON with URL
+      const result = await response.json();
+      console.log('Supabase response:', result);
+      return {
+        success: true,
+        url: result.public_url,
+        filename: result.filename,
+        size: file.size, // We don't have the actual size from Supabase
+        originalSize: file.size,
+        compressionRatio: "Unknown" // We can't calculate without actual size
+      };
+    } else {
+      // Fallback response - return blob
+      const blob = await response.blob();
+      console.log('Compressed blob response:', {
+        size: blob.size,
+        type: blob.type,
+      });
+      
+      return {
+        success: true,
+        url: URL.createObjectURL(blob),
+        filename: `compressed_${file.name}`,
+        size: blob.size,
+        originalSize: file.size,
+        compressionRatio: ((file.size - blob.size) / file.size * 100).toFixed(2)
+      };
+    }
   } catch (error) {
     console.error('Error compressing image:', error);
     throw error;

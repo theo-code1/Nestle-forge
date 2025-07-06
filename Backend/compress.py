@@ -1,7 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from PIL import Image
 import io
+import os
 from supabase_config import get_supabase_storage
 
 app = Flask(__name__)
@@ -35,19 +36,39 @@ def compress_image():
             img.save(buffer, format=img_format, optimize=True, quality=40)
             buffer.seek(0)
 
-            supabase_storage = get_supabase_storage()
-            supabase_path = f"compressed/{file.filename}"
-            content_type = file.content_type or "image/jpeg"
-            public_url = supabase_storage.upload_file(buffer.getvalue(), supabase_path, content_type)
+            # Check if Supabase is configured
+            supabase_url = os.getenv('SUPABASE_URL')
+            supabase_key = os.getenv('SUPABASE_KEY')
+            
+            if supabase_url and supabase_key:
+                try:
+                    # Try to upload to Supabase
+                    supabase_storage = get_supabase_storage()
+                    supabase_path = f"compressed/{file.filename}"
+                    content_type = file.content_type or "image/jpeg"
+                    public_url = supabase_storage.upload_file(buffer.getvalue(), supabase_path, content_type)
 
-            return jsonify({
-                "success": True,
-                "public_url": public_url,
-                "filename": file.filename
-            })
+                    return jsonify({
+                        "success": True,
+                        "public_url": public_url,
+                        "filename": file.filename
+                    })
+                except Exception as e:
+                    print(f"Supabase upload failed: {e}")
+                    # Fall back to returning the blob
+                    pass
+
+            # Return the compressed image as blob
+            buffer.seek(0)
+            return send_file(
+                buffer,
+                mimetype=file.content_type or "image/jpeg",
+                as_attachment=True,
+                download_name=f"compressed_{file.filename}"
+            )
 
         except Exception as e:
-            print("Exception during compression/upload:", str(e))
+            print("Exception during compression:", str(e))
             return jsonify({'error': f'Compression failed: {str(e)}'}), 500
     else:
         return jsonify({'error': 'Unsupported file type'}), 400
