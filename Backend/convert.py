@@ -10,11 +10,7 @@ from supabase_config import get_supabase_storage
 app = Flask(__name__)
 CORS(app)
 
-UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'tiff', 'ico', 'avif'}
-
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -68,36 +64,25 @@ def convert_image():
         img_buffer.seek(0)
         
         # Upload to Supabase storage
-        try:
-            supabase_storage = get_supabase_storage()
-            content_type = f'image/{target_format.lower()}'
-            public_url = supabase_storage.upload_file(
-                img_buffer.getvalue(),
-                output_filename,
-                content_type
-            )
-            
-            # Return the public URL instead of the file
-            return jsonify({
-                'success': True,
-                'url': public_url,
-                'filename': output_filename,
-                'size': len(img_buffer.getvalue())
-            })
-            
-        except Exception as e:
-            print(f"Supabase upload error: {e}")
-            # Fallback to local storage if Supabase fails
-            output_path = os.path.join(UPLOAD_FOLDER, output_filename)
-            input_image.save(output_path, format=save_format)
-            
-            return send_file(output_path, 
-                            mimetype=f'image/{target_format.lower()}',
-                            as_attachment=True,
-                            download_name=output_filename)
+        supabase_storage = get_supabase_storage()
+        content_type = f'image/{target_format.lower()}'
+        public_url = supabase_storage.upload_file(
+            img_buffer.getvalue(),
+            output_filename,
+            content_type
+        )
+        
+        # Return the public URL instead of the file
+        return jsonify({
+            'success': True,
+            'url': public_url,
+            'filename': output_filename,
+            'size': len(img_buffer.getvalue())
+        })
         
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        print(f"Supabase upload error: {e}")
+        return jsonify({'error': f'Supabase upload failed: {str(e)}'}), 500
 
 @app.route('/download/<path:filename>')
 def download_file(filename):

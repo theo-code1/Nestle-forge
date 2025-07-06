@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from supabase import create_client
+from supabase_config import get_supabase_storage  # ✅ This is correct
 from PIL import Image
 import io
 

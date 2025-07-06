@@ -1,13 +1,12 @@
-import os
-import io
-from flask import Flask, request, send_file, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from PIL import Image
+import io
+from supabase_config import get_supabase_storage
 
 app = Flask(__name__)
-CORS(app)  # Allow cross-origin requests (useful for React frontend)
+CORS(app)
 
-# Set allowed image extensions
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'webp'}
 
 def allowed_file(filename):
@@ -29,23 +28,29 @@ def compress_image():
             img = Image.open(file.stream)
             img_format = img.format or "JPEG"
 
-            # Convert to RGB if needed
             if img.mode in ("RGBA", "P"):
                 img = img.convert("RGB")
 
             buffer = io.BytesIO()
-            img.save(buffer, format=img_format, optimize=True, quality=40)  # You can tweak quality
+            img.save(buffer, format=img_format, optimize=True, quality=40)
             buffer.seek(0)
 
-            return send_file(
-                buffer,
-                mimetype=f'image/{img_format.lower()}',
-                download_name=f"compressed_{file.filename}"
-            )
+            supabase_storage = get_supabase_storage()
+            supabase_path = f"compressed/{file.filename}"
+            content_type = file.content_type or "image/jpeg"
+            public_url = supabase_storage.upload_file(buffer.getvalue(), supabase_path, content_type)
+
+            return jsonify({
+                "success": True,
+                "public_url": public_url,
+                "filename": file.filename
+            })
+
         except Exception as e:
+            print("Exception during compression/upload:", str(e))
             return jsonify({'error': f'Compression failed: {str(e)}'}), 500
     else:
         return jsonify({'error': 'Unsupported file type'}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
