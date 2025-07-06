@@ -20,14 +20,14 @@ const ConvertedImg = ({ convertedImage, ImageName, ImageSize, DownloadImg, imgHr
         <div className="img-labels flex items-center gap-4">
           <img src={convertedImage} alt="Converted image" className='size-24 rounded-md object-cover'/>
           <div className="img-details h-26 pt-2 text-black">
-              <h2 className='text-lg'>{ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails.format : ImageName}</h2>
+              <h2 className='text-lg'>{ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails.format.toLowerCase() : ImageName}</h2>
               <h3 className='text-sm'>{ImageSize}</h3>
           </div>
         </div>
 
         {selectedImg && (
               <>
-                <div className="select-formats flex items-center gap-4 mt-4 z-30">
+                <div className="select-formats h-fit flex items-center gap-4 z-30">
                   <button
                     type="button"
                     className="text-lg font-medium border-indigo-700 border px-4 py-2 rounded-lg"

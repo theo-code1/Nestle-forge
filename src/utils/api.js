@@ -120,6 +120,91 @@ export const convertImage = async (file, targetFormat) => {
 };
 
 /**
+ * Compress an image to reduce file size
+ * @param {File} file - The image file to compress
+ * @param {number} quality - Compression quality (1-100, default 40)
+ * @returns {Promise<Object>} - The compressed file info with URL and metadata
+ */
+export const compressImage = async (file, quality = 40) => {
+  console.log('Starting compression:', {
+    fileName: file.name,
+    fileSize: file.size,
+    fileType: file.type,
+    quality
+  });
+
+  const formData = new FormData();
+  formData.append('image', file);
+
+  try {
+    console.log('Sending compression request to backend...');
+    
+    const apiUrl = getApiUrl();
+    console.log('Request details:', {
+      url: `${apiUrl}/compress`,
+      method: 'POST',
+      file: {
+        name: file.name,
+        type: file.type,
+        size: file.size
+      },
+      quality
+    });
+    
+    const response = await fetch(`${apiUrl}/compress`, {
+      method: 'POST',
+      body: formData,
+    });
+    
+    console.log('Response received:', {
+      status: response.status,
+      statusText: response.statusText,
+      headers: Object.fromEntries([...response.headers.entries()])
+    });
+
+    if (!response.ok) {
+      let errorMessage = `Server error: ${response.status} ${response.statusText}`;
+      try {
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const errorData = await response.json();
+          console.error('Error response JSON:', errorData);
+          errorMessage = errorData.error || errorData.details || errorMessage;
+        } else {
+          const text = await response.text();
+          console.error('Error response text:', text);
+          errorMessage = text || errorMessage;
+        }
+      } catch (e) {
+        console.error('Error parsing error response:', e);
+      }
+      throw new Error(errorMessage);
+    }
+
+    console.log('Compression successful, parsing response...');
+    
+    // Get the compressed image as blob
+    const blob = await response.blob();
+    console.log('Compressed blob response:', {
+      size: blob.size,
+      type: blob.type,
+    });
+    
+    return {
+      success: true,
+      url: URL.createObjectURL(blob),
+      filename: `compressed_${file.name}`,
+      size: blob.size,
+      originalSize: file.size,
+      compressionRatio: ((file.size - blob.size) / file.size * 100).toFixed(2)
+    };
+  } catch (error) {
+    console.error('Error compressing image:', error);
+    throw error;
+  }
+};
+
+/**
  * Download a blob as a file
  * @param {Blob} blob - The blob to download
  * @param {string} filename - The desired filename
