@@ -2,7 +2,7 @@
  * Handles API calls to the backend server
  */
 
-const API_URL = 'http://localhost:5001';
+const API_URL = 'http://localhost:5001'; 
 
 const getApiUrl = () => {
   return API_URL;

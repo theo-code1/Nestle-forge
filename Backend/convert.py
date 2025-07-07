@@ -22,24 +22,36 @@ def generate_unique_filename(original_filename, target_format):
 
 @app.route('/convert', methods=['POST'])
 def convert_image():
+    print("\n=== New Conversion Request ===")
+    print(f"Request headers: {request.headers}")
+    print(f"Request form data: {request.form}")
+    
     if 'file' not in request.files:
+        print("Error: No file in request")
         return jsonify({'error': 'No file provided'}), 400
     
     file = request.files['file']
     target_format = request.form.get('format')
     
+    print(f"Processing file: {file.filename}")
+    print(f"Target format: {target_format}")
+    
     if not file or file.filename == '':
+        print("Error: No file selected")
         return jsonify({'error': 'No file selected'}), 400
     
     if not target_format:
+        print("Error: No target format specified")
         return jsonify({'error': 'No target format specified'}), 400
     
     if not allowed_file(file.filename):
+        print(f"Error: File type not allowed: {file.filename}")
         return jsonify({'error': 'File type not allowed'}), 400
     
     try:
-        # Read the input image
+        print("Opening image...")
         input_image = Image.open(file.stream)
+        print(f"Image opened successfully. Format: {input_image.format}, Size: {input_image.size}, Mode: {input_image.mode}")
         
         # If image is in RGBA mode and target format is JPEG, convert to RGB
         if target_format.lower() in ['jpg', 'jpeg']:
@@ -81,8 +93,14 @@ def convert_image():
         })
         
     except Exception as e:
-        print(f"Supabase upload error: {e}")
-        return jsonify({'error': f'Supabase upload failed: {str(e)}'}), 500
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"Error processing image: {error_details}")
+        return jsonify({
+            'error': 'Error processing image',
+            'details': str(e),
+            'type': type(e).__name__
+        }), 500
 
 @app.route('/download/<path:filename>')
 def download_file(filename):
