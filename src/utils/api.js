@@ -234,3 +234,58 @@ export const downloadBlob = (blob, filename) => {
     URL.revokeObjectURL(url);
   }, 0);
 };
+
+
+/**
+ * Remove background from an image
+ * @param {File} file - The image file to process
+ * @returns {Promise<Object>} - The processed file info with URL and metadata
+ */
+export const removeBackground = async (file) => {
+  console.log('Starting background removal:', {
+    fileName: file.name,
+    fileSize: file.size,
+    fileType: file.type,
+  });
+
+  const formData = new FormData();
+  formData.append('image', file);
+
+  try {
+    const response = await fetch('http://localhost:8000/remove-background', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      let errorMessage = `Server error: ${response.status} ${response.statusText}`;
+      try {
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorData.details || errorMessage;
+        } else {
+          const text = await response.text();
+          errorMessage = text || errorMessage;
+        }
+      } catch (e) {
+        // ignore
+      }
+      throw new Error(errorMessage);
+    }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+
+    return {
+      success: true,
+      url,
+      filename: `${file.name.split('.')[0]}_bgremoved.png`,
+      size: blob.size,
+      blob,
+    };
+  } catch (error) {
+    console.error('Error removing background:', error);
+    throw error;
+  }
+};

@@ -40,23 +40,14 @@ const BgRemoverSection = () => {
 
   const handleRemoveBg = async () => {
     if (!selectedImage) return;
-    setLoading(true)
-    const formData = new FormData();
-    formData.append("image", selectedImage);
+    setLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/remove-background", {
-        method: "POST",
-        body: formData,
-      });
-      if (!response.ok) throw new Error("Failed to remove background");
-      const blob = await response.blob();
-      const resultUrl = URL.createObjectURL(blob);
-      setProcessedImage(resultUrl);
+      const result = await removeBackground(selectedImage);
+      setProcessedImage(result.url);
     } catch (err) {
-      console.error(err);
-      alert("Background removal failed.");
+      alert('Background removal failed.');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
