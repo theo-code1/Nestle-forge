@@ -9,15 +9,15 @@ body {
   font-family: Roboto, 'sans-serif';  
 }
 a.active {
-  color: rgb(38, 38, 251);
+  color: rgb(32, 32, 220);
 }
 
-.before-image{
-  animation: slideBefore linear 2s backwards;
+.img-layer{
+  animation: slideBefore linear 2s forwards;
 }
 @keyframes slideBefore{
   0%{
-    min-width: fit-content;
+    min-width: 600px;
   }
   100%{
     min-width: 0px;

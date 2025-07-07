@@ -94,22 +94,24 @@ const BgRemoverSection = () => {
         />
         {imagePreview ? (
           <div className="before-after relative flex flex-col items-center justify-center w-full h-full">
-            <img
-              src={imagePreview}
-              alt="Uploaded Preview"
-              className={`${ animationBefore ? 'before-image' : ''}  min-w-fit max-h-[50dvh] object-cover rounded shadow`}
-              onAnimationEnd={() => setAnimationBefore(false)}
-            />
+            <div className={`${animationBefore && processedImage ? 'img-layer w-0' : ''}  overflow-hidden flex items-center justify-center`}  style={{ minWidth: animationBefore ? 600 : undefined }}>
+              <img
+                src={imagePreview}
+                alt="Uploaded Preview"
+                className={`min-w-fit max-h-[50dvh] object-cover rounded shadow select-none`}
+                onAnimationEnd={() => setAnimationBefore(false)}
+                />
+            </div>
             {processedImage && (
 
               <img
               src={processedImage}
               alt="Result Preview"
-              className="absolute right- top-0 min-w-fit max-h-[50dvh] object-cover rounded shadow"
+              className="absolute right- top-0 min-w-fit max-h-[50dvh] object-cover rounded shadow select-none"
               />
             )}
             <button
-              className="absolute top-2 right-4 text-3xl bg-transparent text-red-500 cursor-pointer  hover:text-red-700 hover:bg-white/50 rounded-full transition-all duration-100"
+              className="absolute top-0 right-4 text-3xl bg-transparent text-red-500 cursor-pointer  hover:text-red-700 hover:bg-white/50 rounded-full transition-all duration-100"
               onClick={handleRemoveImage}
             >
               <XDelete />
