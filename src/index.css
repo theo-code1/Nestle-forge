@@ -11,3 +11,16 @@ body {
 a.active {
   color: rgb(38, 38, 251);
 }
+
+.before-image{
+  animation: slideBefore linear 1s ;
+}
+@keyframes slideBefore{
+
+  0%{
+    min-width: fit-content;
+  }
+  100%{
+    min-width: 0px;
+  }
+}

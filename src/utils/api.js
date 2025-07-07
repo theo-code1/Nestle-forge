@@ -242,18 +242,16 @@ export const downloadBlob = (blob, filename) => {
  * @returns {Promise<Object>} - The processed file info with URL and metadata
  */
 export const removeBackground = async (file) => {
-  console.log('Starting background removal:', {
-    fileName: file.name,
-    fileSize: file.size,
-    fileType: file.type,
-  });
-
   const formData = new FormData();
-  formData.append('image', file);
+  formData.append('image_file', file); // <-- Correct field name
 
   try {
-    const response = await fetch('http://localhost:8000/remove-background', {
+    const response = await fetch('https://api.remove.bg/v1.0/removebg', {
       method: 'POST',
+      headers: {
+        'X-Api-Key': 'dsvgvULgyvxLgmxrBs7Vpsjv'
+        // Do NOT set Content-Type, let the browser set it for FormData!
+      },
       body: formData,
     });
 
@@ -263,12 +261,13 @@ export const removeBackground = async (file) => {
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
           const errorData = await response.json();
-          errorMessage = errorData.error || errorData.details || errorMessage;
+          errorMessage = errorData.errors?.[0]?.title || errorData.error || errorData.details || errorMessage;
         } else {
           const text = await response.text();
           errorMessage = text || errorMessage;
         }
       } catch (e) {
+        console.error(e)
         // ignore
       }
       throw new Error(errorMessage);

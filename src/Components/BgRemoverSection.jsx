@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import XDelete from './Icons/XDelete'
 import Upload from './Icons/Upload'
+import { removeBackground } from '../utils/api';
 
 const BgRemoverSection = () => {
   const [imagePreview, setImagePreview] = useState(null)
@@ -45,7 +46,7 @@ const BgRemoverSection = () => {
       const result = await removeBackground(selectedImage);
       setProcessedImage(result.url);
     } catch (err) {
-      alert('Background removal failed.');
+      alert('Background removal failed.' + err);
     } finally {
       setLoading(false);
     }
@@ -90,12 +91,20 @@ const BgRemoverSection = () => {
           onChange={handleFileChange}
         />
         {imagePreview ? (
-          <div className="flex flex-col items-center justify-center w-full h-full relative">
+          <div className="before-after relative flex flex-col items-center justify-center w-full h-full">
             <img
-              src={processedImage ? processedImage : imagePreview}
+              src={imagePreview}
               alt="Uploaded Preview"
-              className="min-w-fit max-h-[50dvh] object-cover rounded shadow"
+              className={`${processedImage ? '' : ''} before-image min-w-fit max-h-[50dvh] object-cover rounded shadow`}
             />
+            {processedImage && (
+
+              <img
+              src={processedImage}
+              alt="Result Preview"
+              className="absolute right- top-0 min-w-fit max-h-[50dvh] object-cover rounded shadow"
+              />
+            )}
             <button
               className="absolute top-2 right-4 text-3xl bg-transparent text-red-500 cursor-pointer  hover:text-red-700 hover:bg-white/50 rounded-full transition-all duration-100"
               onClick={handleRemoveImage}
