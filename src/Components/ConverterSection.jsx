@@ -159,7 +159,7 @@ export default function ConverterSection() {
   };
 
   return (
-    <section className="flex flex-col items-center gap-8 py-16 overflow-y-auto overflow-x-hidden max-h-[90dvh]">
+    <section className="flex flex-col items-center gap-8 pt-16 pb-12 overflow-y-auto overflow-x-hidden max-h-[90dvh]">
       <div className="heading flex flex-col items-center gap-4">
         <h1 className="text-4xl font-medium text-center">
           Convert your images to any Format you want
@@ -285,39 +285,6 @@ export default function ConverterSection() {
 
         </div>
       )}
-
-      {/* Footer Section */}
-      <div className="w-full mt-16 py-8 border-t border-gray-200">
-        <div className="max-w-4xl mx-auto text-center">
-          <h3 className="text-2xl font-semibold text-gray-800 mb-4">Why Choose Our Image Converter?</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <span className="text-indigo-600 text-xl">⚡</span>
-              </div>
-              <h4 className="font-semibold text-gray-800 mb-2">Fast & Efficient</h4>
-              <p className="text-gray-600 text-sm">Convert multiple images simultaneously with our optimized processing</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <span className="text-indigo-600 text-xl">🔒</span>
-              </div>
-              <h4 className="font-semibold text-gray-800 mb-2">Secure Processing</h4>
-              <p className="text-gray-600 text-sm">Your images are processed locally and never stored on our servers</p>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <span className="text-indigo-600 text-xl">🎨</span>
-              </div>
-              <h4 className="font-semibold text-gray-800 mb-2">High Quality</h4>
-              <p className="text-gray-600 text-sm">Maintain image quality across all supported formats</p>
-            </div>
-          </div>
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <p className="text-gray-500 text-sm">© 2025 Image Converter. Built with React & Flask for seamless image conversion.</p>
-          </div>
-        </div>
-      </div>
 
     </section>
   );

@@ -13,11 +13,11 @@ a.active {
 }
 
 .img-layer{
-  animation: slideBefore linear 2s forwards;
+  animation: slideBefore linear 1.5s forwards;
 }
 @keyframes slideBefore{
   0%{
-    min-width: 600px;
+    width: 1000px;
   }
   100%{
     min-width: 0px;

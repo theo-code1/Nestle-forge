@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react'
 import XDelete from './Icons/XDelete'
 import Upload from './Icons/Upload'
 import { removeBackground } from '../utils/api';
+import ReFooter from './ReFooter'
 
 const BgRemoverSection = () => {
   const [imagePreview, setImagePreview] = useState(null)
@@ -10,6 +11,7 @@ const BgRemoverSection = () => {
   const [loading, setLoading] = useState(false)
   const fileInputRef = useRef(null)
   const [animationBefore, setAnimationBefore] = useState(false)
+  const [showErr, setShowErr] = useState('')
 
   const handleDrop = (e) => {
     e.preventDefault()
@@ -48,7 +50,8 @@ const BgRemoverSection = () => {
       setProcessedImage(result.url);
       setAnimationBefore(true)
     } catch (err) {
-      alert('Background removal failed.' + err);
+      setShowErr('Image resolution is not good')
+      console.error(err)
     } finally {
       setLoading(false);
     }
@@ -94,38 +97,29 @@ const BgRemoverSection = () => {
         />
         {imagePreview ? (
           <div className="before-after relative flex flex-col items-center justify-center w-full h-full">
-            <div className={`${animationBefore && processedImage ? 'img-layer w-0' : ''}  overflow-hidden flex items-center justify-center`}  style={{ minWidth: animationBefore ? 600 : undefined }}>
+            <div className={`${animationBefore && processedImage ? 'img-layer w-0' : ''}  w-full h-full overflow-hidden flex items-center justify-center`}  
+                style={{ minWidth: animationBefore ? 800 : undefined }}>
               <img
                 src={imagePreview}
                 alt="Uploaded Preview"
-                className={`min-w-fit max-h-[50dvh] object-cover rounded shadow select-none`}
+                className={` max-h-[50dvh] object-cover rounded shadow select-none`}
                 onAnimationEnd={() => setAnimationBefore(false)}
                 />
-            </div>
-            {processedImage && (
-
-              <img
-              src={processedImage}
-              alt="Result Preview"
-              className="absolute right- top-0 min-w-fit max-h-[50dvh] object-cover rounded shadow select-none"
-              />
-            )}
+              {processedImage && (
+                
+                <img
+                src={processedImage}
+                alt="Result Preview"
+                className="absolute right- top-0 min-w-fit max-h-[50dvh] object-cover rounded shadow select-none"
+                />
+              )}
+              </div>
             <button
               className="absolute top-0 right-4 text-3xl bg-transparent text-red-500 cursor-pointer  hover:text-red-700 hover:bg-white/50 rounded-full transition-all duration-100"
               onClick={handleRemoveImage}
             >
               <XDelete />
             </button>
-            {!processedImage && (
-              <button
-                type="button"
-                className="mt-6 px-6 py-3 text-lg bg-indigo-600 text-white rounded-lg disabled:bg-indigo-400 disabled:cursor-not-allowed"
-                onClick={handleRemoveBg}
-                disabled={loading}
-              >
-                {loading ? 'Processing...' : 'Remove Background'}
-              </button>
-            )}
           </div>
         ) : (
           <>
@@ -141,10 +135,25 @@ const BgRemoverSection = () => {
           </>
         )}
       </div>
+
+        {showErr !== "" && imagePreview && (
+          <span className='text-red-500 text-sm mt-4'>{showErr}</span>
+        )}
+
+        {!processedImage && (
+          <button
+            type="button"
+            className={` ${showErr !== '' ? 'mt-3' : 'mt-6'} px-6 py-3 text-lg bg-indigo-600 text-white rounded-lg disabled:bg-indigo-400 disabled:cursor-not-allowed`}
+            onClick={handleRemoveBg}
+            disabled={loading}
+          >
+            {loading ? 'Processing...' : 'Remove Background'}
+          </button>
+        )}
       {processedImage && (
         <button
           type="button"
-          className="px-6 py-3 text-lg bg-indigo-600 text-white rounded-lg"
+          className="px-6 py-3 mt-4 text-lg bg-indigo-600 text-white rounded-lg"
           onClick={handleDownload}
         >
           Download

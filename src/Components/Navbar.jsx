@@ -42,9 +42,10 @@ const Navbar = () => {
             >{option}</option>
             
         ))} */}
-        <div className="login-buttons flex gap-2">
-            <button className='bg-indigo-600 text-white px-4 py-2 rounded-lg hover:brightness-90 active:brightness-80 transition-all duration-150' type='submit'>Sign up</button>
-            <button className='border border-indigo-600 text-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-50 active:bg-indigo-100 transition-all duration-150' type='submit'>Login</button>
+        <div className="mode-toggle  ">
+            <button className='w-24 h-10 border rounded-full'>
+                
+            </button>
         </div>
     </nav>
   )
