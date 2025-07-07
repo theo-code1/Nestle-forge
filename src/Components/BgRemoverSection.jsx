@@ -1,9 +1,11 @@
 import React, { useState, useRef } from 'react'
 import XDelete from './Icons/XDelete'
+import Upload from './Icons/Upload'
 
 const BgRemoverSection = () => {
   const [imagePreview, setImagePreview] = useState(null)
   const fileInputRef = useRef(null)
+  const [bgRemoved, setBgRemoved] = useState(false)
 
   const handleDrop = (e) => {
     e.preventDefault()
@@ -37,7 +39,7 @@ const BgRemoverSection = () => {
         <h3 className='text-[16px] text-center'>Instantly erase backgrounds to create clean, transparent images—perfect for design,<br />profiles, or web use.</h3>
       </div>
       <div
-        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-1/2 pt-16 pb-12 px-16 mt-12 rounded-xl border-2 border-dashed mx-auto hover:border-indigo-600 cursor-pointer`}
+        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-1/2 ${imagePreview ? 'py-4' : 'pt-16 pb-12 px-16'} mt-12 rounded-xl border-2 border-dashed mx-auto hover:border-indigo-600 cursor-pointer`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onClick={handleClick}
@@ -56,7 +58,7 @@ const BgRemoverSection = () => {
             <img
               src={imagePreview}
               alt="Uploaded Preview"
-              className="max-w-xs max-h-64 object-contain rounded shadow"
+              className="max-w-8/10 max-h-84 object-contain rounded shadow border"
             />
             <button
               className="absolute top-2 right-4 text-3xl bg-transparent text-red-500 cursor-pointer hover:bg-red-500 hover:text-white rounded-full"
@@ -68,17 +70,21 @@ const BgRemoverSection = () => {
         ) : (
           <>
             {/* You can add your <Upload /> icon here if you have it */}
-            <div className="text-center">
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">Drop your images here</h3>
-              <p className="text-gray-600 text-sm mb-4">or click to browse files</p>
+            <div className="text-center flex flex-col items-center gap-4">
+              <Upload />
+              <h3 className="text-xl font-semibold text-gray-800 ">Drop your images here</h3>
+              <p className="text-gray-600 text-sm -mb-2">or click to browse files</p>
               <p className="text-xs text-gray-500">Supports: PNG, JPG, JPEG, GIF, BMP, WEBP, TIFF, ICO, AVIF</p>
             </div>
-            <span className="bg-indigo-600 text-white px-4 py-2 rounded-full hover:brightness-90 active:brightness-80 transition-all duration-150">
+            <span className="bg-indigo-600 text-white px-4 py-2 mt-2 rounded-full hover:brightness-90 active:brightness-80 transition-all duration-150">
               Upload Image
             </span>
           </>
         )}
       </div>
+      {bgRemoved && (
+        <button type="button" className='px-6 py-3 text-lg bg-indigo-600 text-white rounded-lg'>Download</button>
+      )}
     </section>
   )
 }
