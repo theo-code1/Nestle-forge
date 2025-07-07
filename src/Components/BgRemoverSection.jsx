@@ -9,6 +9,7 @@ const BgRemoverSection = () => {
   const [processedImage, setProcessedImage] = useState(null) // URL for processed image
   const [loading, setLoading] = useState(false)
   const fileInputRef = useRef(null)
+  const [animationBefore, setAnimationBefore] = useState(false)
 
   const handleDrop = (e) => {
     e.preventDefault()
@@ -45,6 +46,7 @@ const BgRemoverSection = () => {
     try {
       const result = await removeBackground(selectedImage);
       setProcessedImage(result.url);
+      setAnimationBefore(true)
     } catch (err) {
       alert('Background removal failed.' + err);
     } finally {
@@ -95,7 +97,8 @@ const BgRemoverSection = () => {
             <img
               src={imagePreview}
               alt="Uploaded Preview"
-              className={`${processedImage ? '' : ''} before-image min-w-fit max-h-[50dvh] object-cover rounded shadow`}
+              className={`${ animationBefore ? 'before-image' : ''}  min-w-fit max-h-[50dvh] object-cover rounded shadow`}
+              onAnimationEnd={() => setAnimationBefore(false)}
             />
             {processedImage && (
 

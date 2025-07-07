@@ -13,10 +13,9 @@ a.active {
 }
 
 .before-image{
-  animation: slideBefore linear 1s ;
+  animation: slideBefore linear 2s backwards;
 }
 @keyframes slideBefore{
-
   0%{
     min-width: fit-content;
   }
