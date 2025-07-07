@@ -2,7 +2,7 @@ import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } 
 import UpscalerSection from './Components/UpscalerSection'
 import ConverterSection from './Components/ConverterSection'
 import CompressorSection from './Components/CompressorSection'
-import BgRemoverSection from './Components/BgRemoveSection'
+import BgRemoverSection from './Components/BgRemoverSection'
 import NotFound from './Components/NotFound'
 import RootLayout from './Layout/Rootlayout'
 
