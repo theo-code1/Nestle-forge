@@ -4,8 +4,10 @@ import Upload from './Icons/Upload'
 
 const BgRemoverSection = () => {
   const [imagePreview, setImagePreview] = useState(null)
+  const [selectedImage, setSelectedImage] = useState(null) // File object
+  const [processedImage, setProcessedImage] = useState(null) // URL for processed image
+  const [loading, setLoading] = useState(false)
   const fileInputRef = useRef(null)
-  const [bgRemoved, setBgRemoved] = useState(false)
 
   const handleDrop = (e) => {
     e.preventDefault()
@@ -13,6 +15,8 @@ const BgRemoverSection = () => {
     const file = e.dataTransfer.files[0]
     if (file && file.type.startsWith('image/')) {
       setImagePreview(URL.createObjectURL(file))
+      setSelectedImage(file)
+      setProcessedImage(null)
     }
   }
 
@@ -25,11 +29,52 @@ const BgRemoverSection = () => {
     const file = e.target.files[0]
     if (file && file.type.startsWith('image/')) {
       setImagePreview(URL.createObjectURL(file))
+      setSelectedImage(file)
+      setProcessedImage(null)
     }
   }
 
   const handleClick = () => {
     fileInputRef.current.click()
+  }
+
+  const handleRemoveBg = async () => {
+    if (!selectedImage) return;
+    setLoading(true)
+    const formData = new FormData();
+    formData.append("image", selectedImage);
+    try {
+      const response = await fetch("http://localhost:8000/remove-background", {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) throw new Error("Failed to remove background");
+      const blob = await response.blob();
+      const resultUrl = URL.createObjectURL(blob);
+      setProcessedImage(resultUrl);
+    } catch (err) {
+      console.error(err);
+      alert("Background removal failed.");
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  const handleRemoveImage = (e) => {
+    e.stopPropagation();
+    setImagePreview(null);
+    setSelectedImage(null);
+    setProcessedImage(null);
+  }
+
+  const handleDownload = () => {
+    if (!processedImage) return;
+    const link = document.createElement('a');
+    link.href = processedImage;
+    link.download = 'bg-removed.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   return (
@@ -39,10 +84,10 @@ const BgRemoverSection = () => {
         <h3 className='text-[16px] text-center'>Instantly erase backgrounds to create clean, transparent images—perfect for design,<br />profiles, or web use.</h3>
       </div>
       <div
-        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-1/2 ${imagePreview ? 'py-4' : 'pt-16 pb-12 px-16'} mt-12 rounded-xl border-2 border-dashed mx-auto hover:border-indigo-600 cursor-pointer`}
+        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-1/2 ${imagePreview ? 'border-2 border-transparent  border-solid' : 'border-2 pt-16 pb-12 px-16 hover:border-indigo-600  border-dashed'} mt-12 rounded-xl mx-auto cursor-pointer`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
-        onClick={handleClick}
+        onClick={!imagePreview ? handleClick : undefined}
       >
         <input
           type="file"
@@ -54,22 +99,31 @@ const BgRemoverSection = () => {
           onChange={handleFileChange}
         />
         {imagePreview ? (
-          <div className="flex flex-col items-center justify-center w-full h-full">
+          <div className="flex flex-col items-center justify-center w-full h-full relative">
             <img
-              src={imagePreview}
+              src={processedImage ? processedImage : imagePreview}
               alt="Uploaded Preview"
-              className="max-w-8/10 max-h-84 object-contain rounded shadow border"
+              className="min-w-fit max-h-[50dvh] object-cover rounded shadow"
             />
             <button
-              className="absolute top-2 right-4 text-3xl bg-transparent text-red-500 cursor-pointer hover:bg-red-500 hover:text-white rounded-full"
-              onClick={e => { e.stopPropagation(); setImagePreview(null) }}
+              className="absolute top-2 right-4 text-3xl bg-transparent text-red-500 cursor-pointer  hover:text-red-700 hover:bg-white/50 rounded-full transition-all duration-100"
+              onClick={handleRemoveImage}
             >
               <XDelete />
             </button>
+            {!processedImage && (
+              <button
+                type="button"
+                className="mt-6 px-6 py-3 text-lg bg-indigo-600 text-white rounded-lg disabled:bg-indigo-400 disabled:cursor-not-allowed"
+                onClick={handleRemoveBg}
+                disabled={loading}
+              >
+                {loading ? 'Processing...' : 'Remove Background'}
+              </button>
+            )}
           </div>
         ) : (
           <>
-            {/* You can add your <Upload /> icon here if you have it */}
             <div className="text-center flex flex-col items-center gap-4">
               <Upload />
               <h3 className="text-xl font-semibold text-gray-800 ">Drop your images here</h3>
@@ -82,8 +136,14 @@ const BgRemoverSection = () => {
           </>
         )}
       </div>
-      {bgRemoved && (
-        <button type="button" className='px-6 py-3 text-lg bg-indigo-600 text-white rounded-lg'>Download</button>
+      {processedImage && (
+        <button
+          type="button"
+          className="px-6 py-3 text-lg bg-indigo-600 text-white rounded-lg"
+          onClick={handleDownload}
+        >
+          Download
+        </button>
       )}
     </section>
   )
