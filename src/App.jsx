@@ -1,5 +1,4 @@
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
-import UpscalerSection from './Components/UpscalerSection'
 import ConverterSection from './Components/ConverterSection'
 import CompressorSection from './Components/CompressorSection'
 import BgRemoverSection from './Components/BgRemoverSection'
