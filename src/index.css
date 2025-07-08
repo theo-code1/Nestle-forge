@@ -17,9 +17,9 @@ a.active {
 }
 @keyframes slideBefore{
   0%{
-    width: 1000px;
+    width: full;
   }
   100%{
-    min-width: 0px;
+    width: 0px;
   }
 }

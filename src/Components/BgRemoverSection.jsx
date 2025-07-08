@@ -97,23 +97,23 @@ const BgRemoverSection = () => {
         />
         {imagePreview ? (
           <div className="before-after relative flex flex-col items-center justify-center w-full h-full">
-            <div className={`${animationBefore && processedImage ? 'img-layer w-0' : ''}  w-full h-full overflow-hidden flex items-center justify-center`}  
-                style={{ minWidth: animationBefore ? 800 : undefined }}>
+            <div className={`${animationBefore && processedImage ? 'img-layer overflow-hidden' : ''} relative w-full max-h-[50dvh] flex items-center justify-center`}
+              // onAnimationEnd={() => setAnimationBefore(false)}
+            >
               <img
                 src={imagePreview}
                 alt="Uploaded Preview"
-                className={` max-h-[50dvh] object-cover rounded shadow select-none`}
-                onAnimationEnd={() => setAnimationBefore(false)}
+                className={`min-w-fit max-h-[50dvh] object-cover shadow select-none`}
                 />
-              {processedImage && (
+                </div>
                 
+              {processedImage && (
                 <img
                 src={processedImage}
                 alt="Result Preview"
-                className="absolute right-0 top-0 min-w-full max-h-[50dvh] object-cover rounded shadow select-none"
+                className="absolute left-1/2 top-0 -translate-x-1/2 min-w-fit min-h-full object-cover shadow select-none"
                 />
               )}
-              </div>
             <button
               className="absolute top-0 right-4 text-3xl bg-transparent text-red-500 cursor-pointer  hover:text-red-700 hover:bg-white/50 rounded-full transition-all duration-100"
               onClick={handleRemoveImage}
