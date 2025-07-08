@@ -3,6 +3,7 @@ import UpscalerSection from './Components/UpscalerSection'
 import ConverterSection from './Components/ConverterSection'
 import CompressorSection from './Components/CompressorSection'
 import BgRemoverSection from './Components/BgRemoverSection'
+import PaletteExSection from './Components/PaletteExSection'
 import NotFound from './Components/NotFound'
 import RootLayout from './Layout/Rootlayout'
 
@@ -17,8 +18,7 @@ const App = () => {
         <Route path='image-converter' element={<ConverterSection />} />
         <Route path='image-compressor' element={<CompressorSection />} />
         <Route path='background-remover' element={<BgRemoverSection />} />
-        {/* <Route path='image-resizer-cropper' element={<ImgResizerSection />} /> */}
-        {/* <Route path='color-palette-extractor' element={<PaletteExSection />} /> */}
+        <Route path='color-palette-extractor' element={<PaletteExSection />} />
         <Route path='*' element={<NotFound />} />
       </Route>
     )

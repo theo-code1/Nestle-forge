@@ -159,7 +159,7 @@ export default function ConverterSection() {
   };
 
   return (
-    <section className="flex flex-col items-center gap-8 pt-16 pb-12 overflow-y-auto overflow-x-hidden max-h-[90dvh]">
+    <section className="flex flex-col items-center gap-8 pt-16 pb-12 overflow-y-auto overflow-x-hidden max-h-screen">
       <div className="heading flex flex-col items-center gap-4">
         <h1 className="text-4xl font-medium text-center">
           Convert your images to any Format you want
@@ -172,7 +172,7 @@ export default function ConverterSection() {
 
       <div className="files-management relative w-full flex items-start">
         <div
-          className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-1/2 pt-16 pb-12 px-16 mt-12 rounded-xl border-2 border-dashed mx-auto ${
+          className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-1/2 pt-16 pb-12 px-16 mt-16 rounded-xl border-2 border-dashed mx-auto ${
             Object.values(loadingImages).some(loading => loading)
               ? "cursor-not-allowed opacity-70"
               : "cursor-pointer opacity-100"

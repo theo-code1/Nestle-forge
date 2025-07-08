@@ -75,13 +75,13 @@ const BgRemoverSection = () => {
   }
 
   return (
-    <section className='flex flex-col items-center gap-8 py-16 overflow-y-auto overflow-x-hidden max-h-[90dvh]'>
+    <section className='flex flex-col items-center gap-8 py-16 overflow-y-auto overflow-x-hidden max-h-screen'>
       <div className="headers flex flex-col gap-4">
         <h1 className='text-4xl text-black text-center font-medium'>Remove Background from you images</h1>
         <h3 className='text-[16px] text-center'>Instantly erase backgrounds to create clean, transparent images—perfect for design,<br />profiles, or web use.</h3>
       </div>
       <div
-        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-1/2 ${imagePreview ? 'border-2 border-transparent  border-solid' : 'border-2 pt-16 pb-12 px-16 hover:border-indigo-600  border-dashed'} mt-12 rounded-xl mx-auto cursor-pointer`}
+        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-1/2 ${imagePreview ? 'border-2 border-transparent  border-solid' : 'border-2 pt-16 pb-12 px-16 hover:border-indigo-600  border-dashed'} mt-16 rounded-xl mx-auto cursor-pointer`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onClick={!imagePreview ? handleClick : undefined}
