@@ -75,7 +75,7 @@ const BgRemoverSection = () => {
   }
 
   return (
-    <section className='flex flex-col items-center gap-8 py-16 overflow-y-auto overflow-x-hidden max-h-screen'>
+    <section className='flex flex-col items-center gap-8 py-16 overflow-y-auto overflow-x-hidden min-h-screen'>
       <div className="headers flex flex-col gap-4">
         <h1 className='text-4xl text-black text-center font-medium'>Remove Background from you images</h1>
         <p className='text-[16px] text-center'>Instantly erase backgrounds to create clean, transparent images—perfect for design,<br />profiles, or web use.</p>
@@ -103,7 +103,7 @@ const BgRemoverSection = () => {
               <img
                 src={imagePreview}
                 alt="Uploaded Preview"
-                className={`min-w-fit max-h-[50dvh] object-cover shadow select-none`}
+                className={`min-w-fit max-h-[50dvh] object-cover shadow select-none rounded-lg`}
                 />
                 </div>
                 
@@ -111,11 +111,11 @@ const BgRemoverSection = () => {
                 <img
                 src={processedImage}
                 alt="Result Preview"
-                className="absolute left-1/2 top-0 -translate-x-1/2 min-w-fit min-h-full object-cover shadow select-none"
+                className="absolute left-1/2 top-0 -translate-x-1/2 min-w-fit min-h-full object-cover shadow select-none rounded-lg"
                 />
               )}
             <button
-              className="absolute top-0 right-4 text-3xl bg-transparent text-red-500 cursor-pointer  hover:text-red-700 hover:bg-white/50 rounded-full transition-all duration-100"
+              className="absolute top-0 right-0 text-3xl bg-transparent text-red-500 cursor-pointer  hover:text-red-700 hover:bg-white/50 rounded-full transition-all duration-100"
               onClick={handleRemoveImage}
             >
               <XDelete />

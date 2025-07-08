@@ -13,8 +13,7 @@ const App = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path='/' element={<RootLayout />}>
-        <Route index element={<UpscalerSection />} />
-        <Route path='image-converter' element={<ConverterSection />} />
+        <Route index element={<ConverterSection />} />
         <Route path='image-compressor' element={<CompressorSection />} />
         <Route path='background-remover' element={<BgRemoverSection />} />
         <Route path='color-palette-extractor' element={<PaletteExSection />} />
@@ -22,8 +21,6 @@ const App = () => {
       </Route>
     )
   )
-
-
 
   return (  
     <RouterProvider router={router} />
