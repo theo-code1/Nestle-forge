@@ -227,7 +227,7 @@ const PaletteExSection = () => {
                   <span className="font-semibold">JSON</span>
                   <button className="text-xs px-2 py-1 bg-gray-200 rounded hover:bg-gray-300" onClick={() => handleCopy(exportFormats.json, 'json')}>{copied === 'json' ? 'Copied!' : 'Copy'}</button>
                 </div>
-                <pre className="bg-gray-100 rounded p-2 text-xs overflow-x-auto">{exportFormats.json}</pre>
+                <pre className="bg-gray-100 rounded p-2 text-xs overflow-x-auto overflow-y-auto max-h-40">{exportFormats.json}</pre>
               </div>
             </div>
           </div>
