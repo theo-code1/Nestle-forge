@@ -110,7 +110,7 @@ const BgRemoverSection = () => {
                 <img
                 src={processedImage}
                 alt="Result Preview"
-                className="absolute right- top-0 min-w-fit max-h-[50dvh] object-cover rounded shadow select-none"
+                className="absolute right-0 top-0 min-w-full max-h-[50dvh] object-cover rounded shadow select-none"
                 />
               )}
               </div>
@@ -140,7 +140,7 @@ const BgRemoverSection = () => {
           <span className='text-red-500 text-sm mt-4'>{showErr}</span>
         )}
 
-        {!processedImage && (
+        {!processedImage && imagePreview && (
           <button
             type="button"
             className={` ${showErr !== '' ? 'mt-3' : 'mt-6'} px-6 py-3 text-lg bg-indigo-600 text-white rounded-lg disabled:bg-indigo-400 disabled:cursor-not-allowed`}

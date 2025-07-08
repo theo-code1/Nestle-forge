@@ -249,7 +249,7 @@ export const removeBackground = async (file) => {
     const response = await fetch('https://api.remove.bg/v1.0/removebg', {
       method: 'POST',
       headers: {
-        'X-Api-Key': 'dsvgvULgyvxLgmxrBs7Vpsjv'
+        'X-Api-Key': 'SNWPooLvzvMoedw1umraE9Wv'
         // Do NOT set Content-Type, let the browser set it for FormData!
       },
       body: formData,
