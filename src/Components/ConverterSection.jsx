@@ -159,7 +159,7 @@ export default function ConverterSection() {
   };
 
   return (
-    <section className="flex flex-col items-center gap-8 pt-16 pb-12 overflow-y-auto overflow-x-hidden min-h-screen">
+    <section className="flex flex-col items-center gap-8 pt-16 pb-12 overflow-y-auto overflow-x-hidden h-screen">
       <div className="heading flex flex-col items-center gap-4">
         <h1 className="text-4xl font-medium text-center">
           Convert your images to any Format you want

@@ -55,7 +55,7 @@ const PaletteExSection = () => {
   }
 
   return (
-    <section className='flex flex-col items-center gap-8 py-16 overflow-y-auto overflow-x-hidden min-h-screen'>
+    <section className='flex flex-col items-center gap-8 py-16 overflow-y-auto overflow-x-hidden h-screen'>
         <div className="headers flex flex-col gap-4">
             <h1 className='text-4xl text-center text-black font-medium prose'>Extract palettes from your images.</h1>
             <p className='text-center '>Turn your images into stunning color schemes. Perfect for design, branding,<br />and creative inspiration.</p>
@@ -125,7 +125,7 @@ const PaletteExSection = () => {
       {/* {imagePreview &&( */}
         <div className="picked-colors flex items-center gap-16 mt-12">
           <PalettesSelected />
-          <button type="button" className='text-lg px-8 py-3 rounded-lg bg-indigo-600 text-white'>Export</button>
+          <button type="button" className='text-lg px-8 py-3 rounded-lg bg-indigo-600 text-white hover:brightness-95 transition-all duration-100 cursor-pointer'>Export</button>
         </div>
       {/*  )} */}
     </section>

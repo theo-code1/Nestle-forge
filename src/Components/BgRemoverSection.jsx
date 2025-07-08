@@ -75,7 +75,7 @@ const BgRemoverSection = () => {
   }
 
   return (
-    <section className='flex flex-col items-center gap-8 py-16 overflow-y-auto overflow-x-hidden min-h-screen'>
+    <section className='flex flex-col items-center gap-8 py-16 overflow-y-auto overflow-x-hidden h-screen'>
       <div className="headers flex flex-col gap-4">
         <h1 className='text-4xl text-black text-center font-medium'>Remove Background from you images</h1>
         <p className='text-[16px] text-center'>Instantly erase backgrounds to create clean, transparent images—perfect for design,<br />profiles, or web use.</p>

@@ -120,7 +120,7 @@ const CompressorSection = () => {
 
 
   return (
-   <section className='flex flex-col items-center gap-8 py-16 overflow-y-auto overflow-x-hidden min-h-[90dvh]'>
+   <section className='flex flex-col items-center gap-8 py-16 overflow-y-auto overflow-x-hidden h-[90dvh]'>
     <div className="headers flex flex-col gap-4">
         <h1 className='text-4xl font-medium text-center'>Compress your images for Free</h1>
         <p className='text-[16px] text-center '>Reduce file size while maintaining quality, Optimize your images for faster loading and<br/>better performance.</p>
