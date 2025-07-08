@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import Upload from './Icons/Upload'
 import XDelete from './Icons/XDelete'
 import ColorThief from 'color-thief-browser'
+import PalettesSelected from './PalettesSelected'
 
 const PaletteExSection = () => {
 
@@ -121,11 +122,12 @@ const PaletteExSection = () => {
         </div>
       )} */}
 
-      {imagePreview &&(
-        <div className="picked-colors">
-          
+      {/* {imagePreview &&( */}
+        <div className="picked-colors flex items-center gap-16 mt-12">
+          <PalettesSelected />
+          <button type="button" className='text-lg px-8 py-3 rounded-lg bg-indigo-600 text-white'>Export</button>
         </div>
-      )}
+      {/*  )} */}
     </section>
   )
 }
