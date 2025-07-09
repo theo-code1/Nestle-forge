@@ -123,11 +123,11 @@ const CompressorSection = () => {
    <section className='flex flex-col items-center gap-8 py-16 overflow-y-auto overflow-x-hidden h-[90dvh]'>
     <div className="headers flex flex-col gap-4">
         <h1 className='text-4xl font-medium text-center'>Compress your images for Free</h1>
-        <p className='text-[16px] text-center '>Reduce file size while maintaining quality, Optimize your images for faster loading and<br/>better performance.</p>
+        <p className='text-[16px] text-center '>Reduce file size while maintaining quality, Optimize your images for faster loading<br/> and better performance.</p>
     </div>
     
     <div 
-      className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-1/2 pt-16 pb-12 px-16 mt-12 rounded-xl border-2 border-dashed mx-auto ${
+      className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-1/2 pt-16 pb-12 px-16 mt-16 rounded-xl border-2 border-dashed mx-auto ${
         Object.values(loadingImages).some(loading => loading)
           ? "cursor-not-allowed opacity-70"
           : "cursor-pointer opacity-100"
