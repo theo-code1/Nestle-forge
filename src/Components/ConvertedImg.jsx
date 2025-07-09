@@ -18,7 +18,7 @@ const ConvertedImg = ({ convertedImage, ImageName, ImageSize, DownloadImg, imgHr
   return (
       <nav className='flex items-center justify-between px-4 py-2 bg-white border border-black rounded-md w-full'>
         <div className="img-labels flex items-center gap-4">
-          <img src={convertedImage} alt="Converted image" className='size-24 rounded-md object-cover'/>
+          {/* <img src={convertedImage} alt="Converted image" className='size-24 rounded-md object-cover'/> */}
           <div className="img-details h-26 pt-2 text-black">
               <h2 className='text-lg'>{ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails.format.toLowerCase() : ImageName}</h2>
               <h3 className='text-sm'>{ImageSize}</h3>
