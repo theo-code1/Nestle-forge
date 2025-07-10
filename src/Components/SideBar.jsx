@@ -1,10 +1,13 @@
 import { NavLink } from 'react-router-dom'
+import NestleForgeLogo from './Icons/NestleForgeLogo.jsx'
 
 const SideBar = () => {
 
   return (
     <main className='side-bar float-left w-1/7 h-screen border-r border-r-black/20 text-left py-8 px-4 flex flex-col gap-16 font-'>
-        <h1 className='text-2xl font-bold text-center   '>Logo</h1>
+      <div className="logo">
+        <NestleForgeLogo />
+      </div>
         <ul className='text-sm flex flex-col gap-2 font-medium'>
               <NavLink to='/'> <li className={`block hover:bg-gray-100 p-2 cursor-pointer rounded-lg `}>Image Converter</li> </NavLink>
               <NavLink to='/image-compressor'> <li className={`block hover:bg-gray-100 p-2 cursor-pointer rounded-lg `}>Image Compressor</li> </NavLink>
