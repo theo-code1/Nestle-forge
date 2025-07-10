@@ -3,14 +3,14 @@
 
 @theme {
   --font-roboto: 'Roboto', 'sans-serif';
+  --color-blue: '#0665FD';
 }
 
 body {
   font-family: Roboto, 'sans-serif'; 
-  letter-spacing: 0.2px;
 }
 a.active {
-  color: #2020dc;
+  color: #3A71C9;
 }
 
 .img-layer{
