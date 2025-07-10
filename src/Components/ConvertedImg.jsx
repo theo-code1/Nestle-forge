@@ -2,6 +2,7 @@ import { useState } from "react";
 import FaTrash from "./Icons/Delete"
 import ToArrow from "./Icons/toArrow.jsx";
 import Dropdown from "./Icons/dropdown.jsx";
+import DocIcon from "./Icons/DocIcon.jsx";
 
 const ConvertedImg = ({ convertedImage, ImageName, ImageSize, DownloadImg, imgHref, handleDelete, selectedImgDetails, isConverted, handleConverting, selectedImg, setConvertToFormat, convertToFormat, isLoading, imageId, openDropdownId, setOpenDropdownId }) => {
 
@@ -16,12 +17,12 @@ const ConvertedImg = ({ convertedImage, ImageName, ImageSize, DownloadImg, imgHr
   
 
   return (
-      <nav className='flex items-center justify-between px-4 py-2 bg-white border border-black rounded-md w-full'>
+      <nav className='w-[30dvw flex items-center justify-between px-6 py-3 bg-white border border-black/30 rounded-md '>
         <div className="img-labels flex items-center gap-4">
-          {/* <img src={convertedImage} alt="Converted image" className='size-24 rounded-md object-cover'/> */}
-          <div className="img-details h-26 pt-2 text-black">
-              <h2 className='text-lg'>{ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails.format.toLowerCase() : ImageName}</h2>
-              <h3 className='text-sm'>{ImageSize}</h3>
+          <DocIcon className={'scale-120 origin-top-left'} size={'32'}/>
+          <div className="img-details w-fit">
+              <h2 className='text-[16px] font-medium'>{ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails.format.toLowerCase() : ImageName}</h2>
+              <h3 className='text-sm text-[#545454]'>{ImageSize}</h3>
           </div>
         </div>
 

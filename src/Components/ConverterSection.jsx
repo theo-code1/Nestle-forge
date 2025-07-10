@@ -159,35 +159,34 @@ export default function ConverterSection() {
   };
 
   return (
-    <section className="flex flex-col items-center gap-8 pt-16 pb-12 overflow-y-auto overflow-x-hidden h-screen">
+    <section className="flex flex-col items-center gap-8 pt-14 pb-12 overflow-y-auto overflow-x-hidden h-screen">
       <div className="heading flex flex-col items-center gap-4">
         <h1 className="text-4xl font-medium text-center">
-          Convert your images to any Format you want
+        Format Switcher
         </h1>
         <p className="text-[16px]  font-[400]  text-center">
-          Easily change your images into any popular format.Fast, simple, and
-          lossless <br /> conversion for all your needs.
+        Easily change your images into any popular format.Fast, simple, and lossless
         </p>
       </div>
 
       <div className="files-management relative w-full flex items-start">
         <div
-          className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-1/2 pt-16 pb-12 px-16 mt-16 rounded-xl border-2 border-dashed mx-auto ${
+          className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-1/2 pt-8 pb-8 px-12 mt-16 rounded-xl border-2 border-dashed mx-auto ${
             Object.values(loadingImages).some(loading => loading)
               ? "cursor-not-allowed opacity-70"
               : "cursor-pointer opacity-100"
           }
-          ${Object.values(loadingImages).some(loading => loading) ? 'hover:border-black' : 'hover:border-indigo-600'}`}
+          ${Object.values(loadingImages).some(loading => loading) ? 'hover:border-black' : 'hover:border-[#3582FD]'}`}
           onClick={
             !Object.values(loadingImages).some(loading => loading) ? () => document.getElementById("file").click() : null
           }
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
-          <Upload />
+          <Upload size={`5rem`} className="p-4 bg-[#67A1FE]/60 rounded-full"/>
 
           <div className="text-center">
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">Drop your images here</h3>
+            <h3 className="text-xl font-medium text-gray-800 ">Drop your images here</h3>
             <p className="text-gray-600 text-sm mb-4">or click to browse files</p>
             <p className="text-xs text-gray-500">Supports: PNG, JPG, JPEG, GIF, BMP, WEBP, TIFF, ICO, AVIF</p>
           </div>
@@ -223,7 +222,7 @@ export default function ConverterSection() {
                 });
               }}
             />
-            <span className="bg-indigo-600 text-white px-4 py-2 rounded-full hover:brightness-90 active:brightness-80 transition-all duration-150">
+            <span className="bg-[#3582FD] text-white px-4 py-2 rounded-xl hover:brightness-90 active:brightness-80 transition-all duration-150">
               Upload Image
             </span>
           </div>
@@ -240,7 +239,7 @@ export default function ConverterSection() {
             <>
             <div
               key={image.id}
-              className="relative group bg-white rounded-lg shadow-md flex flex-col items-center"
+              className="relative group flex flex-wrap items-center"
             >
               <ConvertedImg
                 isConverted={image.isConverted || false}

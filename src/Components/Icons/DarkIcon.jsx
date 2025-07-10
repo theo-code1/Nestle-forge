@@ -1,6 +1,7 @@
 function FaMoon(props) {
   return (
     <svg
+      className="rotate-y-180 mr-1 opacity-80"
       stroke="currentColor"
       fill="currentColor"
       strokeWidth={0}

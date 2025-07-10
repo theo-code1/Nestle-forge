@@ -1,9 +1,8 @@
 function IoIosSunny(props) {
   return (
     <svg
-    className=""
-      stroke="currentColor"
-      fill="currentColor"
+      stroke="white"
+      fill="white"
       strokeWidth={0}
       viewBox="0 0 512 512"
       height="1.5em"
