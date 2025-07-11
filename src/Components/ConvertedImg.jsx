@@ -4,7 +4,7 @@ import ToArrow from "./Icons/toArrow.jsx";
 import Dropdown from "./Icons/dropdown.jsx";
 import DocIcon from "./Icons/DocIcon.jsx";
 
-const ConvertedImg = ({ convertedImage, ImageName, ImageSize, DownloadImg, imgHref, handleDelete, selectedImgDetails, isConverted, handleConverting, selectedImg, setConvertToFormat, convertToFormat, isLoading, imageId, openDropdownId, setOpenDropdownId }) => {
+const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete, selectedImgDetails, isConverted, handleConverting, selectedImg, setConvertToFormat, convertToFormat, isLoading, imageId, openDropdownId, setOpenDropdownId }) => {
 
   const formatCategories = {
     Image: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'tiff', 'ico', 'avif'],
@@ -17,25 +17,36 @@ const ConvertedImg = ({ convertedImage, ImageName, ImageSize, DownloadImg, imgHr
   
 
   return (
-      <nav className='w-[30dvw flex items-center justify-between px-6 py-3 bg-white border border-black/30 rounded-md '>
-        <div className="img-labels flex items-center gap-4">
-          <DocIcon className={'scale-120 origin-top-left'} size={'32'}/>
-          <div className="img-details w-fit">
-              <h2 className='text-[16px] font-medium'>{ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails.format.toLowerCase() : ImageName}</h2>
-              <h3 className='text-sm text-[#545454]'>{ImageSize}</h3>
+      <nav className='w-[26dvw] flex flex-col gap-8 items-center justify-between px-5 py-4 bg-white border border-black/40 rounded-md '>
+        <div className="first-column flex justify-between w-full">
+
+          <div className="img-labels flex items-center gap-6">
+            <DocIcon className={'scale-150 origin-left text-black'} />
+            <div className="img-details w-fit">
+                <h2 className='text-[16px] font-medium'>{ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails.format.toLowerCase() : ImageName}</h2>
+                <h3 className='text-[16px] text-[#545454]'>{ImageSize}</h3>
+            </div>
+          </div>
+
+          <div className='delete-button '>
+            <button onClick={handleDelete} title='Delete' className='text-xl bg-white text-red-500  hover:shadow-[0_2px_10px_0_#0000001a] transition-all duration-100 cursor-pointer border-2 border-black/20 rounded-md p-2 '> <FaTrash /> </button>
+              
+              
           </div>
         </div>
 
-        {selectedImg && (
+        <div className="second-column w-full flex justify-between ">
+
+          {selectedImg && (
               <>
-                <div className="select-formats h-fit flex items-center gap-4 z-30">
+                <div className="select-formats h-fit flex items-center gap-0 z-30">
                   <button
                     type="button"
-                    className="text-lg font-medium border-indigo-700 border px-4 py-2 rounded-lg"
+                    className="text-[16px] font-medium border-black/20 border-2 px-5 py-[6px] rounded-md"
                   >
                     {selectedImgDetails.format}
                   </button>
-                  <ToArrow />
+                  <ToArrow className={'text-black '}/>
                   <div className="relative">
                     <button
                       onClick={(e) => {
@@ -43,13 +54,11 @@ const ConvertedImg = ({ convertedImage, ImageName, ImageSize, DownloadImg, imgHr
                         setOpenDropdownId(isDropdownOpen ? null : imageId);
                       }}
                       type="button"
-                      className="text-lg font-medium border-indigo-700 border pl-4 pr-2 py-2 rounded-lg flex items-center hover:bg-black/5 cursor-pointer transition-all duration-100"
+                      className="text-[16px] px-5 py-[6px] rounded-md border-2 border-black/20 flex items-center hover:shadow-[0_2px_10px_0_#0000001a] active:bg-black/5 cursor-pointer transition-all duration-100"
                     >
-                      {convertToFormat.toUpperCase() || "to..."}
+                      {convertToFormat.toUpperCase() || "To"}
                       <Dropdown
-                        className={`transition-transform duration-200 ${
-                          isDropdownOpen ? "rotate-180" : ""
-                        }`}
+                        className={`transition-transform duration-200 `}
                       />
                     </button>
                   </div>
@@ -107,15 +116,13 @@ const ConvertedImg = ({ convertedImage, ImageName, ImageSize, DownloadImg, imgHr
                 )}
               </>
             )}
+            <div className="convert-download">
 
-        <div className='btns flex items-center justify-center gap-2'>
-          <button onClick={handleDelete} title='Delete' className='text-xl bg-white text-red-500 hover:bg-red-500 hover:text-white transition-all duration-100 cursor-pointer border-2 border-red-500 rounded-lg px-6 py-4 '> <FaTrash /> </button>
-            {isConverted && imgHref && (
-              <a href={`http://localhost:5001/download/${encodeURIComponent(DownloadImg)}`} className='text-lg bg-indigo-600 text-white hover:text-indigo-600 hover:bg-white transition-all duration-100 cursor-pointer border-2 border-indigo-600 rounded-lg px-6 py-3' download={DownloadImg}> Download </a>
-            )}
             {convertToFormat && !isConverted && (
-              <button onClick={handleConverting} className='text-lg text-indigo-600 bg-white hover:bg-indigo-600 hover:text-white transition-all duration-100 cursor-pointer border-2 border-indigo-600 rounded-lg px-6 py-3'> {isLoading ? 'converting...' : 'Convert'} </button>
-            )}
+              <button onClick={handleConverting} className='text-lg bg-[#3582FD] hover:brightness-95 text-white transition-all duration-100 cursor-pointer rounded-lg px-6 py-3'> {isLoading ? 'converting...' : 'Convert'} </button>
+                )}
+              {isConverted && imgHref && ( <a href={`http://localhost:5001/download/${encodeURIComponent(DownloadImg)}`} className='text-lg bg-indigo-600 text-white hover:text-indigo-600 hover:bg-white transition-all duration-100 cursor-pointer border-2 border-indigo-600 rounded-lg px-6 py-3' download={DownloadImg}> Download </a> )}
+            </div>
         </div>
       </nav>
   )

@@ -222,9 +222,9 @@ export default function ConverterSection() {
                 });
               }}
             />
-            <span className="bg-[#3582FD] text-white px-4 py-2 rounded-xl hover:brightness-90 active:brightness-80 transition-all duration-150">
+            <button className="bg-[#3582FD] text-white px-4 py-2 rounded-xl hover:brightness-90 active:brightness-80 transition-all duration-150">
               Upload Image
-            </span>
+            </button>
           </div>
         </div>
 
@@ -239,7 +239,7 @@ export default function ConverterSection() {
             <>
             <div
               key={image.id}
-              className="relative group flex flex-wrap items-center"
+              className="relative w-[70dvw] group flex flex-wrap items-start"
             >
               <ConvertedImg
                 isConverted={image.isConverted || false}
