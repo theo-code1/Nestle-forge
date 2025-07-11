@@ -234,13 +234,9 @@ export default function ConverterSection() {
       
 
       {allUploadedImages.length > 0 && (
-        <div className="w-full flex flex-col max-w-4xl gap-6 mt-10">
+        <div className="w-[56dvw] grid grid-cols-2 gap-x-6 gap-y-12 mt-10">
           {allUploadedImages.map((image) => (
-            <>
-            <div
-              key={image.id}
-              className="relative w-[70dvw] group flex flex-wrap items-start"
-            >
+            <div key={image.id} className="w-full">
               <ConvertedImg
                 isConverted={image.isConverted || false}
                 isLoading={loadingImages[image.id] || false}
@@ -274,14 +270,9 @@ export default function ConverterSection() {
                 setOpenDropdownId={setOpenDropdownId}
                 showErr={errors[image.id] || ""}
               />
+          <span className="text-red-500 text-sm font-[400] mt-2">{errors[image.id] || ""}</span>
             </div>
-
-
-                <span className="text-red-500 text-sm font-[400] mt-2">{errors[image.id] || ""}</span>
-              </>
-              
           ))}
-
         </div>
       )}
 
