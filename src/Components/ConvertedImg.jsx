@@ -89,24 +89,28 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
                       <div className="w-2/3 p-2">
                         <div className="grid grid-cols-2 gap-1">
                           {hoveredCategory &&
-                            formatCategories[hoveredCategory]?.map((format) => (
-                              <button
-                                key={format}
-                                className={`w-full px-4 py-2.5 text-sm text-left rounded-md transition-colors ${
-                                  convertToFormat === format
-                                    ? "bg-[#3582FD] text-white font-medium"
-                                    : "text-gray-800 hover:bg-[#3582FD]/10"
-                                }
-                                ${selectedImgDetails.format === format ? 'bg-indigo-50 cursor-not-allowed' : '' } `}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setConvertToFormat(format);
-                                  setOpenDropdownId(null);
-                                }}
-                              >
-                                {format.toUpperCase()}
-                              </button>
-                            ))}
+                            formatCategories[hoveredCategory]?.map((format) => {
+                              const isCurrentFormat = format.toLowerCase() === selectedImgDetails.format.toLowerCase();
+                              return (
+                                <button
+                                  key={format}
+                                  className={`w-full px-4 py-2.5 text-sm text-left rounded-md transition-colors ${
+                                    convertToFormat === format
+                                      ? "bg-[#3582FD] text-white font-medium"
+                                      : "text-gray-800 hover:bg-[#3582FD]/10"
+                                  }
+                                  ${isCurrentFormat ? 'text-black bg-gray-200 hover:bg-gray-200 cursor-not-allowed ' : '' } `}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setConvertToFormat(format);
+                                    setOpenDropdownId(null);
+                                  }}
+                                  disabled={isCurrentFormat}
+                                >
+                                  {format.toUpperCase()}
+                                </button>
+                              );
+                            })}
                         </div>
                       </div>
                     </div>

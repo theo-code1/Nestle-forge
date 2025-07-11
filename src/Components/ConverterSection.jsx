@@ -87,15 +87,6 @@ export default function ConverterSection() {
       return;
     }
 
-    // Check if same format
-    if (
-      imageToConvert.details.format.toLowerCase() === imageToConvert.convertToFormat.toLowerCase()
-    ) {
-      setErrors(prev => ({ ...prev, [imageId]: "Please select a different format to convert." }));
-      setLoadingImages(prev => ({ ...prev, [imageId]: false }));
-      return;
-    }
-
     try {
       // Validate inputs
       if (!imageToConvert.convertToFormat) {
