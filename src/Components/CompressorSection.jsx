@@ -120,10 +120,10 @@ const CompressorSection = () => {
 
 
   return (
-   <section className='flex flex-col items-center gap-8 py-16 overflow-y-auto overflow-x-hidden h-[90dvh]'>
+   <section className='flex flex-col items-center gap-8 pt-14 pb-12 overflow-y-auto overflow-x-hidden h-[90dvh]'>
     <div className="headers flex flex-col gap-4">
-        <h1 className='text-4xl font-medium text-center'>Compress your images for Free</h1>
-        <p className='text-[16px] text-center '>Reduce file size while maintaining quality, Optimize your images for faster loading<br/> and better performance.</p>
+        <h1 className='text-4xl font-medium text-center'>Image Compressor</h1>
+        <p className='text-[16px] text-center '>Easily compress your images without compromising on quality. Perfect for use..</p>
     </div>
     
     <div 
@@ -139,7 +139,7 @@ const CompressorSection = () => {
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      <Upload />
+      <Upload size={`5rem`} className="p-4 bg-[#67A1FE]/60 rounded-full"/>
 
       <div className="text-center">
         <h3 className="text-xl font-semibold text-gray-800 mb-2">Drop your images here</h3>
