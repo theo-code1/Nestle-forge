@@ -150,7 +150,7 @@ export default function ConverterSection() {
   };
 
   return (
-    <section className="bg-white dark:bg-black/90 dark:text-white/90 flex flex-col items-center gap-8 pt-14 pb-12 overflow-y-auto overflow-x-hidden h-screen">
+    <section className="bg-white dark:bg-black/90 dark:text-white/90 flex flex-col items-center gap-8 pt-14 pb-12 overflow-y-auto overflow-x-hidden h-screen selection:bg-black/80 selection:text-white">
       <div className="heading flex flex-col items-center gap-4">
         <h1 className="text-4xl font-medium text-center">
         Format Switcher
@@ -161,7 +161,7 @@ export default function ConverterSection() {
       </div>
 
         <div
-          className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-1/2 py-10 px-12 mt-16 rounded-xl border-2 border-dashed mx-auto ${
+          className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-3/4 lg:w-1/2 py-10 px-4 lg:px-12 mt-8 lg:mt-16 rounded-xl border-2 border-dashed mx-auto ${
             Object.values(loadingImages).some(loading => loading)
               ? "cursor-not-allowed opacity-70"
               : "cursor-pointer opacity-100"
