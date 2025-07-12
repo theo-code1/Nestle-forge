@@ -105,7 +105,7 @@ const CompressFile = ({
               </button>
             )}
             {!isCompressed && (
-              <button onClick={handleCompressing} className='text-lg bg-[#3582FD] text-white transition-all duration-100 cursor-pointer rounded-lg px-6 py-3'> {isLoading ? 'compressing...' : 'Compress'} </button>
+              <button onClick={handleCompressing} className='text-lg bg-[#3582FD] hover:brightness-95 text-white transition-all duration-100 cursor-pointer rounded-lg px-6 py-3'> {isLoading ? 'compressing...' : 'Compress'} </button>
             )}
         </div>
       </nav>
