@@ -4,7 +4,7 @@ import NestleForgeLogo from './Icons/NestleForgeLogo.jsx'
 const SideBar = () => {
 
   return (
-    <main className='side-bar relative float-left h-screen border-r border-r-black/20 text-left py-6 px-2 flex flex-col gap-6 font-'>
+    <main className='side-bar hidden md:flex flex-col gap-6 relative float-left h-screen border-r border-r-black/20 text-left py-6 px-2 '>
       <div className="logo flex items-center gap-2 px-2 mb-2">
         <NestleForgeLogo width="32" height="32" color="black" className="" />
         <h1 className="logo-name text-lg font-medium">NestleForge</h1>

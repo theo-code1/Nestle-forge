@@ -1,54 +1,12 @@
 import React from 'react'
-import DropArrow from '../Components/Icons/DropArrow'
+
 const Navbar = () => {
-
-    const [selectedLanguage, setSelectedLanguage] = React.useState('English')
-    const [isDropdownOpen, setIsDropdownOpen] = React.useState(false)
-
-    const languageOptions = ['English', 'French', 'Arabic']
-    
   return (
-    <nav className='relative w-6/7 flex gap-16 bg-indigo-50/50 border-b border-b-black/20 justify-end items-center py-4 px-8 '>
-        <ul className='flex gap-12 '>
-            <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Services</a></li>       {/* Add Nav Links here */}
-            <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">About</a></li>
-            <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Lonk03</a></li>
-            <li className='text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'><a href="#">Link04</a></li>
-        </ul>
-        <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className='group flex items-center gap-1 text-[16px] font-medium transition-all duration-150 hover:text-indigo-600'>{selectedLanguage} <DropArrow className='group-hover:text-indigo-600'/></button>
-        {isDropdownOpen && <div data-disabled="true" className='absolute top-14 right-60 z-50 text-center flex-col gap-2 transition-all duration-100 px-2 pt-3 pb-1 bg-indigo-50/50 rounded-lg border border-black/20'>
-            {languageOptions.map((option, index) => (
-                <span     
-                    className='mb-1 block'
-                    key={index} 
-                    onClick={() => {
-                        setSelectedLanguage(option);
-                        setIsDropdownOpen(false);
-                    }}
-                >
-                    <a href='#'
-                        className='text-lg text-center font-medium transition-all duration-150 px-4 py-1 rounded-md hover:text-white hover:bg-indigo-600'>
-                        {option}
-                    </a>
-                </span>
-            ))}
-        </div>}
-        {/* {languageOptions.map((option, index) => (
-            <option 
-            key={index} 
-            className={`text-left px-4 py--2 ${selectedLanguage === option ? 'bg-indigo-100 text-indigo-700' : 'text-gray-700 hover:bg-gray-100'}`} 
-            value={option}
-            onClick={() => setSelectedLanguage(option)}
-            >{option}</option>
-            
-        ))} */}
-        <div className="mode-toggle  ">
-            <button className='w-24 h-10 border rounded-full'>
-                
-            </button>
-        </div>
+    <nav>
+        <NestleForgeLogo width="32" height="32" color="black" className="flex md:hidden" />
+        <MenuIcon />
     </nav>
   )
 }
 
-export default Navbar;
+export default Navbar
