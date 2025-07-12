@@ -176,8 +176,8 @@ export default function ConverterSection() {
           <Upload size={`6rem`} className="p-4 bg-[#67A1FE]/60 rounded-full"/>
 
           <div className="text-center">
-            <h3 className="text-xl font-medium text-gray-800 ">Drop your images here</h3>
-            <p className="text-gray-600 text-sm mb-4">or click to browse files</p>
+            <h3 className="text-xl font-medium text-gray-800 hidden md:flex ">Drop your images here</h3>
+            <p className="text-gray-600 text-sm mb-4 hidden md:flex">or click to browse files</p>
             <p className="text-xs text-gray-500">Supports: PNG, JPG, JPEG, GIF, BMP, WEBP, TIFF, ICO, AVIF</p>
           </div>
 
@@ -221,7 +221,7 @@ export default function ConverterSection() {
       
 
       {allUploadedImages.length > 0 && (
-        <div className="w-full mx-auto lg:w-[56dvw] grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-12 mt-10">
+        <div className="w-full px-4 mx-auto lg:w-[56dvw] grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-12 mt-10">
           {allUploadedImages.map((image) => (
             <div key={image.id} className="w-full">
               <ConvertedImg

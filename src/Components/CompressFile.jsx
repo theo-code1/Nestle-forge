@@ -23,11 +23,12 @@ const CompressFile = ({
 }) => {
 
   return (
-    <nav className='w-[30vw] flex items-center justify-between px-5 py-4 bg-white border border-black/40 rounded-md shadow-[0_2px_15px_0_#0000001a]'>
+    <nav className='w-screen md:w-[30vw] flex items-center justify-between px-5 py-4 bg-white border border-black/40 rounded-md shadow-[0_2px_15px_0_#0000001a]'>
         <div className="img-details flex gap-2 items-center">
           <DocIcon className={'w-8 h-8 text-black'} />
           <div className="headers min-w-fit">
-              <h2 className='text-[16px] font-medium'>{ImageName && ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails?.format : ImageName}</h2>
+              <h2 className='text-[16px] font-medium  hidden md:flex'>{ImageName && ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails?.format : ImageName}</h2>
+              <h2 className='text-[16px] font-medium flex md:hidden'>{ImageName && ImageName.length > 16 ? ImageName.substring(0, 8) + '...' + selectedImgDetails?.format : ImageName}</h2>
               <h3 className='text-[16px] text-[#545454]'>{ImageSize}</h3>
           </div>
               {isCompressed && selectedImgDetails?.compressionRatio && (

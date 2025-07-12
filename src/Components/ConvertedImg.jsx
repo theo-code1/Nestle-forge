@@ -17,7 +17,7 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
   
 
   return (
-      <nav className='w-[26dvw] flex flex-col gap-12 items-center justify-between px-5 py-4 bg-white border border-black/40 rounded-md shadow-[0_2px_15px_0_#0000001a]'>
+      <nav className='w-full md:w-[26dvw] flex flex-col gap-12 items-center justify-between px-5 py-4 bg-white border border-black/40 rounded-md shadow-[0_2px_15px_0_#0000001a]'>
         <div className="first-column flex justify-between w-full items-center">
 
           <div className="img-labels flex items-center gap-4">
@@ -39,7 +39,7 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
 
           {selectedImg && (
               <>
-                <div className="select-formats h-fit flex items-center gap-1   z-30">
+                <div className="select-formats h-fit flex items-center gap-1 z-30">
                   <button
                     type="button"
                     className="text-[16px] font-medium border-black/20 border-2 px-5.5 py-2 rounded-md"
@@ -121,7 +121,7 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
             <div className="convert-download flex-shrink-0">
 
             {convertToFormat && !isConverted && (
-              <button onClick={handleConverting} className='text-lg bg-[#3582FD] hover:brightness-95 text-white transition-all duration-100 cursor-pointer rounded-lg px-6 py-2'> {isLoading ? 'converting...' : 'Convert'} </button>
+              <button onClick={handleConverting} className={`text-lg bg-[#3582FD] hover:brightness-95 text-white transition-all duration-100 cursor-pointer rounded-lg py-2 ${isLoading ? 'px-2' : 'px-6'}`}> {isLoading ? 'converting...' : 'Convert'} </button>
                 )}
               {isConverted && imgHref && ( <a href={`http://localhost:5001/download/${encodeURIComponent(DownloadImg)}`} className='text-lg bg-[#3582FD] text-white hover:brightness-95 transition-all duration-100 cursor-pointer rounded-lg px-6 py-3' download={DownloadImg}> Download </a> )}
             </div>
