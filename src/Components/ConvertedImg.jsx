@@ -120,10 +120,10 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
             )}
             <div className="convert-download flex-shrink-0">
 
-            {/* {convertToFormat && !isConverted && ( */}
+            {convertToFormat && !isConverted && (
               <button onClick={handleConverting} className='text-lg bg-[#3582FD] hover:brightness-95 text-white transition-all duration-100 cursor-pointer rounded-lg px-6 py-2'> {isLoading ? 'converting...' : 'Convert'} </button>
-                {/* )} */}
-              {isConverted && imgHref && ( <a href={`http://localhost:5001/download/${encodeURIComponent(DownloadImg)}`} className='text-lg bg-indigo-600 text-white hover:text-indigo-600 hover:bg-white transition-all duration-100 cursor-pointer border-2 border-indigo-600 rounded-lg px-6 py-3' download={DownloadImg}> Download </a> )}
+                )}
+              {isConverted && imgHref && ( <a href={`http://localhost:5001/download/${encodeURIComponent(DownloadImg)}`} className='text-lg bg-[#3582FD] text-white hover:brightness-95 transition-all duration-100 cursor-pointer rounded-lg px-6 py-3' download={DownloadImg}> Download </a> )}
             </div>
         </div>
       </nav>

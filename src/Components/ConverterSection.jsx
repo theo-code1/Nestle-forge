@@ -160,9 +160,8 @@ export default function ConverterSection() {
         </p>
       </div>
 
-      <div className="files-management relative w-full flex items-start">
         <div
-          className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-1/2 pt-8 pb-8 px-12 mt-16 rounded-xl border-2 border-dashed mx-auto ${
+          className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-1/2 py-10 px-12 mt-16 rounded-xl border-2 border-dashed mx-auto ${
             Object.values(loadingImages).some(loading => loading)
               ? "cursor-not-allowed opacity-70"
               : "cursor-pointer opacity-100"
@@ -174,7 +173,7 @@ export default function ConverterSection() {
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
-          <Upload size={`5rem`} className="p-4 bg-[#67A1FE]/60 rounded-full"/>
+          <Upload size={`6rem`} className="p-4 bg-[#67A1FE]/60 rounded-full"/>
 
           <div className="text-center">
             <h3 className="text-xl font-medium text-gray-800 ">Drop your images here</h3>
@@ -218,9 +217,6 @@ export default function ConverterSection() {
             </button>
           </div>
         </div>
-
-
-      </div>
       
       
 

@@ -111,7 +111,7 @@ const CompressorSection = () => {
 
     } catch (error) {
       console.error('Compression failed:', error);
-      alert('Compression failed: ' + error.message);
+      alert('Compression failed: ' + error.message )
     } finally {
       // Clear loading state
       setLoadingImages(prev => ({ ...prev, [imageId]: false }));
@@ -120,14 +120,14 @@ const CompressorSection = () => {
 
 
   return (
-   <section className='flex flex-col items-center gap-8 pt-14 pb-12 overflow-y-auto overflow-x-hidden h-[90dvh]'>
+   <section className='flex flex-col items-center gap-8 pt-14 pb-12 overflow-y-auto overflow-x-hidden h-screen'>
     <div className="headers flex flex-col gap-4">
         <h1 className='text-4xl font-medium text-center'>Image Compressor</h1>
         <p className='text-[16px] text-center '>Easily compress your images without compromising on quality. Perfect for use..</p>
     </div>
     
     <div 
-      className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-1/2 pt-16 pb-12 px-16 mt-16 rounded-xl border-2 border-dashed mx-auto ${
+      className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-1/2 py-10 px-16 mt-16 rounded-xl border-2 border-dashed mx-auto ${
         Object.values(loadingImages).some(loading => loading)
           ? "cursor-not-allowed opacity-70"
           : "cursor-pointer opacity-100"
@@ -139,10 +139,10 @@ const CompressorSection = () => {
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      <Upload size={`5rem`} className="p-4 bg-[#67A1FE]/60 rounded-full"/>
+      <Upload size={`6rem`} className="p-4 bg-[#67A1FE]/60 rounded-full"/>
 
       <div className="text-center">
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">Drop your images here</h3>
+        <h3 className="text-xl font-medium text-gray-800 mb-">Drop your images here</h3>
         <p className="text-gray-600 text-sm mb-4">or click to browse files</p>
         <p className="text-xs text-gray-500">Supports: PNG, JPG, JPEG, GIF, BMP, WEBP, TIFF, ICO, AVIF</p>
       </div>
@@ -156,14 +156,14 @@ const CompressorSection = () => {
           multiple
           onChange={handleFileUpload}
         />
-        <span className="bg-indigo-600 text-white px-4 py-2 rounded-full hover:brightness-90 active:brightness-80 transition-all duration-150">
+        <span className="bg-[#3582FD] text-white px-4 py-2 rounded-xl hover:brightness-90 active:brightness-80 transition-all duration-150">
           Upload Image
         </span>
       </div>
     </div>
 
     {/* Display uploaded images */}
-    <div className="uploaded-images flex flex-col gap-4 w-full max-w-4xl">
+    <div className="uploaded-images w-[64dvw] grid grid-cols-2 gap-x-6 gap-y-12 mt-10">
       {allUploadedImages.map((image) => {
         const compressedImage = compressedImages[image.id];
         const isCompressed = !!compressedImage;

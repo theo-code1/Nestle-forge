@@ -13,10 +13,10 @@ const SideBar = () => {
       <hr className='opacity-50 w-9/10 mx-auto'/>
 
         <ul className='text-[16px] flex flex-col gap-1 font-medium'>
-              <NavLink to='/'> <li className={`block hover:bg-gray-50 p-2 cursor-pointer rounded-md `}>Image Converter</li> </NavLink>
-              <NavLink to='/image-compressor'> <li className={`block hover:bg-gray-50 p-2 cursor-pointer rounded-md `}>Image Compressor</li> </NavLink>
-              <NavLink to='/background-remover'> <li className={`block hover:bg-gray-50 p-2 cursor-pointer rounded-md `}>Background Remover</li> </NavLink>
-              <NavLink to='/color-palette-extractor'> <li className={`block hover:bg-gray-50 p-2 cursor-pointer rounded-md `}>Color Palette Extractor</li> </NavLink>
+              <NavLink to='/'> <li className={`block hover:bg-gray-100 p-2 cursor-pointer rounded-md `}>Image Converter</li> </NavLink>
+              <NavLink to='/image-compressor'> <li className={`block hover:bg-gray-100 p-2 cursor-pointer rounded-md `}>Image Compressor</li> </NavLink>
+              <NavLink to='/background-remover'> <li className={`block hover:bg-gray-100 p-2 cursor-pointer rounded-md `}>Background Remover</li> </NavLink>
+              <NavLink to='/color-palette-extractor'> <li className={`block hover:bg-gray-100 p-2 cursor-pointer rounded-md `}>Color Palette Extractor</li> </NavLink>
             
         </ul>
 
