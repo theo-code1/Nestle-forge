@@ -120,7 +120,7 @@ const CompressorSection = () => {
 
 
   return (
-   <section className='flex flex-col items-center gap-4 md:gap-8 pt-24 md:pt-14 pb-12 overflow-y-auto overflow-x-hidden h-screen'>
+   <section className='flex flex-col items-center gap-4 md:gap-8 pt-28 md:pt-14 pb-12 overflow-y-auto overflow-x-hidden h-screen'>
     <div className="headers flex flex-col gap-4">
         <h1 className='text-4xl font-medium text-center'>Image Compressor</h1>
         <p className='text-[16px] text-center px-2'>Easily compress your images without compromising on quality. Perfect for use..</p>

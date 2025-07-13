@@ -10,7 +10,7 @@ const Navbar = () => {
 
   return (
     <>
-        <nav className='flex md:hidden w-screen fixed top-0 left-0 items-center justify-between px-4 py-4'>
+        <nav className='flex md:hidden w-screen fixed top-0 left-0 items-center justify-between px-4 py-4 bg-white border-b border-black/20'>
             <div className="Logo flex gap-2 items-center ">
                 <NestleForgeLogo width="32" height="32" color="black" className="" />
                 <h2 className='text-lg font-medium'>NestleForge</h2>

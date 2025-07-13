@@ -74,20 +74,20 @@ const BgRemoverSection = () => {
   };
 
   return (
-    <section className="flex flex-col items-center gap-2 py-14 overflow-y-auto overflow-x-hidden h-screen">
+    <section className="flex flex-col items-center gap-2 py-28 md:py-14 overflow-y-auto overflow-x-hidden h-screen">
       <div className="headers flex flex-col gap-4">
-        <h1 className="text-4xl text-black text-center font-medium">
+        <h1 className="text-3xl md:text-4xl text-black text-center font-medium">
           Instant Background Removal
         </h1>
         <p className="text-[16px] text-center">
           Automatically erase backgrounds from any image. Get clean, transparent
           cutouts in
-          <br />
+          <br className="hidden md:flex"/>
           just seconds.
         </p>
       </div>
       <div
-        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-1/2 ${imagePreview ? "border-2 border-transparent  border-solid" : "border-2 pt-10 pb-10 px-16 hover:border-indigo-600  border-dashed"} mt-16 rounded-xl mx-auto cursor-pointer`}
+        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-3/4 md:w-1/2 ${imagePreview ? "border-2 border-transparent  border-solid" : "border-2 pt-10 pb-10 px-4 md:px-16 hover:border-indigo-600  border-dashed"} mt-16 rounded-xl mx-auto cursor-pointer`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onClick={!imagePreview ? handleClick : undefined}
@@ -118,7 +118,7 @@ const BgRemoverSection = () => {
               <img
                 src={processedImage}
                 alt="Result Preview"
-                className="absolute left-1/2 top-0 -translate-x-1/2 min-w-fit min-h-full object-cover shadow select-none rounded-lg"
+                className="absolute left-1/2 top-0 -translate-x-1/2  md:min-w-fit min-h-full object-cover shadow select-none rounded-lg"
               />
             )}
           </div>
@@ -130,10 +130,10 @@ const BgRemoverSection = () => {
                 className="p-4 bg-[#67A1FE]/60 rounded-full"
               />
               <div className="drag-info">
-                <h3 className="text-xl font-medium text-gray-800 ">
+                <h3 className="text-xl font-medium text-gray-800  hidden md:flex">
                   Drop your images here
                 </h3>
-                <p className="text-gray-600 text-sm mb- ">
+                <p className="text-gray-600 text-sm hidden md:flex">
                   or click to browse files
                 </p>
               </div>
