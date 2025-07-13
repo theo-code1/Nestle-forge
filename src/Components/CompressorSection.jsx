@@ -120,14 +120,14 @@ const CompressorSection = () => {
 
 
   return (
-   <section className='flex flex-col items-center gap-4 md:gap-8 pt-28 md:pt-14 pb-12 overflow-y-auto overflow-x-hidden h-screen'>
+   <section className='flex flex-col items-center gap-4 md:gap-8 pt-24 md:pt-14 pb-12 overflow-y-auto overflow-x-hidden h-screen'>
     <div className="headers flex flex-col gap-4">
-        <h1 className='text-4xl font-medium text-center'>Image Compressor</h1>
-        <p className='text-[16px] text-center px-2'>Easily compress your images without compromising on quality. Perfect for use..</p>
+        <h1 className='text-3xl md:text-4xl font-medium text-center'>Image Compressor</h1>
+        <p className='text-sm md:text-[16px] px-2 text-center '>Easily compress your images without compromising on quality. Perfect for use..</p>
     </div>
     
     <div 
-      className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-1/2 py-10 px-4 md:px-16 mt-16 rounded-xl border-2 border-dashed mx-auto ${
+      className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-3/4 lg:w-1/2 py-10 px-4 md:px-16 mt-16 rounded-xl border-2 border-dashed mx-auto ${
         Object.values(loadingImages).some(loading => loading)
           ? "cursor-not-allowed opacity-70"
           : "cursor-pointer opacity-100"
@@ -163,7 +163,7 @@ const CompressorSection = () => {
     </div>
 
     {/* Display uploaded images */}
-    <div className="uploaded-images w-screen px-4 md:px-0 md:w-[64dvw] grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-12 mt-10">
+    <div className="uploaded-images w-screen px-4 lg:px-0 md:w-[64dvw] grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-12 mt-10">
       {allUploadedImages.map((image) => {
         const compressedImage = compressedImages[image.id];
         const isCompressed = !!compressedImage;

@@ -75,13 +75,13 @@ const PaletteExSection = () => {
 
 
   return (
-    <section className='flex flex-col items-center gap-2 py-28 px-2 md:py-14 overflow-y-auto overflow-x-hidden h-screen'>
+    <section className='flex flex-col items-center gap-2 py-24 px-2 md:py-14 overflow-y-auto overflow-x-hidden h-screen'>
         <div className="headers flex flex-col gap-4">
-            <h1 className='text-4xl text-center text-black font-medium prose'>Extract palettes from your images</h1>
-            <p className='text-center px-2'>Turn your images into stunning color schemes. Perfect for design, branding,<br className='hidden md:flex'/>and creative inspiration.</p>
+            <h1 className='text-3xl md:text-4xl text-center text-black font-medium'>Image to Palette</h1>
+            <p className='text-sm md:text-[16px] text-center px-2'>Extract beautiful color schemes in seconds. Just upload an image and <br className='hidden md:flex'/>get inspired.</p>
         </div>
         <div
-        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-1/2 ${imagePreview ? 'border-2 border-transparent  border-solid' : 'border-2 py-10 md:py-10 px-4 md:px-16 hover:border-[#3582FD]  border-dashed'} mt-16 rounded-xl mx-auto cursor-pointer`}
+        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-3/4 lg:w-1/2 ${imagePreview ? 'border-2 border-transparent  border-solid' : 'border-2 py-10 md:py-10 px-4 md:px-16 hover:border-[#3582FD]  border-dashed'} mt-16 rounded-xl mx-auto cursor-pointer`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onClick={!imagePreview ? handleClick : undefined}
@@ -128,7 +128,7 @@ const PaletteExSection = () => {
       </div>
       {imagePreview &&(
         <div className="picked-colors w-screen md:w-fit flex flex-col px-2 gap-8 mt-12 ">
-          <div className="flex items-start flex-nowrap ">
+          <div className="flex items-start max-w-screen flex-nowrap overflow-y-hidden overflow-x-auto">
             <PalettesSelected paletteColors={palette} />
           </div>
             <button

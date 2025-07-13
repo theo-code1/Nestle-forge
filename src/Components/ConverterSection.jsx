@@ -150,18 +150,18 @@ export default function ConverterSection() {
   };
 
   return (
-    <section className="bg-white dark:bg-black/90 dark:text-white/90 flex flex-col items-center gap-8 pt-28 md:pt-14 pb-12 overflow-y-auto overflow-x-hidden h-screen selection:bg-black/80 selection:text-white">
+    <section className="bg-white dark:bg-black/90 dark:text-white/90 flex flex-col items-center gap-4 md:gap-8 pt-28 md:pt-14 pb-12 overflow-y-auto overflow-x-hidden h-screen selection:bg-black/80 selection:text-white">
       <div className="heading flex flex-col items-center gap-4">
-        <h1 className="text-4xl font-medium text-center">
+        <h1 className="text-3xl md:text-4xl font-medium text-center">
         Format Switcher
         </h1>
-        <p className="text-[16px]  font-[400]  text-center">
+        <p className="text-sm md:text-[16px] px-2 font-[400]  text-center">
         Easily change your images into any popular format.Fast, simple, and lossless
         </p>
       </div>
 
         <div
-          className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-9/10 lg:w-1/2 py-10 px-4 lg:px-12 mt-8 lg:mt-16 rounded-xl border-2 border-dashed mx-auto ${
+          className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-3/4 lg:w-1/2 py-10 px-4 lg:px-12 mt-16 rounded-xl border-2 border-dashed mx-auto ${
             Object.values(loadingImages).some(loading => loading)
               ? "cursor-not-allowed opacity-70"
               : "cursor-pointer opacity-100"
@@ -221,9 +221,9 @@ export default function ConverterSection() {
       
 
       {allUploadedImages.length > 0 && (
-        <div className="w-full px-4 mx-auto lg:w-[56dvw] grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-12 mt-10">
+        <div className="w-full px-4 mx-auto lg:w-[56dvw] grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-12 mt-10">
           {allUploadedImages.map((image) => (
-            <div key={image.id} className="w-full">
+            <div key={image.id} className="w-full md:flex md:flex-col lg:block ">
               <ConvertedImg
                 isConverted={image.isConverted || false}
                 isLoading={loadingImages[image.id] || false}
@@ -257,7 +257,7 @@ export default function ConverterSection() {
                 setOpenDropdownId={setOpenDropdownId}
                 showErr={errors[image.id] || ""}
               />
-          <span className="text-red-500 text-sm font-[400] mt-2">{errors[image.id] || ""}</span>
+          <span className="text-red-500 text-sm font-[400] mt-2  text-center">{errors[image.id] || ""}</span>
             </div>
           ))}
         </div>

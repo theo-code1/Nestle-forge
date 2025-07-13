@@ -74,12 +74,12 @@ const BgRemoverSection = () => {
   };
 
   return (
-    <section className="flex flex-col items-center gap-2 py-28 md:py-14 px-2 overflow-y-auto overflow-x-hidden h-screen">
+    <section className="flex flex-col items-center gap-2 py-24 md:py-14 px-2 overflow-y-auto overflow-x-hidden h-screen">
       <div className="headers flex flex-col gap-4">
         <h1 className="text-3xl md:text-4xl text-black text-center font-medium">
           Instant Background Removal
         </h1>
-        <p className="text-[16px] text-center">
+        <p className="text-sm md:text-[16px] px-2 text-center">
           Automatically erase backgrounds from any image. Get clean, transparent
           cutouts in
           <br className="hidden md:flex"/>
@@ -87,7 +87,7 @@ const BgRemoverSection = () => {
         </p>
       </div>
       <div
-        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-1/2 ${imagePreview ? "border-2 border-transparent  border-solid" : "border-2 pt-10 pb-10 px-4 md:px-16 hover:border-[#3582FD]  border-dashed"} mt-16 rounded-xl mx-auto cursor-pointer`}
+        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-3/4 lg:w-1/2 ${imagePreview ? "border-2 border-transparent  border-solid" : "pt-10 pb-10 px-4 md:px-16 hover:border-[#3582FD] border-2 border-dashed"} mt-16 rounded-xl mx-auto cursor-pointer`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onClick={!imagePreview ? handleClick : undefined}
