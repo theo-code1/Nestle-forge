@@ -75,13 +75,13 @@ const PaletteExSection = () => {
 
 
   return (
-    <section className='flex flex-col items-center gap-8 py-16 overflow-y-auto overflow-x-hidden h-screen'>
+    <section className='flex flex-col items-center gap-2 py-28 px-2 md:py-14 overflow-y-auto overflow-x-hidden h-screen'>
         <div className="headers flex flex-col gap-4">
-            <h1 className='text-4xl text-center text-black font-medium prose'>Extract palettes from your images.</h1>
-            <p className='text-center '>Turn your images into stunning color schemes. Perfect for design, branding,<br />and creative inspiration.</p>
+            <h1 className='text-4xl text-center text-black font-medium prose'>Extract palettes from your images</h1>
+            <p className='text-center px-2'>Turn your images into stunning color schemes. Perfect for design, branding,<br className='hidden md:flex'/>and creative inspiration.</p>
         </div>
         <div
-        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-1/2 ${imagePreview ? 'border-2 border-transparent  border-solid' : 'border-2 pt-16 pb-12 px-16 hover:border-indigo-600  border-dashed'} mt-16 rounded-xl mx-auto cursor-pointer`}
+        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-1/2 ${imagePreview ? 'border-2 border-transparent  border-solid' : 'border-2 py-10 md:py-10 px-4 md:px-16 hover:border-[#3582FD]  border-dashed'} mt-16 rounded-xl mx-auto cursor-pointer`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onClick={!imagePreview ? handleClick : undefined}
@@ -101,7 +101,7 @@ const PaletteExSection = () => {
                 ref={imageRef}
                 src={imagePreview}
                 alt="Uploaded Preview"
-                className={`min-w-fit max-h-[45dvh] object-contain shadow select-none rounded-lg `}
+                className={`w-[90dvw] md:min-w-fit max-h-[45dvh] object-contain shadow select-none rounded-lg `}
                 onLoad={handleImageLoad}
                 onClick={handleImageClick}
                 style={{ cursor: 'crosshair' }}
@@ -112,30 +112,32 @@ const PaletteExSection = () => {
           </div>
         ) : (
           <>
-            <div className="text-center flex flex-col items-center gap-4">
+            <div className="text-center flex flex-col items-center gap-4 mb-2">
               <Upload size={`6rem`} className="p-4 bg-[#67A1FE]/60 rounded-full"/>
-              <h3 className="text-xl font-semibold text-gray-800 ">Drop your images here</h3>
-              <p className="text-gray-600 text-sm -mb-2">or click to browse files</p>
-              <p className="text-xs text-gray-500">Supports: PNG, JPG, JPEG, GIF, BMP, WEBP, TIFF, ICO, AVIF</p>
+              <div className="drag-info">
+                <h3 className="text-xl font-medium text-gray-800 text-center">Drop your images here</h3>
+                <p className="text-gray-600 text-sm text-center">or click to browse files</p>
+              </div>
+              <p className="text-xs text-gray-500 text-center">Supports: PNG, JPG, JPEG, GIF, BMP, WEBP, TIFF, ICO, AVIF</p>
             </div>
-            <span className="bg-indigo-600 text-white px-4 py-2 mt-2 rounded-full hover:brightness-90 active:brightness-80 transition-all duration-150">
+            <span className="bg-[#3582FD] text-white px-4 py-2 mt-2 rounded-xl hover:brightness-90 active:brightness-80 transition-all duration-150">
               Upload Image
             </span>
           </>
         )}
       </div>
       {imagePreview &&(
-        <div className="picked-colors flex flex-col items-center gap-8 mt-12">
-          <div className="flex items-start gap-8">
+        <div className="picked-colors w-screen md:w-fit flex flex-col px-2 gap-8 mt-12 ">
+          <div className="flex items-start flex-nowrap ">
             <PalettesSelected paletteColors={palette} />
+          </div>
             <button
               className="text-lg bg-white hover:bg-gray-50 text-red-500 border border-red-500 px-6 py-3 mt-1 cursor-pointer rounded-lg transition-all duration-100"
               onClick={handleRemoveImage}
             > Remove
             </button>
-          </div>
           {palette.length > 0 && (
-            <p className="text-sm text-gray-600 mt-4">
+            <p className="text-sm text-gray-600 px-2 mt-4">
               Click on the image to pick colors. Click on any color to copy its hex value.
             </p>
           )}

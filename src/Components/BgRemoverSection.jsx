@@ -74,7 +74,7 @@ const BgRemoverSection = () => {
   };
 
   return (
-    <section className="flex flex-col items-center gap-2 py-28 md:py-14 overflow-y-auto overflow-x-hidden h-screen">
+    <section className="flex flex-col items-center gap-2 py-28 md:py-14 px-2 overflow-y-auto overflow-x-hidden h-screen">
       <div className="headers flex flex-col gap-4">
         <h1 className="text-3xl md:text-4xl text-black text-center font-medium">
           Instant Background Removal
@@ -87,7 +87,7 @@ const BgRemoverSection = () => {
         </p>
       </div>
       <div
-        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-3/4 md:w-1/2 ${imagePreview ? "border-2 border-transparent  border-solid" : "border-2 pt-10 pb-10 px-4 md:px-16 hover:border-indigo-600  border-dashed"} mt-16 rounded-xl mx-auto cursor-pointer`}
+        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-1/2 ${imagePreview ? "border-2 border-transparent  border-solid" : "border-2 pt-10 pb-10 px-4 md:px-16 hover:border-[#3582FD]  border-dashed"} mt-16 rounded-xl mx-auto cursor-pointer`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onClick={!imagePreview ? handleClick : undefined}
@@ -129,7 +129,7 @@ const BgRemoverSection = () => {
                 size={`6rem`}
                 className="p-4 bg-[#67A1FE]/60 rounded-full"
               />
-              <div className="drag-info">
+              <div className="drag-info flex flex-col items-center">
                 <h3 className="text-xl font-medium text-gray-800  hidden md:flex">
                   Drop your images here
                 </h3>

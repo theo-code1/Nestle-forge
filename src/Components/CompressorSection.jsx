@@ -127,12 +127,12 @@ const CompressorSection = () => {
     </div>
     
     <div 
-      className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-3/4 md:w-1/2 py-10 px-4 md:px-16 mt-16 rounded-xl border-2 border-dashed mx-auto ${
+      className={`drag-drop-container z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-1/2 py-10 px-4 md:px-16 mt-16 rounded-xl border-2 border-dashed mx-auto ${
         Object.values(loadingImages).some(loading => loading)
           ? "cursor-not-allowed opacity-70"
           : "cursor-pointer opacity-100"
       }
-      ${Object.values(loadingImages).some(loading => loading) ? 'hover:border-black' : 'hover:border-indigo-600'}`}
+      ${Object.values(loadingImages).some(loading => loading) ? 'hover:border-black' : 'hover:border-[#3582FD]'}`}
       onClick={
         !Object.values(loadingImages).some(loading => loading) ? () => document.getElementById("file").click() : null
       }
@@ -141,10 +141,10 @@ const CompressorSection = () => {
     >
       <Upload size={`6rem`} className="p-4 bg-[#67A1FE]/60 rounded-full"/>
 
-      <div className="text-center">
+      <div className="text-center flex flex-col items-center">
         <h3 className="text-xl font-medium text-gray-800  hidden md:flex">Drop your images here</h3>
-        <p className="text-gray-600 text-sm mb-4 hidden md:flex">or click to browse files</p>
-        <p className="text-xs text-gray-500">Supports: PNG, JPG, JPEG, GIF, BMP, WEBP, TIFF, ICO, AVIF</p>
+        <p className="text-gray-600 text-sm text-center mb-4 hidden md:flex">or click to browse files</p>
+        <p className="text-xs text-gray-500 text-center">Supports: PNG, JPG, JPEG, GIF, BMP, WEBP, TIFF, ICO, AVIF</p>
       </div>
 
       <div className={`select-file flex gap-4 items-center mt-4 `}>
