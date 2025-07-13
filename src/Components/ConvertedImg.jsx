@@ -17,7 +17,7 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
   
 
   return (
-      <nav className='w-full md:w-3/4 lg:w-[26dvw] md:mx-auto lg:mx-0 flex flex-col gap-12 items-center justify-between px-5 py-4 bg-white dark:bg-black border border-black/40 dark:border-white/30 rounded-md shadow-[0_2px_15px_0_#0000001a]'>
+      <nav className='w-full md:w-3/4 lg:w-[26dvw] md:mx-auto lg:mx-0 flex flex-col gap-12 items-center justify-between px-5 py-4 bg-white dark:bg-black border border-black/40 dark:border-white/20 rounded-md shadow-[0_2px_15px_0_#0000001a]'>
         <div className="first-column flex justify-between w-full items-center">
 
           <div className="img-labels flex items-center gap-4">

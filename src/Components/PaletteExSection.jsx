@@ -75,10 +75,10 @@ const PaletteExSection = () => {
 
 
   return (
-    <section className='flex flex-col items-center gap-2 py-24 px-2 md:py-14 overflow-y-auto overflow-x-hidden h-screen'>
+    <section className='bg-white dark:bg-black/90 flex flex-col items-center gap-2 py-24 px-2 md:py-14 overflow-y-auto overflow-x-hidden h-screen'>
         <div className="headers flex flex-col gap-4">
-            <h1 className='text-3xl md:text-4xl text-center text-black font-medium'>Image to Palette</h1>
-            <p className='text-sm md:text-[16px] text-center px-2'>Extract beautiful color schemes in seconds. Just upload an image and <br className='hidden md:flex'/>get inspired.</p>
+            <h1 className='text-3xl md:text-4xl text-center text-black dark:text-white/90 font-medium'>Image to Palette</h1>
+            <p className='text-sm md:text-[16px] text-black dark:text-white/90 text-center px-2'>Extract beautiful color schemes in seconds. Just upload an image and <br className='hidden md:flex'/>get inspired.</p>
         </div>
         <div
         className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-3/4 lg:w-1/2 ${imagePreview ? 'border-2 border-transparent  border-solid' : 'border-2 py-10 md:py-10 px-4 md:px-16 hover:border-[#3582FD]  border-dashed'} mt-16 rounded-xl mx-auto cursor-pointer`}

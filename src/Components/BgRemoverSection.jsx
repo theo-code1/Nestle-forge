@@ -74,20 +74,20 @@ const BgRemoverSection = () => {
   };
 
   return (
-    <section className="flex flex-col items-center gap-2 py-24 md:py-14 px-2 overflow-y-auto overflow-x-hidden h-screen">
+    <section className="bg-white dark:bg-black/90 flex flex-col items-center gap-2 py-24 md:py-14 px-2 overflow-y-auto overflow-x-hidden h-screen">
       <div className="headers flex flex-col gap-4">
-        <h1 className="text-3xl md:text-4xl text-black text-center font-medium">
+        <h1 className="text-3xl md:text-4xl text-black dark:text-white/90 text-center font-medium">
           Instant Background Removal
         </h1>
-        <p className="text-sm md:text-[16px] px-2 text-center">
+        <p className="text-sm md:text-[16px] px-2 md:px-4 text-center text-black dark:text-white/90">
           Automatically erase backgrounds from any image. Get clean, transparent
           cutouts in
-          <br className="hidden md:flex"/>
+          <br className="hidden lg:flex"/>
           just seconds.
         </p>
       </div>
       <div
-        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-3/4 lg:w-1/2 ${imagePreview ? "border-2 border-transparent  border-solid" : "pt-10 pb-10 px-4 md:px-16 hover:border-[#3582FD] border-2 border-dashed"} mt-16 rounded-xl mx-auto cursor-pointer`}
+        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-3/4 lg:w-1/2 ${imagePreview ? "border-2 border-transparent  border-solid" : "pt-10 pb-10 px-4 md:px-14  hover:border-[#3582FD] border-2 border-dashed border-black dark:border-white/90"} mt-16 rounded-xl mx-auto cursor-pointer`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onClick={!imagePreview ? handleClick : undefined}
@@ -127,13 +127,13 @@ const BgRemoverSection = () => {
             <div className="text-center flex flex-col items-center gap-4 mb-2">
               <Upload
                 size={`6rem`}
-                className="p-4 bg-[#67A1FE]/60 rounded-full"
+                className="p-4 bg-[#67A1FE]/60 rounded-full text-black dark:text-white/90"
               />
               <div className="drag-info flex flex-col items-center">
-                <h3 className="text-xl font-medium text-gray-800  hidden md:flex">
+                <h3 className="text-xl font-medium text-gray-800 dark:text-white/80 hidden md:flex">
                   Drop your images here
                 </h3>
-                <p className="text-gray-600 text-sm hidden md:flex">
+                <p className="text-gray-600 dark:text-white/60 text-sm hidden md:flex">
                   or click to browse files
                 </p>
               </div>
@@ -141,7 +141,7 @@ const BgRemoverSection = () => {
                 Supports: PNG, JPG, JPEG, GIF, BMP, WEBP, TIFF, ICO, AVIF
               </p>
             </div>
-            <span className="bg-[#3582FD] text-white px-4 py-2 mt-2 rounded-xl hover:brightness-90 active:brightness-80 transition-all duration-150">
+            <span className="bg-[#3582FD] dark:bg-[#3582FD]/80 text-white px-4 py-2 mt-2 rounded-xl hover:brightness-90 active:brightness-80 transition-all duration-150">
               Upload Image
             </span>
           </>
@@ -167,7 +167,7 @@ const BgRemoverSection = () => {
         )}
         {imagePreview && (
           <button
-            className="order-1 text-3xl bg-white text-red-500 cursor-pointer border-2 border-black/20 px-3 py-2 hover:shadow-[0_2px_15px_0_#0000001a] rounded-lg transition-all duration-100"
+            className="order-1 text-3xl bg-white dark:bg-black text-red-500 cursor-pointer border-2 border-black/20 px-3 py-2 hover:shadow-[0_2px_15px_0_#0000001a] rounded-lg transition-all duration-100"
             onClick={handleRemoveImage}
           >
             <Delete />
@@ -177,7 +177,7 @@ const BgRemoverSection = () => {
         {processedImage && (
           <button
             type="button"
-            className="order-3 px-6 py-3 text-lg bg-[#3582FD] text-white rounded-lg"
+            className="order-3 px-6 py-3 text-lg bg-[#3582FD] dark:bg-[#3582FD]/80 text-white rounded-lg"
             onClick={handleDownload}
           >
             Download

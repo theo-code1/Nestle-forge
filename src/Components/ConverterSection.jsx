@@ -150,7 +150,7 @@ export default function ConverterSection() {
   };
 
   return (
-    <section className="bg-white dark:bg-black/90 dark:text-white/90 flex flex-col items-center gap-4 md:gap-8 pt-28 md:pt-14 pb-12 overflow-y-auto overflow-x-hidden h-screen selection:bg-black/80 selection:text-white">
+    <section className="bg-white dark:bg-black/90 dark:text-white/90 flex flex-col items-center gap-4 md:gap-8 pt-28 md:pt-14 pb-12 overflow-y-auto overflow-x-hidden h-screen selection:bg-black/80 selection:text-white dark:selection:bg-white dark:selection:text-black">
       <div className="heading flex flex-col items-center gap-4">
         <h1 className="text-3xl md:text-4xl font-medium text-center">
         Format Switcher
@@ -173,7 +173,7 @@ export default function ConverterSection() {
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
-          <Upload size={`6rem`} className="p-4 bg-[#67A1FE]/60 rounded-full"/>
+          <Upload size={`6rem`} className="p-4 bg-[#67A1FE]/60 rounded-full dark:text-white/90"/>
 
           <div className="text-center flex flex-col items-center">
             <h3 className="text-xl font-medium text-gray-800 dark:text-white/80 hidden md:flex ">Drop your images here</h3>

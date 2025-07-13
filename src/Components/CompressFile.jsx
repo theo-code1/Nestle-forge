@@ -23,12 +23,12 @@ const CompressFile = ({
 }) => {
 
   return (
-    <nav className='w-screen md:w-full lg:w-[30vw] flex items-center justify-between px-5 py-4 bg-white border border-black/40 rounded-md shadow-[0_2px_15px_0_#0000001a]'>
+    <nav className='w-screen md:w-full lg:w-[30vw] flex items-center justify-between px-5 py-4 bg-white border dark:bg-black border-black/40 dark:border-white/20 rounded-md shadow-[0_2px_15px_0_#0000001a]'>
         <div className="img-details flex gap-2 items-center">
-          <DocIcon className={'w-8 h-8 text-black'} />
+          <DocIcon className={'w-8 h-8 text-black dark:text-white/90'} />
           <div className="headers min-w-fit">
-              <h2 className='text-[16px] font-medium  hidden md:flex'>{ImageName && ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails?.format : ImageName}</h2>
-              <h2 className='text-[16px] font-medium flex md:hidden'>{ImageName && ImageName.length > 16 ? ImageName.substring(0, 8) + '...' + selectedImgDetails?.format : ImageName}</h2>
+              <h2 className='text-[16px] font-medium dark:text-white/90 hidden md:flex'>{ImageName && ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails?.format : ImageName}</h2>
+              <h2 className='text-[16px] font-medium dark:text-white/90 flex md:hidden'>{ImageName && ImageName.length > 16 ? ImageName.substring(0, 8) + '...' + selectedImgDetails?.format : ImageName}</h2>
               <h3 className='text-[16px] text-[#545454]'>{ImageSize}</h3>
           </div>
               {isCompressed && selectedImgDetails?.compressionRatio && (
@@ -43,7 +43,7 @@ const CompressFile = ({
               )}
           </div>
         <div className='btns flex items-center justify-center gap-2'>
-          <button onClick={handleDelete} title='Delete' className='text-2xl bg-white text-red-500 hover:shadow-[0_0_15px_0_#0000001a] transition-all duration-100 cursor-pointer border-2 border-black/20 rounded-md px-3 py-3 '> <Delete /> </button>
+          <button onClick={handleDelete} title='Delete' className='text-2xl bg-white dark:bg-black text-red-500 hover:shadow-[0_0_15px_0_#0000001a] transition-all duration-100 cursor-pointer border-2 border-black/20 dark:border-white/20 rounded-md px-3 py-3 '> <Delete /> </button>
             {isCompressed && compressedImg && (
               <button 
                 className='text-lg bg-[#3582FD] text-white hover:brightness-95 transition-all duration-100 cursor-pointer rounded-lg px-6 py-3'
@@ -106,7 +106,7 @@ const CompressFile = ({
               </button>
             )}
             {!isCompressed && (
-              <button onClick={handleCompressing} className='text-lg bg-[#3582FD] hover:brightness-95 text-white transition-all duration-100 cursor-pointer rounded-lg px-6 py-3'> {isLoading ? 'compressing...' : 'Compress'} </button>
+              <button onClick={handleCompressing} className='text-lg bg-[#3582FD] dark:bg-[#3582FD]/80 hover:brightness-95 text-white transition-all duration-100 cursor-pointer rounded-lg px-6 py-3'> {isLoading ? 'compressing...' : 'Compress'} </button>
             )}
         </div>
       </nav>
