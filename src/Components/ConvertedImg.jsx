@@ -17,21 +17,21 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
   
 
   return (
-      <nav className='w-full md:w-3/4 lg:w-[26dvw] md:mx-auto lg:mx-0 flex flex-col gap-12 items-center justify-between px-5 py-4 bg-white border border-black/40 rounded-md shadow-[0_2px_15px_0_#0000001a]'>
+      <nav className='w-full md:w-3/4 lg:w-[26dvw] md:mx-auto lg:mx-0 flex flex-col gap-12 items-center justify-between px-5 py-4 bg-white dark:bg-black border border-black/40 dark:border-white/30 rounded-md shadow-[0_2px_15px_0_#0000001a]'>
         <div className="first-column flex justify-between w-full items-center">
 
           <div className="img-labels flex items-center gap-4">
             <div className="doc-icon-container">
-              <DocIcon className={'w-8 h-8 text-black'} />
+              <DocIcon className={'w-8 h-8 text-black dark:text-white/90'} />
             </div>
             <div className="img-details w-fit">
-                <h2 className='text-[16px] font-medium'>{ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails.format.toLowerCase() : ImageName}</h2>
+                <h2 className='text-white dark:text-white/90 text-[16px] font-medium'>{ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails.format.toLowerCase() : ImageName}</h2>
                 <h3 className='text-[16px] text-[#545454]'>{ImageSize}</h3>
             </div>
           </div>
 
           <div className='delete-button'>
-            <button onClick={handleDelete} title='Delete' className='text-xl bg-white text-red-500  hover:shadow-[0_2px_15px_0_#0000001a] transition-all duration-100 cursor-pointer border-2 border-black/20 rounded-md p-2 '> <FaTrash /> </button>
+            <button onClick={handleDelete} title='Delete' className='text-xl bg-white dark:bg-black text-red-500  hover:shadow-[0_2px_15px_0_#0000001a] dark:hover:shadow-[0_2px_15px_0_#ffffff1a] transition-all duration-100 cursor-pointer border-2 border-black/20 dark:border-white/20 rounded-md p-2 '> <FaTrash /> </button>
           </div>
         </div>
 
@@ -42,7 +42,7 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
                 <div className="select-formats h-fit flex items-center gap-1 z-30">
                   <button
                     type="button"
-                    className="text-[16px] font-medium border-black/20 border-2 px-5.5 py-2 rounded-md"
+                    className="text-white dark:text-white/90 text-[16px] font-medium border-black/20 dark:border-white/20 border-2 px-5.5 py-2 rounded-md"
                   >
                     {selectedImgDetails.format}
                   </button>
@@ -54,7 +54,7 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
                         setOpenDropdownId(isDropdownOpen ? null : imageId);
                       }}
                       type="button"
-                      className={`text-[16px] font-medium pl-5 ${!convertToFormat ? 'pr-3.5' : 'pr-5'} py-2 rounded-md border-2 border-black/20 flex gap-4 items-center hover:shadow-[0_2px_15px_0_#0000001a] active:bg-black/5 cursor-pointer transition-all duration-100`}
+                      className={`text-white dark:text-white/90 text-[16px] font-medium pl-5 ${!convertToFormat ? 'pr-3.5' : 'pr-5'} py-2 rounded-md border-2 border-black/20 dark:border-white/20 flex gap-4 items-center hover:shadow-[0_2px_15px_0_#0000001a] active:bg-black/5 cursor-pointer transition-all duration-100`}
                     >
                       {convertToFormat ? convertToFormat.toUpperCase() : "To"}
                       {!convertToFormat && <Dropdown />}
@@ -63,16 +63,16 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
                 </div>
 
                 {isDropdownOpen && (
-                  <div className="absolute left-1/2 transform -translate-x-1/2 top-12 mt-2 w-96 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-visible">
+                  <div className="absolute left-1/2 transform -translate-x-1/2 top-12 mt-2 w-96 bg-white dark:bg-black/90 rounded-lg shadow-lg border border-gray-200 dark:border-black z-50 overflow-visible">
                     <div className="flex">
                       {/* Categories List */}
-                      <div className="w-1/3 border-r border-gray-200 bg-gray-50">
+                      <div className="w-1/3 border-r border-gray-200 bg-gray-50 dark:bg-black dark:border-white/40">
                         {Object.keys(formatCategories).map((category) => (
                           <div
                             key={category}
                             className={`px-4 py-3 text-sm font-medium cursor-pointer transition-colors ${
                               hoveredCategory === category
-                                ? "bg-white text-[#3582FD] font-semibold"
+                                ? "text-[#3582FD] dark:text-[#3582FD]/80 font-semibold"
                                 : "text-gray-800 hover:bg-gray-100"
                             }`}
                             onClick={(e) => {
@@ -96,10 +96,10 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
                                   key={format}
                                   className={`w-full px-4 py-2.5 text-sm text-left rounded-md transition-colors ${
                                     convertToFormat === format
-                                      ? "bg-[#3582FD] text-white font-medium"
-                                      : "text-gray-800 hover:bg-[#3582FD]/10"
+                                      ? "bg-[#3582FD] dark:bg-[#3582FD]/80 text-white font-medium"
+                                      : "text-gray-800 hover:bg-[#3582FD]/10 dark:text-white/90 dark:hover:bg-white/20"
                                   }
-                                  ${isCurrentFormat ? 'text-black bg-gray-200 hover:bg-gray-200 cursor-not-allowed ' : '' } `}
+                                  ${isCurrentFormat ? 'text-black bg-gray-200 hover:bg-gray-200 dark:bg-white/30 dark:text-white/60 cursor-not-allowed ' : '' } `}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     setConvertToFormat(format);
@@ -121,7 +121,7 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
             <div className="convert-download flex-shrink-0">
 
             {convertToFormat && !isConverted && (
-              <button onClick={handleConverting} className={`text-lg bg-[#3582FD] hover:brightness-95 text-white transition-all duration-100 cursor-pointer rounded-lg py-2 px-2 md:px-6 `}> {isLoading ? 'converting...' : 'Convert'} </button>
+              <button onClick={handleConverting} className={`text-lg bg-[#3582FD]/80 hover:brightness-95 text-white transition-all duration-100 cursor-pointer rounded-lg py-2 px-2 md:px-6 `}> {isLoading ? 'converting...' : 'Convert'} </button>
                 )}
               {isConverted && imgHref && ( <a href={`http://localhost:5001/download/${encodeURIComponent(DownloadImg)}`} className='text-lg bg-[#3582FD] text-white hover:brightness-95 transition-all duration-100 cursor-pointer rounded-lg px-6 py-3' download={DownloadImg}> Download </a> )}
             </div>

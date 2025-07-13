@@ -160,10 +160,10 @@ const CompressorSection = () => {
           Upload Image
         </span>
       </div>
-    </div>
+    </div>  
 
     {/* Display uploaded images */}
-    <div className="uploaded-images w-screen px-4 lg:px-0 md:w-[64dvw] grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-12 mt-10">
+    <div className="uploaded-images w-screen px-4 md:px-0 md:w-[64dvw] grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-12 mt-10">
       {allUploadedImages.map((image) => {
         const compressedImage = compressedImages[image.id];
         const isCompressed = !!compressedImage;

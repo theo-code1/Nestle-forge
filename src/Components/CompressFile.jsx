@@ -23,7 +23,7 @@ const CompressFile = ({
 }) => {
 
   return (
-    <nav className='w-screen md:w-[30vw] flex items-center justify-between px-5 py-4 bg-white border border-black/40 rounded-md shadow-[0_2px_15px_0_#0000001a]'>
+    <nav className='w-screen md:w-full lg:w-[30vw] flex items-center justify-between px-5 py-4 bg-white border border-black/40 rounded-md shadow-[0_2px_15px_0_#0000001a]'>
         <div className="img-details flex gap-2 items-center">
           <DocIcon className={'w-8 h-8 text-black'} />
           <div className="headers min-w-fit">

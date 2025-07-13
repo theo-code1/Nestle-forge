@@ -101,7 +101,7 @@ const PaletteExSection = () => {
                 ref={imageRef}
                 src={imagePreview}
                 alt="Uploaded Preview"
-                className={`w-[90dvw] md:min-w-fit max-h-[45dvh] object-contain shadow select-none rounded-lg `}
+                className={`w-[90dvw] lg:min-w-fit max-h-[45dvh] object-contain shadow select-none rounded-lg `}
                 onLoad={handleImageLoad}
                 onClick={handleImageClick}
                 style={{ cursor: 'crosshair' }}
@@ -128,7 +128,7 @@ const PaletteExSection = () => {
       </div>
       {imagePreview &&(
         <div className="picked-colors w-screen md:w-fit flex flex-col px-2 gap-8 mt-12 ">
-          <div className="flex items-start max-w-screen flex-nowrap overflow-y-hidden overflow-x-auto">
+          <div className="flex items-start flex-nowrap max-w-screen md:w-full overflow-y-hidden overflow-x-auto">
             <PalettesSelected paletteColors={palette} />
           </div>
             <button

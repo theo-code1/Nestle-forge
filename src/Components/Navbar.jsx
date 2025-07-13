@@ -19,7 +19,7 @@ const Navbar = () => {
                 <MenuIcon width='32'  color='black' className='z-30'/>
             </button>
         </nav>
-        <div className={`fixed top-0 left-0 w-screen h-screen px-8 pt-24 bg-white z-50 transition-all duration-300 ${isMenuOpened ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className={`flex md:hidden fixed top-0 left-0 w-screen h-screen px-8 pt-24 bg-white z-50 transition-all duration-300 ${isMenuOpened ? 'translate-x-0' : 'translate-x-full'}`}>
                 <NestleForgeLogo width="36" height="36" color="black" className="absolute top-6 left-8 " />
             <button onClick={() => setIsMenuOpened(!isMenuOpened)}>
                 <Close width='48'  color='black' className='absolute top-4 right-4 p-2 z-30 '/>
