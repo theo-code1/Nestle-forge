@@ -5,7 +5,6 @@ from flask_cors import CORS
 from datetime import datetime
 import io
 import requests
-from supabase_config import get_supabase_storage
 
 app = Flask(__name__)
 CORS(app)
@@ -19,6 +18,10 @@ def generate_unique_filename(original_filename, target_format):
     timestamp = str(int(datetime.now().timestamp() * 1000000))
     base_name = os.path.splitext(original_filename)[0]
     return f"{timestamp}_{base_name}.{target_format.lower()}"
+
+@app.route('/test')
+def test():
+    return "This is the right Flask file!"
 
 @app.route('/convert', methods=['POST'])
 def convert_image():
@@ -75,23 +78,14 @@ def convert_image():
         input_image.save(img_buffer, format=save_format)
         img_buffer.seek(0)
         
-        # Upload to Supabase storage
-        supabase_storage = get_supabase_storage()
+        # Return the converted image as a file download
         content_type = f'image/{target_format.lower()}'
-        public_url = supabase_storage.upload_file(
-            img_buffer.getvalue(),
-            output_filename,
-            content_type,
-            folder='Converted'
+        return send_file(
+            img_buffer,
+            as_attachment=True,
+            download_name=output_filename,
+            mimetype=content_type
         )
-        
-        # Return the public URL instead of the file
-        return jsonify({
-            'success': True,
-            'url': public_url,
-            'filename': output_filename,
-            'size': len(img_buffer.getvalue())
-        })
         
     except Exception as e:
         import traceback
@@ -103,30 +97,7 @@ def convert_image():
             'type': type(e).__name__
         }), 500
 
-@app.route('/download/<path:filename>')
-def download_file(filename):
-    """Download file from Supabase with proper headers"""
-    try:
-        supabase_storage = get_supabase_storage()
-        bucket_name = supabase_storage.bucket_name
-        
-        # Get the public URL from Supabase
-        public_url = supabase_storage.supabase.storage.from_(bucket_name).get_public_url(filename)
-        
-        # Download the file from Supabase
-        response = requests.get(public_url, stream=True)
-        response.raise_for_status()
-        
-        # Return the file with proper download headers
-        return send_file(
-            io.BytesIO(response.content),
-            as_attachment=True,
-            download_name=filename,
-            mimetype=response.headers.get('content-type', 'application/octet-stream')
-        )
-        
-    except Exception as e:
-        return jsonify({'error': f'Download failed: {str(e)}'}), 500
+# (Removed Supabase download endpoint as requested)
 
 @app.route('/formats', methods=['GET'])
 def get_supported_formats():
