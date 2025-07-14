@@ -16,12 +16,14 @@ a.active {
   color: #0665FD;
   /* [#3582FD]/80 */
 }
+@media (min-width: 768px){
 
-.img-layer{
-  animation: slideBefore linear 1.5s forwards;
+  .img-layer{
+    animation: slideBefore linear 1.5s forwards;
+  }
 }
-@keyframes slideBefore{
-  0%{
+  @keyframes slideBefore{
+    0%{
     width: full;
   }
   100%{

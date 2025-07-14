@@ -25,7 +25,7 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
               <DocIcon className={'w-8 h-8 text-black dark:text-white/90'} />
             </div>
             <div className="img-details w-fit">
-                <h2 className='text-white dark:text-white/90 text-[16px] font-medium'>{ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails.format.toLowerCase() : ImageName}</h2>
+                <h2 className='text-black dark:text-white/90 text-[16px] font-medium'>{ImageName.length > 16 ? ImageName.substring(0, 16) + '...' + selectedImgDetails.format.toLowerCase() : ImageName}</h2>
                 <h3 className='text-[16px] text-[#545454]'>{ImageSize}</h3>
             </div>
           </div>
@@ -121,7 +121,7 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
             <div className="convert-download flex-shrink-0">
 
             {convertToFormat && !isConverted && (
-              <button onClick={handleConverting} className={`text-lg bg-[#3582FD]/80 hover:brightness-95 text-white transition-all duration-100 cursor-pointer rounded-lg py-2 px-2 md:px-6 `}> {isLoading ? 'converting...' : 'Convert'} </button>
+              <button onClick={handleConverting} className={`text-lg bg-[#3582FD] dark:bg-[#3582FD]/80 hover:brightness-95 text-white transition-all duration-100 cursor-pointer rounded-lg py-2 px-2 md:px-6 `}> {isLoading ? 'converting...' : 'Convert'} </button>
                 )}
               {isConverted && imgHref && ( <a href={`http://localhost:5001/download/${encodeURIComponent(DownloadImg)}`} className='text-lg bg-[#3582FD] text-white hover:brightness-95 transition-all duration-100 cursor-pointer rounded-lg px-6 py-3' download={DownloadImg}> Download </a> )}
             </div>

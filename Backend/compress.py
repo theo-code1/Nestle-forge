@@ -85,7 +85,8 @@ def compress_image():
         public_url = supabase_storage.upload_file(
             compressed_bytes,
             output_filename,
-            content_type
+            content_type,
+            folder='Compressed'
         )
         # Create a response with the compressed image and public URL
         response = {

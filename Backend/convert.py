@@ -81,7 +81,8 @@ def convert_image():
         public_url = supabase_storage.upload_file(
             img_buffer.getvalue(),
             output_filename,
-            content_type
+            content_type,
+            folder='Converted'
         )
         
         # Return the public URL instead of the file

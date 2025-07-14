@@ -104,7 +104,7 @@ const BgRemoverSection = () => {
         {imagePreview ? (
           <div className="before-after relative flex flex-col items-center justify-center w-full h-full">
             <div
-              className={`${animationBefore && processedImage ? "img-layer overflow-hidden" : ""} border relative w-full max-h-[50dvh] flex items-center justify-center`}
+              className={`${animationBefore && processedImage ? "img-layer overflow-hidden" : ""} relative w-full max-h-[50dvh] flex items-center justify-center`}
               // onAnimationEnd={() => setAnimationBefore(false)}
             >
               <img

@@ -32,7 +32,8 @@ def remove_background():
         public_url = supabase_storage.upload_file(
             output_io.getvalue(),
             output_filename,
-            content_type
+            content_type,
+            folder='Bgremoved'
         )
         return jsonify({
             "success": True,

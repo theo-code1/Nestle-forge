@@ -19,23 +19,23 @@ class SupabaseStorage:
         
         self.supabase: Client = create_client(self.url, self.key)
         
-    def upload_file(self, file_data: bytes, filename: str, content_type: str = None) -> str:
+    def upload_file(self, file_data: bytes, filename: str, content_type: str = None, folder: str = None) -> str:
         """
         Upload a file to Supabase storage
         Returns the public URL of the uploaded file
         """
         try:
+            # Support subfolders
+            path = f"{folder}/{filename}" if folder else filename
             # Upload file to Supabase storage
             result = self.supabase.storage.from_(self.bucket_name).upload(
-                path=filename,
+                path=path,
                 file=file_data,
                 file_options={"content-type": content_type} if content_type else None
             )
-            
             # Get the public URL
-            public_url = self.supabase.storage.from_(self.bucket_name).get_public_url(filename)
+            public_url = self.supabase.storage.from_(self.bucket_name).get_public_url(path)
             return public_url
-            
         except Exception as e:
             print(f"Error uploading to Supabase: {e}")
             raise e
