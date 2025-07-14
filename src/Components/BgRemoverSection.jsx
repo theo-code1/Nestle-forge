@@ -74,7 +74,7 @@ const BgRemoverSection = () => {
   };
 
   return (
-    <section className="bg-white dark:bg-black/90 flex flex-col items-center gap-2 py-24 md:py-14 px-2 overflow-y-auto overflow-x-hidden h-screen">
+    <section className="bg-white dark:bg-black/95 flex flex-col items-center gap-2 py-24 md:py-14 px-2 overflow-y-auto overflow-x-hidden h-screen">
       <div className="headers flex flex-col gap-4">
         <h1 className="text-3xl md:text-4xl text-black dark:text-white/90 text-center font-medium">
           Instant Background Removal
@@ -87,7 +87,7 @@ const BgRemoverSection = () => {
         </p>
       </div>
       <div
-        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-3/4 lg:w-1/2 ${imagePreview ? "border-2 border-transparent  border-solid" : "pt-10 pb-10 px-4 md:px-14  hover:border-[#3582FD] border-2 border-dashed border-black dark:border-white/90"} mt-16 rounded-xl mx-auto cursor-pointer`}
+        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-3/4 lg:w-1/2 ${imagePreview ? "border-2 border-transparent  border-solid" : "pt-10 pb-10 px-4 md:px-14  hover:border-[#3582FD] dark:hover:border-[#3582FD]/60 border-2 border-dashed border-black dark:border-white/90"} mt-16 rounded-xl mx-auto cursor-pointer`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onClick={!imagePreview ? handleClick : undefined}

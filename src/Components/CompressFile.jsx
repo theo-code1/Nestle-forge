@@ -46,7 +46,7 @@ const CompressFile = ({
           <button onClick={handleDelete} title='Delete' className='text-2xl bg-white dark:bg-black text-red-500 hover:shadow-[0_0_15px_0_#0000001a] transition-all duration-100 cursor-pointer border-2 border-black/20 dark:border-white/20 rounded-md px-3 py-3 '> <Delete /> </button>
             {isCompressed && compressedImg && (
               <button 
-                className='text-lg bg-[#3582FD] text-white hover:brightness-95 transition-all duration-100 cursor-pointer rounded-lg px-6 py-3'
+                className='text-lg bg-[#3582FD] text-white hover:brightness-95 transition-all duration-100 cursor-pointer rounded-lg px-4 py-2 md:px-6 md:py-3'
                 onClick={async (e) => {
                   e.preventDefault();
                   try {
@@ -106,7 +106,7 @@ const CompressFile = ({
               </button>
             )}
             {!isCompressed && (
-              <button onClick={handleCompressing} className='text-lg bg-[#3582FD] dark:bg-[#3582FD]/80 hover:brightness-95 text-white transition-all duration-100 cursor-pointer rounded-lg px-6 py-3'> {isLoading ? 'compressing...' : 'Compress'} </button>
+              <button onClick={handleCompressing} className='text-lg bg-[#3582FD] dark:bg-[#3582FD]/80 hover:brightness-95 text-white transition-all duration-100 cursor-pointer rounded-lg px-4 py-2 md:px-6 md:py-3'> {isLoading ? 'compressing...' : 'Compress'} </button>
             )}
         </div>
       </nav>

@@ -75,13 +75,13 @@ const PaletteExSection = () => {
 
 
   return (
-    <section className='bg-white dark:bg-black/90 flex flex-col items-center gap-2 py-24 px-2 md:py-14 overflow-y-auto overflow-x-hidden h-screen'>
+    <section className='bg-white dark:bg-black/95 flex flex-col items-center gap-2 py-24 px-2 md:py-14 overflow-y-auto overflow-x-hidden h-screen'>
         <div className="headers flex flex-col gap-4">
             <h1 className='text-3xl md:text-4xl text-center text-black dark:text-white/90 font-medium'>Image to Palette</h1>
             <p className='text-sm md:text-[16px] text-black dark:text-white/90 text-center px-2'>Extract beautiful color schemes in seconds. Just upload an image and <br className='hidden md:flex'/>get inspired.</p>
         </div>
         <div
-        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-3/4 lg:w-1/2 ${imagePreview ? 'border-2 border-transparent  border-solid' : 'border-2 py-10 md:py-10 px-4 md:px-16 hover:border-[#3582FD]  border-dashed'} mt-16 rounded-xl mx-auto cursor-pointer`}
+        className={`drag-drop-container relative z-10 flex flex-col items-center justify-center gap-4 w-9/10 md:w-3/4 lg:w-1/2 ${imagePreview ? 'border-2 border-transparent  border-solid' : 'border-2 py-10 md:py-10 px-4 md:px-14 hover:border-[#3582FD] dark:hover:border-[#3582FD]/60 border-dashed border-black dark:border-white/80'} mt-16 rounded-xl mx-auto cursor-pointer`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onClick={!imagePreview ? handleClick : undefined}
@@ -113,14 +113,14 @@ const PaletteExSection = () => {
         ) : (
           <>
             <div className="text-center flex flex-col items-center gap-4 mb-2">
-              <Upload size={`6rem`} className="p-4 bg-[#67A1FE]/60 rounded-full"/>
+              <Upload size={`6rem`} className="p-4 bg-[#67A1FE]/60 rounded-full text-black dark:text-white/80"/>
               <div className="drag-info">
-                <h3 className="text-xl font-medium text-gray-800 text-center">Drop your images here</h3>
-                <p className="text-gray-600 text-sm text-center">or click to browse files</p>
+                <h3 className="text-xl font-medium text-gray-800 dark:text-white/80 text-center">Drop your images here</h3>
+                <p className="text-gray-600 dark:text-white/60 text-sm text-center">or click to browse files</p>
               </div>
               <p className="text-xs text-gray-500 text-center">Supports: PNG, JPG, JPEG, GIF, BMP, WEBP, TIFF, ICO, AVIF</p>
             </div>
-            <span className="bg-[#3582FD] text-white px-4 py-2 mt-2 rounded-xl hover:brightness-90 active:brightness-80 transition-all duration-150">
+            <span className="bg-[#3582FD] dark:bg-[#3582FD]/80 text-white px-4 py-2 mt-2 rounded-xl hover:brightness-90 active:brightness-80 transition-all duration-150">
               Upload Image
             </span>
           </>
@@ -132,7 +132,7 @@ const PaletteExSection = () => {
             <PalettesSelected paletteColors={palette} />
           </div>
             <button
-              className="text-lg bg-white hover:bg-gray-50 text-red-500 border border-red-500 px-6 py-3 mt-1 cursor-pointer rounded-lg transition-all duration-100"
+              className="text-lg bg-transparent hover:bg-gray-50 dark:hover:bg-black/90 text-red-500 border border-red-500 px-6 py-3 mt-1 cursor-pointer rounded-lg transition-all duration-100"
               onClick={handleRemoveImage}
             > Remove
             </button>

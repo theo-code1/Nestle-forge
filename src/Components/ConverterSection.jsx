@@ -150,7 +150,7 @@ export default function ConverterSection() {
   };
 
   return (
-    <section className="bg-white dark:bg-black/90 dark:text-white/90 flex flex-col items-center gap-4 md:gap-8 pt-28 md:pt-14 pb-12 overflow-y-auto overflow-x-hidden h-screen selection:bg-black/80 selection:text-white dark:selection:bg-white dark:selection:text-black">
+    <section className="bg-white dark:bg-black/95 dark:text-white/90 flex flex-col items-center gap-4 md:gap-8 pt-28 md:pt-14 pb-4 overflow-y-auto overflow-x-hidden h-screen selection:bg-black/80 selection:text-white dark:selection:bg-white dark:selection:text-black">
       <div className="heading flex flex-col items-center gap-4">
         <h1 className="text-3xl md:text-4xl font-medium text-center">
         Format Switcher

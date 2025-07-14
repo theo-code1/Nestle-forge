@@ -92,7 +92,7 @@ export function PaletteArticle({ articleColor }) {
       </div>
       
       {/* Hex value display */}
-      <div className="text-xs text-gray-700 mt-2 font-mono text-center min-w-[60px]">
+      <div className="text-xs text-gray-700 dark:text-white/80 mt-2 font-mono text-center min-w-[60px]">
         {hexColor}
       </div>
     </div>

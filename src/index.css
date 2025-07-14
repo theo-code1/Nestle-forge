@@ -93,3 +93,31 @@ a.active {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
+
+/* Thin scrollbar for all sections */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #979797 #f1f1f1;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #3582FD;
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 8px;
+}
+
+/* Dark mode scrollbar */
+.dark *::-webkit-scrollbar-thumb {
+  background: #3582FD;
+}
+.dark *::-webkit-scrollbar-track {
+  background: #222;
+}
