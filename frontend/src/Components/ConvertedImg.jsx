@@ -3,8 +3,9 @@ import FaTrash from "./Icons/Delete.jsx"
 import ToArrow from "./Icons/toArrow.jsx";
 import Dropdown from "./Icons/dropdown.jsx";
 import DocIcon from "./Icons/DocIcon.jsx";
+import { downloadBlob } from "../utils/api";
 
-const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete, selectedImgDetails, isConverted, handleConverting, selectedImg, setConvertToFormat, convertToFormat, isLoading, imageId, openDropdownId, setOpenDropdownId }) => {
+const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, handleDelete, selectedImgDetails, isConverted, handleConverting, selectedImg, setConvertToFormat, convertToFormat, isLoading, imageId, openDropdownId, setOpenDropdownId, convertedBlob }) => {
 
   const formatCategories = {
     Image: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'tiff', 'ico', 'avif'],
@@ -123,7 +124,17 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
             {convertToFormat && !isConverted && (
               <button onClick={handleConverting} className={`text-lg bg-[#3582FD] dark:bg-[#3582FD]/80 hover:brightness-95 text-white transition-all duration-100 cursor-pointer rounded-lg py-2 px-2 md:px-6 `}> {isLoading ? 'converting...' : 'Convert'} </button>
                 )}
-              {isConverted && imgHref && ( <a href={`http://localhost:5001/download/${encodeURIComponent(DownloadImg)}`} className='text-lg bg-[#3582FD] text-white hover:brightness-95 transition-all duration-100 cursor-pointer rounded-lg px-6 py-3' download={DownloadImg}> Download </a> )}
+              {isConverted && convertedBlob && (
+                <button
+                  onClick={() => downloadBlob(convertedBlob, DownloadImg)}
+                  className="text-lg bg-[#3582FD] text-white hover:brightness-95 transition-all duration-100 cursor-pointer rounded-lg px-6 py-3"
+                >
+                  Download
+                </button>
+              )}
+              {isConverted && !convertedBlob && (
+                <span className="text-red-500 text-sm">Download unavailable</span>
+              )}
             </div>
         </div>
       </nav>

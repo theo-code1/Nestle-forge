@@ -123,7 +123,8 @@ export default function ConverterSection() {
                 convertedUrl: result.url,
                 convertedName: filename,
                 convertedSize: (result.size / 1024).toFixed(2) + " KB",
-                isConverted: true
+                isConverted: true,
+                convertedBlob: result.blob // <-- this line is important
               }
             : img
         )
@@ -256,6 +257,7 @@ export default function ConverterSection() {
                 openDropdownId={openDropdownId}
                 setOpenDropdownId={setOpenDropdownId}
                 showErr={errors[image.id] || ""}
+                convertedBlob={image.convertedBlob}
               />
           <span className="text-red-500 text-sm font-[400] mt-2  text-center">{errors[image.id] || ""}</span>
             </div>
