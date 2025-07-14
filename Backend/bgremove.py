@@ -4,6 +4,7 @@ from flask_cors import CORS
 from rembg import remove
 from PIL import Image
 import io
+from supabase_config import get_supabase_storage
 
 app = Flask(__name__)
 CORS(app)
@@ -24,7 +25,21 @@ def remove_background():
         output_image.save(output_io, format='PNG')
         output_io.seek(0)
 
-        return send_file(output_io, mimetype='image/png')
+        # Upload to Supabase
+        supabase_storage = get_supabase_storage()
+        output_filename = f"bgremoved_{image_file.filename}"
+        content_type = "image/png"
+        public_url = supabase_storage.upload_file(
+            output_io.getvalue(),
+            output_filename,
+            content_type
+        )
+        return jsonify({
+            "success": True,
+            "public_url": public_url,
+            "filename": output_filename,
+            "size": output_io.getbuffer().nbytes
+        })
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500

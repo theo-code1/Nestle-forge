@@ -104,13 +104,13 @@ const BgRemoverSection = () => {
         {imagePreview ? (
           <div className="before-after relative flex flex-col items-center justify-center w-full h-full">
             <div
-              className={`${animationBefore && processedImage ? "img-layer overflow-hidden" : ""} relative w-full max-h-[50dvh] flex items-center justify-center`}
+              className={`${animationBefore && processedImage ? "img-layer overflow-hidden" : ""} border relative w-full max-h-[50dvh] flex items-center justify-center`}
               // onAnimationEnd={() => setAnimationBefore(false)}
             >
               <img
                 src={imagePreview}
                 alt="Uploaded Preview"
-                className={`min-w-fit max-h-[50dvh] object-cover shadow select-none rounded-lg`}
+                className={`md:min-w-fit max-h-full  object-cover shadow select-none rounded-lg`}
               />
             </div>
 
@@ -118,7 +118,7 @@ const BgRemoverSection = () => {
               <img
                 src={processedImage}
                 alt="Result Preview"
-                className="absolute left-1/2 top-0 -translate-x-1/2  md:min-w-fit min-h-full object-cover shadow select-none rounded-lg"
+                className="absolute left-1/2 top-0 -translate-x-1/2  md:min-w-fit min-h-full md:max-h-full object-cover shadow select-none rounded-lg"
               />
             )}
           </div>

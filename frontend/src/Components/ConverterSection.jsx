@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Upload from "./Icons/Upload.jsx";
-import { convertImage } from "../utils/api";
+import { convertImage } from "../utils/api.js";
 import ConvertedImg from "./ConvertedImg.jsx";
 
 

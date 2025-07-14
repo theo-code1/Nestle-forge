@@ -43,7 +43,7 @@ const CompressFile = ({
               )}
           </div>
         <div className='btns flex items-center justify-center gap-2'>
-          <button onClick={handleDelete} title='Delete' className='text-2xl bg-white dark:bg-black text-red-500 hover:shadow-[0_0_15px_0_#0000001a] transition-all duration-100 cursor-pointer border-2 border-black/20 dark:border-white/20 rounded-md px-3 py-3 '> <Delete /> </button>
+          <button onClick={handleDelete} title='Delete' className='text-2xl bg-white dark:bg-black text-red-500 hover:shadow-[0_0_15px_0_#0000001a] transition-all duration-100 cursor-pointer border-2 border-black/20 dark:border-white/20 rounded-md px-2 py-2 md:px-3 md:py-3 '> <Delete /> </button>
             {isCompressed && compressedImg && (
               <button 
                 className='text-lg bg-[#3582FD] text-white hover:brightness-95 transition-all duration-100 cursor-pointer rounded-lg px-4 py-2 md:px-6 md:py-3'

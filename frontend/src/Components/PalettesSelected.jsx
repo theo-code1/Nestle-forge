@@ -68,7 +68,7 @@ export function PaletteArticle({ articleColor }) {
   return (
     <div className="flex flex-col items-center flex-1 ">
       <div
-        className="h-16 w-full relative group cursor-pointer rounded-lg shadow-[0_2px_15px_0_#0000001a]"
+        className="h-16 w-full relative group cursor-pointer rounded-lg shadow-[0_2px_15px_0_#0000001a] dark:shadow-xl dark:shadow-white/10"
         style={{ backgroundColor: articleColor }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}

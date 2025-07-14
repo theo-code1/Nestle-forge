@@ -3,6 +3,7 @@ from PIL import Image
 import io
 import os
 from flask_cors import CORS
+from supabase_config import get_supabase_storage
 
 app = Flask(__name__)
 CORS(app)
@@ -77,16 +78,26 @@ def compress_image():
         compressed_size = len(compressed_bytes)
         compression_ratio = 100 * (original_size - compressed_size) / original_size
         
-        # Create a response with the compressed image
+        # Upload to Supabase
+        supabase_storage = get_supabase_storage()
+        output_filename = f"compressed_{file.filename}"
+        content_type = f"image/{format.lower()}"
+        public_url = supabase_storage.upload_file(
+            compressed_bytes,
+            output_filename,
+            content_type
+        )
+        # Create a response with the compressed image and public URL
         response = {
             "success": True,
             "original_size_kb": round(original_size / 1024, 2),
             "compressed_size_kb": round(compressed_size / 1024, 2),
             "compression_ratio_percent": round(compression_ratio, 2),
             "format": format.lower(),
-            "image_data": compressed_bytes.hex()  # Convert bytes to hex string for JSON
+            "public_url": public_url,
+            "filename": output_filename,
+            "size": compressed_size
         }
-        
         return jsonify(response)
 
     except Exception as e:

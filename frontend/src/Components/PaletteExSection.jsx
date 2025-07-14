@@ -137,7 +137,7 @@ const PaletteExSection = () => {
             > Remove
             </button>
           {palette.length > 0 && (
-            <p className="text-sm text-gray-600 px-2 mt-4">
+            <p className="text-sm text-gray-600 dark:text-white/40 px-2 mt-4">
               Click on the image to pick colors. Click on any color to copy its hex value.
             </p>
           )}

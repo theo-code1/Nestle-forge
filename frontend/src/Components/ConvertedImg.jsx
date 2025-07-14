@@ -1,5 +1,5 @@
 import { useState } from "react";
-import FaTrash from "./Icons/Delete"
+import FaTrash from "./Icons/Delete.jsx"
 import ToArrow from "./Icons/toArrow.jsx";
 import Dropdown from "./Icons/dropdown.jsx";
 import DocIcon from "./Icons/DocIcon.jsx";
@@ -42,11 +42,11 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
                 <div className="select-formats h-fit flex items-center gap-1 z-30">
                   <button
                     type="button"
-                    className="text-white dark:text-white/90 text-[16px] font-medium border-black/20 dark:border-white/20 border-2 px-5.5 py-2 rounded-md"
+                    className="text-black dark:text-white/90 text-[16px] font-medium border-black/20 dark:border-white/20 border-2 px-5.5 py-2 rounded-md"
                   >
                     {selectedImgDetails.format}
                   </button>
-                  <ToArrow className={'text-black '}/>
+                  <ToArrow className={'text-black dark:text-white/80'}/>
                   <div className="relative ">
                     <button
                       onClick={(e) => {
@@ -54,7 +54,7 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, imgHref, handleDelete
                         setOpenDropdownId(isDropdownOpen ? null : imageId);
                       }}
                       type="button"
-                      className={`text-white dark:text-white/90 text-[16px] font-medium pl-5 ${!convertToFormat ? 'pr-3.5' : 'pr-5'} py-2 rounded-md border-2 border-black/20 dark:border-white/20 flex gap-4 items-center hover:shadow-[0_2px_15px_0_#0000001a] active:bg-black/5 cursor-pointer transition-all duration-100`}
+                      className={`text-black dark:text-white/90 text-[16px] font-medium pl-5 ${!convertToFormat ? 'pr-3.5' : 'pr-5'} py-2 rounded-md border-2 border-black/20 dark:border-white/20 flex gap-4 items-center hover:shadow-[0_2px_15px_0_#0000001a] active:bg-black/5 cursor-pointer transition-all duration-100`}
                     >
                       {convertToFormat ? convertToFormat.toUpperCase() : "To"}
                       {!convertToFormat && <Dropdown />}
