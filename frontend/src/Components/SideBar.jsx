@@ -19,10 +19,10 @@ const SideBar = () => {
   };
 
   return (
-    <main className='side-bar bg-white dark:bg-black hidden md:flex flex-col gap-6 relative float-left h-screen border-r border-r-black/20 text-left py-6 px-2 '>
+    <main className='side-bar bg-white dark:bg-black hidden md:flex flex-col gap-6 relative float-left h-screen border-r border-r-black/20 text-left py-6 px-2 selection:text-white selection:bg-black dark:selection:text-black dark:selection:bg-white'>
       <div className="logo flex items-center gap-2 px-2 mb-2">
         <NestleForgeLogo width="32" height="32" color={logoColorTheme} className={`text-black dark:text-white/90`} />
-        <h1 className="logo-name text-black dark:text-white/90 text-lg font-medium">NestleForge</h1>
+        <h1 className="logo-name text-black dark:text-white/90 text-lg  font-medium">NestleForge</h1>
       </div>
 
       <hr className='text-black dark:text-white opacity-50 w-9/10 mx-auto'/>

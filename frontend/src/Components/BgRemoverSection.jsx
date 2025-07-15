@@ -74,12 +74,12 @@ const BgRemoverSection = () => {
   };
 
   return (
-    <section className="bg-white dark:bg-black/95 flex flex-col items-center gap-2 py-24 md:py-14 px-2 overflow-y-auto overflow-x-hidden h-screen">
+    <section className="bg-white dark:bg-black/95 flex flex-col items-center gap-2 py-24 md:py-14 px-2 overflow-y-auto overflow-x-hidden h-screen selection:text-white selection:bg-black dark:selection:bg-white dark:selection:text-black">
       <div className="headers flex flex-col gap-4">
         <h1 className="text-3xl md:text-4xl text-black dark:text-white/90 text-center font-medium">
           Instant Background Removal
         </h1>
-        <p className="text-sm md:text-[16px] px-2 md:px-4 text-center text-black dark:text-white/90">
+        <p className="text-sm md:text-[16px] 2xl:text-lg px-2 md:px-4 text-center text-black dark:text-white/90">
           Automatically erase backgrounds from any image. Get clean, transparent
           cutouts in
           <br className="hidden lg:flex"/>

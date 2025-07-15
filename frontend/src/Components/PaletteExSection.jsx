@@ -75,7 +75,7 @@ const PaletteExSection = () => {
 
 
   return (
-    <section className='bg-white dark:bg-black/95 flex flex-col items-center gap-2 py-24 px-2 md:py-14 overflow-y-auto overflow-x-hidden h-screen'>
+    <section className='bg-white dark:bg-black/95 flex flex-col items-center gap-2 py-24 px-2 md:py-14 overflow-y-auto overflow-x-hidden h-screen selection:text-white selection:bg-black dark:selection:text-black dark:selection:bg-white'>
         <div className="headers flex flex-col gap-4">
             <h1 className='text-3xl md:text-4xl text-center text-black dark:text-white/90 font-medium'>Image to Palette</h1>
             <p className='text-sm md:text-[16px] text-black dark:text-white/90 text-center px-2'>Extract beautiful color schemes in seconds. Just upload an image and <br className='hidden md:flex'/>get inspired.</p>

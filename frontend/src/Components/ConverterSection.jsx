@@ -156,7 +156,7 @@ export default function ConverterSection() {
         <h1 className="text-3xl md:text-4xl font-medium text-center">
         Format Switcher
         </h1>
-        <p className="text-sm md:text-[16px] px-2 font-[400]  text-center">
+        <p className="text-sm md:text-[16px] 2xl:text-lg px-2 font-[400]  text-center">
         Easily change your images into any popular format.Fast, simple, and lossless
         </p>
       </div>
