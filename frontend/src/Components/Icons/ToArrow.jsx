@@ -1,6 +1,6 @@
 import * as React from "react";
 
-function BsArrowRightShort({ className}) {
+function ToArrow({ className}) {
   return (
     <svg
       className={className}
@@ -25,4 +25,4 @@ function BsArrowRightShort({ className}) {
   );
 }
 
-export default BsArrowRightShort;
+export default ToArrow;

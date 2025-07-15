@@ -5,6 +5,16 @@ import io
 import os
 from datetime import datetime
 
+from http.server import BaseHTTPRequestHandler
+
+def handler(request: BaseHTTPRequestHandler, context):
+    return {
+        "statusCode": 200,
+        "headers": {"Content-Type": "application/json"},
+        "body": '{"message": "Hello from Python"}'
+    }
+
+
 app = Flask(__name__)
 CORS(app)
 
