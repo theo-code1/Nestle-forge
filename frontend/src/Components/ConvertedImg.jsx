@@ -1,7 +1,7 @@
 import { useState } from "react";
 import FaTrash from "./Icons/Delete.jsx"
 import ToArrow from "./Icons/ToArrow.jsx";
-import Dropdown from "./Icons/Dropdown.jsx";
+import DropDown from "./Icons/DropDown.jsx";
 import DocIcon from "./Icons/DocIcon.jsx";
 import { downloadBlob } from "../utils/api";
 
@@ -58,7 +58,7 @@ const ConvertedImg = ({ ImageName, ImageSize, DownloadImg, handleDelete, selecte
                       className={`text-black dark:text-white/90 text-[16px] font-medium pl-5 ${!convertToFormat ? 'pr-3.5' : 'pr-5'} py-2 rounded-md border-2 border-black/20 dark:border-white/20 flex gap-4 items-center hover:shadow-[0_2px_15px_0_#0000001a] active:bg-black/5 cursor-pointer transition-all duration-100`}
                     >
                       {convertToFormat ? convertToFormat.toUpperCase() : "To"}
-                      {!convertToFormat && <Dropdown />}
+                      {!convertToFormat && <DropDown />}
                     </button>
                   </div>
                 </div>
