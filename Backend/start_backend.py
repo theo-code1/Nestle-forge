@@ -4,8 +4,10 @@ from PIL import Image
 import io
 import os
 from datetime import datetime
-
 from http.server import BaseHTTPRequestHandler
+
+# Import configuration
+from config import FRONTEND_URL
 
 def handler(request: BaseHTTPRequestHandler, context):
     return {
@@ -13,7 +15,6 @@ def handler(request: BaseHTTPRequestHandler, context):
         "headers": {"Content-Type": "application/json"},
         "body": '{"message": "Hello from Python"}'
     }
-
 
 app = Flask(__name__)
 CORS(app)
@@ -138,6 +139,11 @@ def convert_image():
             'type': type(e).__name__
         }), 500
 
+@app.route('/api/config', methods=['GET'])
+def get_config_endpoint():
+    return jsonify({
+        'frontendUrl': FRONTEND_URL
+    })
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

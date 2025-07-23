@@ -2,11 +2,13 @@
  * Handles API calls to the backend server
  */
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+const API_URL = import.meta.env.VITE_API_URL;
+const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
 
-const getApiUrl = () => {
-  return API_URL;
-};
+const getApiUrl = () => API_URL;
+const getFrontendUrl = () => FRONTEND_URL;
+
+export { getFrontendUrl };
 
 /**
  * Convert an image to a different format
