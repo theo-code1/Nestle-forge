@@ -1,7 +1,7 @@
 import { useState } from "react";
 import FaTrash from "./Icons/Delete.jsx"
-import ToArrow from "./Icons/toArrow.jsx";
-import Dropdown from "./Icons/dropdown.jsx";
+import ToArrow from "./Icons/ToArrow.jsx";
+import Dropdown from "./Icons/Dropdown.jsx";
 import DocIcon from "./Icons/DocIcon.jsx";
 import { downloadBlob } from "../utils/api";
 
